@@ -56,6 +56,7 @@ export default function CompareMembers() {
   //other stuff
   let congress = "116";
   let senate = "senate";
+  
   const apiCall = async () => {
     let response = await getMembers(congress, senate);
     setMembers(response);
@@ -193,13 +194,13 @@ export default function CompareMembers() {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   menu_container: {
     // flex: 1,
-    flexDirection: "row",
+    flexDirection: 'row',
     // justifyContent: "space-around",
   },
 });
