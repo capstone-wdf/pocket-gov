@@ -45,10 +45,15 @@ export default function CompareMembers() {
   const openMenu2 = () => setVisible2(true);
   const closeMenu2 = () => setVisible2(false);
 
-  // useEffect(() => {
-  //   if(member1)
-  // }, [member1, member2])
+  //useEffect for comparison API
+  useEffect(() => {
+    if (member1 && member2) {
+      getComparison(member1.id, member2.id);
+      console.log(agreeData);
+    }
+  }, [member1, member2]);
 
+  //other stuff
   let congress = "116";
   let senate = "senate";
   const apiCall = async () => {
@@ -137,9 +142,7 @@ export default function CompareMembers() {
         />
       )}
       {member2 && <Text>{`${member2.first_name} ${member2.last_name}`}</Text>}
-      <Button onPress={() => getComparison(member1.id, member2.id)}>
-        Compare
-      </Button>
+
       {agreeData && (
         <View>
           <Text>{`Agree percent: ${agreeData.agree_percent}`}</Text>
