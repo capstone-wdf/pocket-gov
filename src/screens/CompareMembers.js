@@ -151,9 +151,16 @@ export default function CompareMembers() {
           <Text>{`Disagree votes: ${agreeData.disagree_votes}`}</Text>
 
           <VictoryPie
+            colorScale={["forestgreen", "firebrick"]}
             data={[
-              { x: "Agree", y: agreeData.agree_percent },
-              { x: "Disagree", y: agreeData.disagree_percent },
+              {
+                x: `Agree ${agreeData.agree_percent}%`,
+                y: agreeData.agree_percent,
+              },
+              {
+                x: `Disagree ${agreeData.disagree_percent}%`,
+                y: agreeData.disagree_percent,
+              },
             ]}
           />
         </View>
