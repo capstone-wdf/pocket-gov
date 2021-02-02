@@ -20,10 +20,13 @@ export default function CompareMembers() {
   const [members, setMembers] = useState([]);
   const [member1, setMember1] = useState({});
   const [member2, setMember2] = useState({});
-  const [visible, setVisible] = useState(false);
+  const [visible1, setVisible1] = useState(false);
+  const [visible2, setVisible2] = useState(false);
 
-  const openMenu = () => setVisible(true);
-  const closeMenu = () => setVisible(false);
+  const openMenu1 = () => setVisible1(true);
+  const closeMenu1 = () => setVisible1(false);
+  const openMenu2 = () => setVisible2(true);
+  const closeMenu2 = () => setVisible2(false);
 
   let congress = '116';
   let senate = 'senate';
@@ -51,30 +54,48 @@ export default function CompareMembers() {
   return (
     <SafeAreaView style={styles.container}>
       <Menu
-        visible={visible}
-        onDismiss={closeMenu}
-        anchor={<Button onPress={openMenu}>Show menu</Button>}
+        visible={visible1}
+        onDismiss={closeMenu1}
+        anchor={<Button onPress={openMenu1}>choose member 1</Button>}
       >
-        <Menu.Item
-          onPress={() => {
-            setMember1({"last_name": "test 1"});
-          }}
-          title="Member 1"
-        />
-        <Menu.Item
-          onPress={() => {
-            setMember2({"last_name": "test 2"});
-          }}
-          title="Member 2"
-        />
+        {members.map((member) => {
+          return (
+            <Menu.Item
+              title={member.first_name}
+              key={member.id}
+              onPress={() => {
+                setMember1({ first_name: member.first_name });
+                closeMenu1();
+              }}
+            />
+          );
+        })}
       </Menu>
-        <Text>{`${member1.last_name}`}</Text>
-        <Text>{`${member2.last_name}`}</Text>
-      <FlatList
+      <Menu
+        visible={visible2}
+        onDismiss={closeMenu2}
+        anchor={<Button onPress={openMenu2}>choose member 2</Button>}
+      >
+        {members.map((member) => {
+          return (
+            <Menu.Item
+              title={member.first_name}
+              key={member.id}
+              onPress={() => {
+                setMember2({ first_name: member.first_name });
+                closeMenu2();
+              }}
+            />
+          );
+        })}
+      </Menu>
+      <Text>{`${member1.first_name}`}</Text>
+      <Text>{`${member2.first_name}`}</Text>
+      {/* <FlatList
         data={members}
         renderItem={renderItem}
         keyExtractor={(item) => item.id}
-      />
+      /> */}
     </SafeAreaView>
   );
 }
