@@ -4,7 +4,7 @@ import { FlatList, SafeAreaView, StyleSheet, Text, View } from "react-native";
 import { Avatar, Button, Menu } from "react-native-paper";
 import axios from "axios";
 import { config } from "../../secrets";
-import { VictoryPie } from "victory-native";
+import { VictoryPie, VictoryStack, VictoryBar } from "victory-native";
 
 async function getMembers(congress, chamber) {
   const theUrl = `https://api.propublica.org/congress/v1/${congress}/${chamber}/members.json`;
@@ -163,6 +163,28 @@ export default function CompareMembers() {
               },
             ]}
           />
+
+          <VictoryStack
+            horizontal={true}
+            colorScale={["forestgreen", "firebrick"]}
+          >
+            <VictoryBar
+              data={[
+                {
+                  x: `Agree ${agreeData.agree_percent}%`,
+                  y: agreeData.agree_percent,
+                },
+              ]}
+            />
+            <VictoryBar
+              data={[
+                {
+                  x: `Disagree ${agreeData.disagree_percent}%`,
+                  y: agreeData.disagree_percent,
+                },
+              ]}
+            />
+          </VictoryStack>
         </View>
       )}
     </SafeAreaView>
