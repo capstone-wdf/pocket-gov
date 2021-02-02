@@ -1,9 +1,10 @@
-import { StatusBar } from 'expo-status-bar';
-import React, { useState } from 'react';
-import { FlatList, SafeAreaView, StyleSheet, Text, View } from 'react-native';
-import { Avatar, Button, Menu } from 'react-native-paper';
-import axios from 'axios';
-import { config } from '../../secrets';
+import { StatusBar } from "expo-status-bar";
+import React, { useState } from "react";
+import { FlatList, SafeAreaView, StyleSheet, Text, View } from "react-native";
+import { Avatar, Button, Menu } from "react-native-paper";
+import axios from "axios";
+import { config } from "../../secrets";
+import { VictoryChart, VictoryBar } from "victory-native";
 
 async function getMembers(congress, chamber) {
   const theUrl = `https://api.propublica.org/congress/v1/${congress}/${chamber}/members.json`;
@@ -31,8 +32,6 @@ async function compareTwoMembers(
   }
 }
 
-// let compareTwoMemsData = await compareTwoMembers(firstMemberId, secondMemberId, congress, senate)
-
 export default function CompareMembers() {
   const [members, setMembers] = useState([]);
   const [member1, setMember1] = useState({});
@@ -46,8 +45,8 @@ export default function CompareMembers() {
   const openMenu2 = () => setVisible2(true);
   const closeMenu2 = () => setVisible2(false);
 
-  let congress = '116';
-  let senate = 'senate';
+  let congress = "116";
+  let senate = "senate";
   const apiCall = async () => {
     let response = await getMembers(congress, senate);
     setMembers(response);
@@ -65,13 +64,9 @@ export default function CompareMembers() {
     setAgreeData(compareTwoMemsData);
   };
 
-  // if (member1.first_name && member2.first_name && !agreeData) {
-  //   getComparison(member1.id, member2.id);
-  // }
-
   return (
     <SafeAreaView style={styles.container}>
-      <View styles={styles.menu}>
+      <View style={styles.menu_container}>
         <Menu
           visible={visible1}
           onDismiss={closeMenu1}
@@ -145,6 +140,13 @@ export default function CompareMembers() {
           <Text>{`Common votes: ${agreeData.common_votes}`}</Text>
           <Text>{`Disagree percent: ${agreeData.disagree_percent}`}</Text>
           <Text>{`Disagree votes: ${agreeData.disagree_votes}`}</Text>
+
+          <VictoryBar
+            data={[
+              { x: 1, y: agreeData.agree_percent },
+              { x: 2, y: agreeData.disagree_percent },
+            ]}
+          />
         </View>
       )}
     </SafeAreaView>
@@ -153,13 +155,13 @@ export default function CompareMembers() {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: "#fff",
+    alignItems: "center",
+    justifyContent: "center",
   },
-  menu: {
-    flex: 1,
-    flexDirection: 'row',
+  menu_container: {
+    // flex: 1,
+    flexDirection: "row",
+    // justifyContent: "space-around",
   },
 });
