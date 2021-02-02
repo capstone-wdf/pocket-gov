@@ -1,7 +1,7 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useState } from 'react';
 import { FlatList, SafeAreaView, StyleSheet, Text, View } from 'react-native';
-import { Button, Menu } from 'react-native-paper';
+import { Avatar, Button, Menu } from 'react-native-paper';
 import axios from 'axios';
 import { config } from '../../secrets';
 
@@ -71,58 +71,81 @@ export default function CompareMembers() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Menu
-        visible={visible1}
-        onDismiss={closeMenu1}
-        anchor={<Button onPress={openMenu1}>choose member 1</Button>}
-      >
-        {members.map((member) => {
-          return (
-            <Menu.Item
-              title={`${member.first_name} ${member.last_name}`}
-              key={member.id}
-              onPress={() => {
-                setMember1({
-                  first_name: member.first_name,
-                  last_name: member.last_name,
-                  id: member.id,
-                });
-                closeMenu1();
-              }}
-            />
-          );
-        })}
-      </Menu>
-      <Menu
-        visible={visible2}
-        onDismiss={closeMenu2}
-        anchor={<Button onPress={openMenu2}>choose member 2</Button>}
-      >
-        {members.map((member) => {
-          return (
-            <Menu.Item
-              title={`${member.first_name} ${member.last_name}`}
-              key={member.id}
-              onPress={() => {
-                setMember2({
-                  first_name: member.first_name,
-                  last_name: member.last_name,
-                  id: member.id,
-                });
-                closeMenu2();
-                // getComparison(member1.id, member2.id);
-              }}
-            />
-          );
-        })}
-      </Menu>
+      <View styles={styles.menu}>
+        <Menu
+          visible={visible1}
+          onDismiss={closeMenu1}
+          anchor={<Button onPress={openMenu1}>choose member 1</Button>}
+        >
+          {members.map((member) => {
+            return (
+              <Menu.Item
+                title={`${member.first_name} ${member.last_name}`}
+                key={member.id}
+                onPress={() => {
+                  setMember1({
+                    first_name: member.first_name,
+                    last_name: member.last_name,
+                    id: member.id,
+                  });
+                  closeMenu1();
+                }}
+              />
+            );
+          })}
+        </Menu>
+        <Menu
+          visible={visible2}
+          onDismiss={closeMenu2}
+          anchor={<Button onPress={openMenu2}>choose member 2</Button>}
+        >
+          {members.map((member) => {
+            return (
+              <Menu.Item
+                title={`${member.first_name} ${member.last_name}`}
+                key={member.id}
+                onPress={() => {
+                  setMember2({
+                    first_name: member.first_name,
+                    last_name: member.last_name,
+                    id: member.id,
+                  });
+                  closeMenu2();
+                  // getComparison(member1.id, member2.id);
+                }}
+              />
+            );
+          })}
+        </Menu>
+      </View>
+      {member1.first_name && (
+        <Avatar.Image
+          size={35}
+          source={{
+            uri: `https://theunitedstates.io/images/congress/225x275/${member1.id}.jpg`,
+          }}
+        />
+      )}
       <Text>{`${member1.first_name} ${member1.last_name}`}</Text>
+      {member2.first_name && (
+        <Avatar.Image
+          size={35}
+          source={{
+            uri: `https://theunitedstates.io/images/congress/225x275/${member2.id}.jpg`,
+          }}
+        />
+      )}
       <Text>{`${member2.first_name} ${member2.last_name}`}</Text>
       <Button onPress={() => getComparison(member1.id, member2.id)}>
         Compare
       </Button>
       {agreeData && (
-        <Text>{`Agree percent: ${agreeData.agree_percent} | Common votes: ${agreeData.common_votes}`}</Text>
+        <View>
+          <Text>{`Agree percent: ${agreeData.agree_percent}`}</Text>
+          <Text>{`Common votes: ${agreeData.common_votes}`}</Text>
+          <Text>{`Disagree percent: ${agreeData.disagree_percent}`}</Text>
+          <Text>{`Disagree votes: ${agreeData.disagree_votes}`}</Text>
+        </View>
       )}
     </SafeAreaView>
   );
@@ -134,5 +157,9 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  menu: {
+    flex: 1,
+    flexDirection: 'row',
   },
 });
