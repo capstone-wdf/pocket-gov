@@ -1,10 +1,14 @@
-import { StatusBar } from "expo-status-bar";
-import React, { useState } from "react";
-import { FlatList, SafeAreaView, StyleSheet, Text, View } from "react-native";
-import { Avatar, Button, Menu } from "react-native-paper";
-import axios from "axios";
-import { config } from "../../secrets";
-import { VictoryChart, VictoryBar } from "victory-native";
+import { StatusBar } from 'expo-status-bar';
+import React, { useState } from 'react';
+import { FlatList, SafeAreaView, StyleSheet, Text, View } from 'react-native';
+import {
+  Avatar,
+  Button,
+  Menu,
+} from 'react-native-paper';
+import axios from 'axios';
+import { config } from '../../secrets';
+import { VictoryChart, VictoryBar } from 'victory-native';
 
 async function getMembers(congress, chamber) {
   const theUrl = `https://api.propublica.org/congress/v1/${congress}/${chamber}/members.json`;
@@ -45,8 +49,8 @@ export default function CompareMembers() {
   const openMenu2 = () => setVisible2(true);
   const closeMenu2 = () => setVisible2(false);
 
-  let congress = "116";
-  let senate = "senate";
+  let congress = '116';
+  let senate = 'senate';
   const apiCall = async () => {
     let response = await getMembers(congress, senate);
     setMembers(response);
@@ -155,13 +159,13 @@ export default function CompareMembers() {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   menu_container: {
     // flex: 1,
-    flexDirection: "row",
+    flexDirection: 'row',
     // justifyContent: "space-around",
   },
 });
