@@ -8,7 +8,7 @@ import {
   Text,
   View,
 } from 'react-native';
-import { Avatar, Button, Menu } from 'react-native-paper';
+import { Avatar, Button, Menu, Title } from 'react-native-paper';
 import axios from 'axios';
 import { config } from '../../secrets';
 import { VictoryPie, VictoryStack, VictoryBar } from 'victory-native';
@@ -95,12 +95,15 @@ export default function CompareMembers() {
   return (
     <SafeAreaView>
       <ScrollView contentContainerStyle={styles.contentContainer}>
+        <Text style={styles.text}>
+          Compare two members' voting history in the Senate or House
+        </Text>
         <Button
           onPress={() => setChamber(chamber === 'senate' ? 'house' : 'senate')}
         >
           {chamber}
         </Button>
-        <View style={styles.menu_container}>
+        <View style={styles.menuContainer}>
           <Menu
             visible={visible1}
             onDismiss={closeMenu1}
@@ -109,13 +112,14 @@ export default function CompareMembers() {
             {members.map((member) => {
               return (
                 <Menu.Item
-                  title={`${member.first_name} ${member.last_name}`}
+                  title={`${member.first_name} ${member.last_name} (${member.party})`}
                   key={member.id}
                   onPress={() => {
                     setMember1({
                       first_name: member.first_name,
                       last_name: member.last_name,
                       id: member.id,
+                      party: member.party,
                     });
                     closeMenu1();
                   }}
@@ -132,16 +136,16 @@ export default function CompareMembers() {
               members.map((member) => {
                 return (
                   <Menu.Item
-                    title={`${member.first_name} ${member.last_name}`}
+                    title={`${member.first_name} ${member.last_name} (${member.party})`}
                     key={member.id}
                     onPress={() => {
                       setMember2({
                         first_name: member.first_name,
                         last_name: member.last_name,
                         id: member.id,
+                        party: member.party,
                       });
                       closeMenu2();
-                      // getComparison(member1.id, member2.id);
                     }}
                   />
                 );
@@ -149,7 +153,7 @@ export default function CompareMembers() {
           </Menu>
         </View>
         <View style={styles.memberContainer}>
-          <View>
+          <View style={styles.member}>
             {member1 && member1.first_name && (
               <Avatar.Image
                 size={70}
@@ -159,10 +163,12 @@ export default function CompareMembers() {
               />
             )}
             {member1 && (
-              <Text>{`${member1.first_name} ${member1.last_name}`}</Text>
+              <Text
+                style={styles.text}
+              >{`${member1.first_name} ${member1.last_name} (${member1.party})`}</Text>
             )}
           </View>
-          <View>
+          <View style={styles.member}>
             {member2 && member2.first_name && (
               <Avatar.Image
                 size={70}
@@ -172,59 +178,65 @@ export default function CompareMembers() {
               />
             )}
             {member2 && (
-              <Text>{`${member2.first_name} ${member2.last_name}`}</Text>
+              <Text
+                style={styles.text}
+              >{`${member2.first_name} ${member2.last_name} (${member2.party})`}</Text>
             )}
           </View>
         </View>
 
         {agreeData && (
           <View>
+            <View style={styles.textContainer}>
+              <Text>{`Agree percent: ${agreeData.agree_percent}`}</Text>
+              <Text>{`Common votes: ${agreeData.common_votes}`}</Text>
+              <Text>{`Disagree percent: ${agreeData.disagree_percent}`}</Text>
+              <Text>{`Disagree votes: ${agreeData.disagree_votes}`}</Text>
+            </View>
+
             <Button onPress={() => setSwitchView(!switchView)}>
               Switch Graph
             </Button>
-
-            <Text>{`Agree percent: ${agreeData.agree_percent}`}</Text>
-            <Text>{`Common votes: ${agreeData.common_votes}`}</Text>
-            <Text>{`Disagree percent: ${agreeData.disagree_percent}`}</Text>
-            <Text>{`Disagree votes: ${agreeData.disagree_votes}`}</Text>
-
-            {switchView ? (
-              <VictoryStack
-                horizontal={true}
-                colorScale={['forestgreen', 'firebrick']}
-              >
-                <VictoryBar
+            <View style={styles.graphContainer}>
+              {switchView ? (
+                <VictoryStack
+                  horizontal={true}
+                  colorScale={['forestgreen', 'firebrick']}
+                >
+                  <VictoryBar
+                    data={[
+                      {
+                        x: `Agree ${agreeData.agree_percent}%`,
+                        y: agreeData.agree_percent,
+                      },
+                    ]}
+                  />
+                  <VictoryBar
+                    data={[
+                      {
+                        x: `Disagree ${agreeData.disagree_percent}%`,
+                        y: agreeData.disagree_percent,
+                      },
+                    ]}
+                  />
+                </VictoryStack>
+              ) : (
+                <VictoryPie
+                  colorScale={['forestgreen', 'firebrick']}
                   data={[
                     {
-                      x: `Agree ${agreeData.agree_percent}%`,
+                      x: `${agreeData.agree_percent}%`,
                       y: agreeData.agree_percent,
                     },
-                  ]}
-                />
-                <VictoryBar
-                  data={[
                     {
-                      x: `Disagree ${agreeData.disagree_percent}%`,
+                      x: `${agreeData.disagree_percent}%`,
                       y: agreeData.disagree_percent,
                     },
                   ]}
+                  labelRadius={60}
                 />
-              </VictoryStack>
-            ) : (
-              <VictoryPie
-                colorScale={['forestgreen', 'firebrick']}
-                data={[
-                  {
-                    x: `Agree ${agreeData.agree_percent}%`,
-                    y: agreeData.agree_percent,
-                  },
-                  {
-                    x: `Disagree ${agreeData.disagree_percent}%`,
-                    y: agreeData.disagree_percent,
-                  },
-                ]}
-              />
-            )}
+              )}
+            </View>
           </View>
         )}
       </ScrollView>
@@ -238,19 +250,32 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  menu_container: {
+  menuContainer: {
     // flex: 1,
     flexDirection: 'row',
     // justifyContent: "space-around",
   },
+  member: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   memberContainer: {
     flex: 1,
     flexDirection: 'row',
-    justifyContent: 'space-evenly',
+    justifyContent: 'space-around',
     width: '90%',
   },
   dataContainer: {
     marginHorizontal: 50,
     paddingHorizontal: 10,
   },
+  text: {
+    alignItems: 'center',
+    margin: 15,
+  },
+  textContainer: {
+    alignItems: 'center',
+    margin: 15,
+  },
+  graphContainer: {},
 });
