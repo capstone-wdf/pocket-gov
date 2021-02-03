@@ -46,6 +46,7 @@ export default function CompareMembers() {
   const [visible1, setVisible1] = useState(false);
   const [visible2, setVisible2] = useState(false);
   const [agreeData, setAgreeData] = useState(null);
+  const [switchView, setSwitchView] = useState(false);
 
   const openMenu1 = () => setVisible1(true);
   const closeMenu1 = () => setVisible1(false);
@@ -107,12 +108,13 @@ export default function CompareMembers() {
                 />
               );
             })}
+
           </Menu>
           <Menu
             visible={visible2}
             onDismiss={closeMenu2}
             anchor={<Button onPress={openMenu2}>choose member 2</Button>}
-          >
+           >
             {members &&
               members.map((member) => {
                 return (
@@ -161,30 +163,21 @@ export default function CompareMembers() {
             )}
           </View>
         </View>
-        {agreeData && (
-          <View style={styles.dataContainer}>
-            <Text>{`Agree percent: ${agreeData.agree_percent}`}</Text>
-            <Text>{`Common votes: ${agreeData.common_votes}`}</Text>
-            <Text>{`Disagree percent: ${agreeData.disagree_percent}`}</Text>
-            <Text>{`Disagree votes: ${agreeData.disagree_votes}`}</Text>
 
-            <VictoryPie
-              colorScale={["forestgreen", "firebrick"]}
-              data={[
-                {
-                  x: `Agree ${agreeData.agree_percent}%`,
-                  y: agreeData.agree_percent,
-                },
-                {
-                  x: `Disagree ${agreeData.disagree_percent}%`,
-                  y: agreeData.disagree_percent,
-                },
-              ]}
-            />
+  {agreeData && (
+        <View>
 
-            <VictoryStack
-              horizontal={true}
-              colorScale={["forestgreen", "firebrick"]}
+          <Button
+           onPress={() => setSwitchView(!switchView)}>Switch Graph</Button>
+
+          <Text>{`Agree percent: ${agreeData.agree_percent}`}</Text>
+          <Text>{`Common votes: ${agreeData.common_votes}`}</Text>
+          <Text>{`Disagree percent: ${agreeData.disagree_percent}`}</Text>
+          <Text>{`Disagree votes: ${agreeData.disagree_votes}`}</Text>
+
+          {switchView ? <VictoryStack
+            horizontal={true}
+            colorScale={["forestgreen", "firebrick"]}
             >
               <VictoryBar
                 data={[
@@ -202,10 +195,24 @@ export default function CompareMembers() {
                   },
                 ]}
               />
-            </VictoryStack>
-          </View>
-        )}
-      </ScrollView>
+            
+          </VictoryStack> : <VictoryPie
+            colorScale={["forestgreen", "firebrick"]}
+            data={[
+              {
+                x: `Agree ${agreeData.agree_percent}%`,
+                y: agreeData.agree_percent,
+              },
+              {
+                x: `Disagree ${agreeData.disagree_percent}%`,
+                y: agreeData.disagree_percent,
+              },
+            ]}
+          />}
+
+        </View>
+      )}
+     </ScrollView>
     </SafeAreaView>
   );
 }
