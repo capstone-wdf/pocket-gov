@@ -1,5 +1,5 @@
-import { StatusBar } from "expo-status-bar";
-import React, { useState, useEffect } from "react";
+import { StatusBar } from 'expo-status-bar';
+import React, { useState, useEffect } from 'react';
 import {
   ScrollView,
   FlatList,
@@ -7,11 +7,11 @@ import {
   StyleSheet,
   Text,
   View,
-} from "react-native";
-import { Avatar, Button, Menu } from "react-native-paper";
-import axios from "axios";
-import { config } from "../../secrets";
-import { VictoryPie, VictoryStack, VictoryBar } from "victory-native";
+} from 'react-native';
+import { Avatar, Button, Menu } from 'react-native-paper';
+import axios from 'axios';
+import { config } from '../../secrets';
+import { VictoryPie, VictoryStack, VictoryBar } from 'victory-native';
 
 async function getMembers(congress, chamber) {
   const theUrl = `https://api.propublica.org/congress/v1/${congress}/${chamber}/members.json`;
@@ -47,6 +47,7 @@ export default function CompareMembers() {
   const [visible2, setVisible2] = useState(false);
   const [agreeData, setAgreeData] = useState(null);
   const [switchView, setSwitchView] = useState(false);
+  const [chamber, setChamber] = useState('senate');
 
   const openMenu1 = () => setVisible1(true);
   const closeMenu1 = () => setVisible1(false);
@@ -57,19 +58,27 @@ export default function CompareMembers() {
   useEffect(() => {
     if (member1 && member2) {
       getComparison(member1.id, member2.id);
-      console.log(agreeData);
     }
   }, [member1, member2]);
 
   //other stuff
-  let congress = "116";
-  let senate = "senate";
+  let congress = '117';
 
   const apiCall = async () => {
-    let response = await getMembers(congress, senate);
+    let response = await getMembers(congress, chamber);
     setMembers(response);
   };
   if (!members.length) {
+    apiCall();
+  }
+
+  //switch from senate to house
+  if (members.length < 105 && chamber === 'house') {
+    apiCall();
+  }
+
+  //switch from house to senate
+  if (members.length > 105 && chamber === 'senate') {
     apiCall();
   }
 
@@ -78,7 +87,7 @@ export default function CompareMembers() {
       firstMemberId,
       secondMemberId,
       congress,
-      senate
+      chamber
     );
     setAgreeData(compareTwoMemsData);
   };
@@ -86,6 +95,11 @@ export default function CompareMembers() {
   return (
     <SafeAreaView>
       <ScrollView contentContainerStyle={styles.contentContainer}>
+        <Button
+          onPress={() => setChamber(chamber === 'senate' ? 'house' : 'senate')}
+        >
+          {chamber}
+        </Button>
         <View style={styles.menu_container}>
           <Menu
             visible={visible1}
@@ -108,13 +122,12 @@ export default function CompareMembers() {
                 />
               );
             })}
-
           </Menu>
           <Menu
             visible={visible2}
             onDismiss={closeMenu2}
             anchor={<Button onPress={openMenu2}>choose member 2</Button>}
-           >
+          >
             {members &&
               members.map((member) => {
                 return (
@@ -164,75 +177,77 @@ export default function CompareMembers() {
           </View>
         </View>
 
-  {agreeData && (
-        <View>
+        {agreeData && (
+          <View>
+            <Button onPress={() => setSwitchView(!switchView)}>
+              Switch Graph
+            </Button>
 
-          <Button
-           onPress={() => setSwitchView(!switchView)}>Switch Graph</Button>
+            <Text>{`Agree percent: ${agreeData.agree_percent}`}</Text>
+            <Text>{`Common votes: ${agreeData.common_votes}`}</Text>
+            <Text>{`Disagree percent: ${agreeData.disagree_percent}`}</Text>
+            <Text>{`Disagree votes: ${agreeData.disagree_votes}`}</Text>
 
-          <Text>{`Agree percent: ${agreeData.agree_percent}`}</Text>
-          <Text>{`Common votes: ${agreeData.common_votes}`}</Text>
-          <Text>{`Disagree percent: ${agreeData.disagree_percent}`}</Text>
-          <Text>{`Disagree votes: ${agreeData.disagree_votes}`}</Text>
-
-          {switchView ? <VictoryStack
-            horizontal={true}
-            colorScale={["forestgreen", "firebrick"]}
-            >
-              <VictoryBar
+            {switchView ? (
+              <VictoryStack
+                horizontal={true}
+                colorScale={['forestgreen', 'firebrick']}
+              >
+                <VictoryBar
+                  data={[
+                    {
+                      x: `Agree ${agreeData.agree_percent}%`,
+                      y: agreeData.agree_percent,
+                    },
+                  ]}
+                />
+                <VictoryBar
+                  data={[
+                    {
+                      x: `Disagree ${agreeData.disagree_percent}%`,
+                      y: agreeData.disagree_percent,
+                    },
+                  ]}
+                />
+              </VictoryStack>
+            ) : (
+              <VictoryPie
+                colorScale={['forestgreen', 'firebrick']}
                 data={[
                   {
                     x: `Agree ${agreeData.agree_percent}%`,
                     y: agreeData.agree_percent,
                   },
-                ]}
-              />
-              <VictoryBar
-                data={[
                   {
                     x: `Disagree ${agreeData.disagree_percent}%`,
                     y: agreeData.disagree_percent,
                   },
                 ]}
               />
-            
-          </VictoryStack> : <VictoryPie
-            colorScale={["forestgreen", "firebrick"]}
-            data={[
-              {
-                x: `Agree ${agreeData.agree_percent}%`,
-                y: agreeData.agree_percent,
-              },
-              {
-                x: `Disagree ${agreeData.disagree_percent}%`,
-                y: agreeData.disagree_percent,
-              },
-            ]}
-          />}
-
-        </View>
-      )}
-     </ScrollView>
+            )}
+          </View>
+        )}
+      </ScrollView>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   contentContainer: {
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   menu_container: {
     // flex: 1,
-    flexDirection: "row",
+    flexDirection: 'row',
     // justifyContent: "space-around",
   },
   memberContainer: {
     flex: 1,
-    flexDirection: "row",
-    justifyContent: "space-evenly",
-    width: "90%",
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
+    width: '90%',
   },
   dataContainer: {
     marginHorizontal: 50,
