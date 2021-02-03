@@ -1,6 +1,13 @@
 import { StatusBar } from "expo-status-bar";
 import React, { useState, useEffect } from "react";
-import { FlatList, SafeAreaView, StyleSheet, Text, View } from "react-native";
+import {
+  ScrollView,
+  FlatList,
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import { Avatar, Button, Menu } from "react-native-paper";
 import axios from "axios";
 import { config } from "../../secrets";
@@ -56,7 +63,7 @@ export default function CompareMembers() {
   //other stuff
   let congress = "116";
   let senate = "senate";
-  
+
   const apiCall = async () => {
     let response = await getMembers(congress, senate);
     setMembers(response);
@@ -76,131 +83,152 @@ export default function CompareMembers() {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.menu_container}>
-        <Menu
-          visible={visible1}
-          onDismiss={closeMenu1}
-          anchor={<Button onPress={openMenu1}>choose member 1</Button>}
-        >
-          {members.map((member) => {
-            return (
-              <Menu.Item
-                title={`${member.first_name} ${member.last_name}`}
-                key={member.id}
-                onPress={() => {
-                  setMember1({
-                    first_name: member.first_name,
-                    last_name: member.last_name,
-                    id: member.id,
-                  });
-                  closeMenu1();
-                }}
-              />
-            );
-          })}
-        </Menu>
-        <Menu
-          visible={visible2}
-          onDismiss={closeMenu2}
-          anchor={<Button onPress={openMenu2}>choose member 2</Button>}
-        >
-          {members &&
-            members.map((member) => {
+    <SafeAreaView>
+      <ScrollView contentContainerStyle={styles.contentContainer}>
+        <View style={styles.menu_container}>
+          <Menu
+            visible={visible1}
+            onDismiss={closeMenu1}
+            anchor={<Button onPress={openMenu1}>choose member 1</Button>}
+          >
+            {members.map((member) => {
               return (
                 <Menu.Item
                   title={`${member.first_name} ${member.last_name}`}
                   key={member.id}
                   onPress={() => {
-                    setMember2({
+                    setMember1({
                       first_name: member.first_name,
                       last_name: member.last_name,
                       id: member.id,
                     });
-                    closeMenu2();
-                    // getComparison(member1.id, member2.id);
+                    closeMenu1();
                   }}
                 />
               );
             })}
-        </Menu>
-      </View>
-      {member1 && member1.first_name && (
-        <Avatar.Image
-          size={35}
-          source={{
-            uri: `https://theunitedstates.io/images/congress/225x275/${member1.id}.jpg`,
-          }}
-        />
-      )}
-      {member1 && <Text>{`${member1.first_name} ${member1.last_name}`}</Text>}
-      {member2 && member2.first_name && (
-        <Avatar.Image
-          size={35}
-          source={{
-            uri: `https://theunitedstates.io/images/congress/225x275/${member2.id}.jpg`,
-          }}
-        />
-      )}
-      {member2 && <Text>{`${member2.first_name} ${member2.last_name}`}</Text>}
-
-      {agreeData && (
-        <View>
-          <Text>{`Agree percent: ${agreeData.agree_percent}`}</Text>
-          <Text>{`Common votes: ${agreeData.common_votes}`}</Text>
-          <Text>{`Disagree percent: ${agreeData.disagree_percent}`}</Text>
-          <Text>{`Disagree votes: ${agreeData.disagree_votes}`}</Text>
-
-          <VictoryPie
-            colorScale={["forestgreen", "firebrick"]}
-            data={[
-              {
-                x: `Agree ${agreeData.agree_percent}%`,
-                y: agreeData.agree_percent,
-              },
-              {
-                x: `Disagree ${agreeData.disagree_percent}%`,
-                y: agreeData.disagree_percent,
-              },
-            ]}
-          />
-
-          <VictoryStack
-            horizontal={true}
-            colorScale={["forestgreen", "firebrick"]}
+          </Menu>
+          <Menu
+            visible={visible2}
+            onDismiss={closeMenu2}
+            anchor={<Button onPress={openMenu2}>choose member 2</Button>}
           >
-            <VictoryBar
+            {members &&
+              members.map((member) => {
+                return (
+                  <Menu.Item
+                    title={`${member.first_name} ${member.last_name}`}
+                    key={member.id}
+                    onPress={() => {
+                      setMember2({
+                        first_name: member.first_name,
+                        last_name: member.last_name,
+                        id: member.id,
+                      });
+                      closeMenu2();
+                      // getComparison(member1.id, member2.id);
+                    }}
+                  />
+                );
+              })}
+          </Menu>
+        </View>
+        <View style={styles.memberContainer}>
+          <View>
+            {member1 && member1.first_name && (
+              <Avatar.Image
+                size={70}
+                source={{
+                  uri: `https://theunitedstates.io/images/congress/225x275/${member1.id}.jpg`,
+                }}
+              />
+            )}
+            {member1 && (
+              <Text>{`${member1.first_name} ${member1.last_name}`}</Text>
+            )}
+          </View>
+          <View>
+            {member2 && member2.first_name && (
+              <Avatar.Image
+                size={70}
+                source={{
+                  uri: `https://theunitedstates.io/images/congress/225x275/${member2.id}.jpg`,
+                }}
+              />
+            )}
+            {member2 && (
+              <Text>{`${member2.first_name} ${member2.last_name}`}</Text>
+            )}
+          </View>
+        </View>
+        {agreeData && (
+          <View style={styles.dataContainer}>
+            <Text>{`Agree percent: ${agreeData.agree_percent}`}</Text>
+            <Text>{`Common votes: ${agreeData.common_votes}`}</Text>
+            <Text>{`Disagree percent: ${agreeData.disagree_percent}`}</Text>
+            <Text>{`Disagree votes: ${agreeData.disagree_votes}`}</Text>
+
+            <VictoryPie
+              colorScale={["forestgreen", "firebrick"]}
               data={[
                 {
                   x: `Agree ${agreeData.agree_percent}%`,
                   y: agreeData.agree_percent,
                 },
-              ]}
-            />
-            <VictoryBar
-              data={[
                 {
                   x: `Disagree ${agreeData.disagree_percent}%`,
                   y: agreeData.disagree_percent,
                 },
               ]}
             />
-          </VictoryStack>
-        </View>
-      )}
+
+            <VictoryStack
+              horizontal={true}
+              colorScale={["forestgreen", "firebrick"]}
+            >
+              <VictoryBar
+                data={[
+                  {
+                    x: `Agree ${agreeData.agree_percent}%`,
+                    y: agreeData.agree_percent,
+                  },
+                ]}
+              />
+              <VictoryBar
+                data={[
+                  {
+                    x: `Disagree ${agreeData.disagree_percent}%`,
+                    y: agreeData.disagree_percent,
+                  },
+                ]}
+              />
+            </VictoryStack>
+          </View>
+        )}
+      </ScrollView>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+  contentContainer: {
+    backgroundColor: "#fff",
+    alignItems: "center",
+    justifyContent: "center",
   },
   menu_container: {
     // flex: 1,
-    flexDirection: 'row',
+    flexDirection: "row",
     // justifyContent: "space-around",
+  },
+  memberContainer: {
+    flex: 1,
+    flexDirection: "row",
+    justifyContent: "space-evenly",
+    width: "90%",
+  },
+  dataContainer: {
+    marginHorizontal: 50,
+    paddingHorizontal: 10,
   },
 });
