@@ -120,6 +120,8 @@ export default function CompareMembers() {
                       last_name: member.last_name,
                       id: member.id,
                       party: member.party,
+                      state: member.state,
+                      short_title: member.short_title,
                     });
                     closeMenu1();
                   }}
@@ -144,6 +146,8 @@ export default function CompareMembers() {
                         last_name: member.last_name,
                         id: member.id,
                         party: member.party,
+                        state: member.state,
+                        short_title: member.short_title,
                       });
                       closeMenu2();
                     }}
@@ -165,7 +169,7 @@ export default function CompareMembers() {
             {member1 && (
               <Text
                 style={styles.text}
-              >{`${member1.first_name} ${member1.last_name} (${member1.party})`}</Text>
+              >{`${member1.first_name} ${member1.last_name} (${member1.party}), ${member1.state}`}</Text>
             )}
           </View>
           <View style={styles.member}>
@@ -180,7 +184,7 @@ export default function CompareMembers() {
             {member2 && (
               <Text
                 style={styles.text}
-              >{`${member2.first_name} ${member2.last_name} (${member2.party})`}</Text>
+              >{`${member2.first_name} ${member2.last_name} (${member2.party}), ${member2.state}`}</Text>
             )}
           </View>
         </View>
@@ -188,6 +192,7 @@ export default function CompareMembers() {
         {agreeData && (
           <View>
             <View style={styles.textContainer}>
+              <Text>{`${member1.short_title} ${member1.last_name} and ${member2.short_title} ${member2.last_name} agree ${agreeData.agree_percent} percent of the time and have ${agreeData.common_votes} votes in common`}</Text>
               <Text>{`Agree percent: ${agreeData.agree_percent}`}</Text>
               <Text>{`Common votes: ${agreeData.common_votes}`}</Text>
               <Text>{`Disagree percent: ${agreeData.disagree_percent}`}</Text>
