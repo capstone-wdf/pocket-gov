@@ -39,6 +39,7 @@ export default function CompareMembers() {
   const [visible1, setVisible1] = useState(false);
   const [visible2, setVisible2] = useState(false);
   const [agreeData, setAgreeData] = useState(null);
+  const [switchView, setSwitchView] = useState(false);
 
   const openMenu1 = () => setVisible1(true);
   const closeMenu1 = () => setVisible1(false);
@@ -56,7 +57,7 @@ export default function CompareMembers() {
   //other stuff
   let congress = "116";
   let senate = "senate";
-  
+
   const apiCall = async () => {
     let response = await getMembers(congress, senate);
     setMembers(response);
@@ -144,28 +145,20 @@ export default function CompareMembers() {
       )}
       {member2 && <Text>{`${member2.first_name} ${member2.last_name}`}</Text>}
 
+
+
       {agreeData && (
         <View>
+
+          <Button
+           onPress={() => setSwitchView(!switchView)}>Switch Graph</Button>
+
           <Text>{`Agree percent: ${agreeData.agree_percent}`}</Text>
           <Text>{`Common votes: ${agreeData.common_votes}`}</Text>
           <Text>{`Disagree percent: ${agreeData.disagree_percent}`}</Text>
           <Text>{`Disagree votes: ${agreeData.disagree_votes}`}</Text>
 
-          <VictoryPie
-            colorScale={["forestgreen", "firebrick"]}
-            data={[
-              {
-                x: `Agree ${agreeData.agree_percent}%`,
-                y: agreeData.agree_percent,
-              },
-              {
-                x: `Disagree ${agreeData.disagree_percent}%`,
-                y: agreeData.disagree_percent,
-              },
-            ]}
-          />
-
-          <VictoryStack
+          {switchView ? <VictoryStack
             horizontal={true}
             colorScale={["forestgreen", "firebrick"]}
           >
@@ -185,7 +178,20 @@ export default function CompareMembers() {
                 },
               ]}
             />
-          </VictoryStack>
+          </VictoryStack> : <VictoryPie
+            colorScale={["forestgreen", "firebrick"]}
+            data={[
+              {
+                x: `Agree ${agreeData.agree_percent}%`,
+                y: agreeData.agree_percent,
+              },
+              {
+                x: `Disagree ${agreeData.disagree_percent}%`,
+                y: agreeData.disagree_percent,
+              },
+            ]}
+          />}
+
         </View>
       )}
     </SafeAreaView>
