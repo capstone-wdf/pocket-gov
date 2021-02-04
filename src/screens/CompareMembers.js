@@ -99,7 +99,7 @@ export default function CompareMembers() {
     let response = await getMembers(congress, chamber);
     setMembers(response);
   };
-  
+
   if (!members.length) {
     apiCall();
   }
@@ -323,6 +323,7 @@ export default function CompareMembers() {
         {sponsorships && (
           <FlatList
             horizontal
+            showsHorizontalScrollIndicator={false}
             data={sponsorships.bills}
             renderItem={renderItem}
             keyExtractor={(item) => item.number}

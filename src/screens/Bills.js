@@ -1,7 +1,14 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useState, useEffect } from 'react';
 import { FlatList, StyleSheet, View } from 'react-native';
-import { Button, Menu, Text, Title, Subheading } from 'react-native-paper';
+import {
+  Button,
+  Menu,
+  Searchbar,
+  Text,
+  Title,
+  Subheading,
+} from 'react-native-paper';
 import axios from 'axios';
 import { config } from '../../secrets';
 import SingleBill from '../components/SingleBill';
@@ -34,9 +41,16 @@ export default function Bills() {
   const [senateRecentBills, setSenateRecentBills] = useState([]);
   const [houseRecentBills, setHouseRecentBills] = useState([]);
   const [upcomingBills, setUpcomingBills] = useState([]);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [visible, setVisible] = useState(false);
+  const [type, setType] = useState('introduced');
+
+  const onChangeSearch = (query) => setSearchQuery(query);
+
+  const openMenu = () => setVisible(true);
+  const closeMenu = () => setVisible(false);
 
   const congress = '117';
-  const type = 'introduced';
   const callGetRecentBills = async (chamber) => {
     if (chamber === 'house') {
       let houseBills = await getRecentBills(congress, chamber, type);
@@ -47,6 +61,12 @@ export default function Bills() {
       setSenateRecentBills(senateBills);
     }
   };
+
+  // effect hook for changing type of recent bill
+  //TO DO:
+  //   useEffect(() => {
+  //     getRecentBills(congress, chamber, type);
+  // }, [type]);
 
   const callGetUpcomingBills = async () => {
     let houseBills = await getUpcomingBills('house');
@@ -83,7 +103,12 @@ export default function Bills() {
 
   return (
     <View style={styles.container}>
-      <View>
+      <Searchbar
+        placeholder="Search Bills"
+        onChangeText={onChangeSearch}
+        value={searchQuery}
+      />
+      <View style={styles.billsContainer}>
         <Title>Upcoming Bills</Title>
         <FlatList
           horizontal
@@ -92,7 +117,49 @@ export default function Bills() {
           renderItem={renderUpcomingBill}
           keyExtractor={(item) => item.bill_id}
         />
-        <Title>Recently Introduced Bills in the Senate</Title>
+        <Menu
+          visible={visible}
+          onDismiss={closeMenu}
+          anchor={<Button onPress={openMenu}>select recent bill type</Button>}
+        >
+          <Menu.Item
+            onPress={() => {
+              setType('introduced');
+            }}
+            title="Introduced"
+          />
+          <Menu.Item
+            onPress={() => {
+              setType('updated');
+            }}
+            title="Updated"
+          />
+          <Menu.Item
+            onPress={() => {
+              setType('active');
+            }}
+            title="Active"
+          />
+          <Menu.Item
+            onPress={() => {
+              setType('passed');
+            }}
+            title="Passed"
+          />
+          <Menu.Item
+            onPress={() => {
+              setType('enacted');
+            }}
+            title="Enacted"
+          />
+          <Menu.Item
+            onPress={() => {
+              setType('vetoed');
+            }}
+            title="Vetoed"
+          />
+        </Menu>
+        <Title>Recent Bills in the Senate</Title>
         <FlatList
           horizontal
           showsHorizontalScrollIndicator={false}
@@ -100,7 +167,7 @@ export default function Bills() {
           renderItem={renderSingleBill}
           keyExtractor={(item) => item.bill_id}
         />
-        <Title>Recently Introduced Bills in the House</Title>
+        <Title>Recent Bills in the House</Title>
         <FlatList
           horizontal
           showsHorizontalScrollIndicator={false}
@@ -117,5 +184,8 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: '#fff',
     height: '100%',
+  },
+  billsContainer: {
+    margin: 10,
   },
 });
