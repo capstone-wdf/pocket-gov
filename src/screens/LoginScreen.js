@@ -58,7 +58,15 @@ const styles = StyleSheet.create({
         color: "#788eec",
         fontWeight: "bold",
         fontSize: 16
-    }
+    },
+    skip: {
+      color: '#788eec',
+      marginTop: 20,
+      height: 48,
+      borderRadius: 5,
+      alignItems: "center",
+      justifyContent: 'center'
+  }
 })
 
 export default function LoginScreen({navigation}) {
@@ -67,6 +75,10 @@ export default function LoginScreen({navigation}) {
 
     const onFooterLinkPress = () => {
         navigation.navigate('Registration')
+    }
+
+    const onSkipPress = () => {
+      navigation.navigate('Legislative')
     }
 
     const onLoginPress = () => {
@@ -132,6 +144,11 @@ export default function LoginScreen({navigation}) {
                 <View style={styles.footerView}>
                     <Text style={styles.footerText}>Don't have an account? <Text onPress={onFooterLinkPress} style={styles.footerLink}>Sign up</Text></Text>
                 </View>
+                <TouchableOpacity
+                    style={styles.skip}
+                    onPress={() => onSkipPress()}>
+                    <Text style={styles.skip}>Skip</Text>
+                </TouchableOpacity>
             </KeyboardAwareScrollView>
         </View>
     )
