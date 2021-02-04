@@ -4,7 +4,7 @@ import { StyleSheet, Text, View, Dimensions } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { Button } from "react-native-paper";
 import USMap from "../components/USMap";
-// import SvgPanZoom, { SvgPanZoomElement } from "react-native-svg-pan-zoom";
+
 import ZoomView from "@dudigital/react-native-zoomable-view/src/ReactNativeZoomableView";
 
 export default function LegislativeHome({ navigation }) {
@@ -17,23 +17,18 @@ export default function LegislativeHome({ navigation }) {
         <Button>Bills</Button>
         <Button>Representatives</Button>
       </View>
-      {/*
-          Mess with viewStyle to fix centering
-           */}
-      <ZoomView style={styles.map}>
-        {/* <SvgPanZoom
-          canvasHeight={200}
-          canvasWidth={270}
-          initialZoom={1.2}
-          minScale={1.2}
-          maxScale={3}
-          viewStyle={{
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <USMap onPress={() => console.log("hi")} />
-        </SvgPanZoom> */}
+
+      <Text
+        style={{
+          backgroundColor: "violet",
+          width: "100%",
+          zIndex: 1,
+        }}
+      >
+        searchbarhere
+      </Text>
+
+      <ZoomView style={styles.map} maxZoom={1.75} minZoom={1}>
         <USMap />
       </ZoomView>
 
@@ -69,13 +64,15 @@ const styles = StyleSheet.create({
     alignItems: "center",
     zIndex: 1,
   },
-  //mess with map to fix centering
+  //width HAS to be defined like this for map to work
   map: {
-    paddingLeft: ".5%",
+    paddingLeft: "3%",
     flex: 1,
     width: Dimensions.get("window").width,
     height: Dimensions.get("window").height,
     zIndex: -1,
+    justifyContent: "center",
+    alignItems: "center",
   },
   branchbar: {
     flex: 1,
