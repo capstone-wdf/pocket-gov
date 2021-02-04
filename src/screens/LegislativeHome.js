@@ -15,15 +15,19 @@ export default function LegislativeHome({ navigation }) {
         title="Go to Single Member Screen"
         onPress={() => navigation.navigate("Single Member")}
       />
+      <Button
+        title="Go to Bills"
+        onPress={() => navigation.navigate('Bills')}
+      />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  // container: {
-  //   flex: 1,
-  //   backgroundColor: '#fff',
-  //   alignItems: 'center',
-  //   justifyContent: 'center',
-  // },
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
 });

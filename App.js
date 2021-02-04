@@ -8,8 +8,10 @@ import { createStackNavigator } from '@react-navigation/stack';
 import LegislativeHome from './src/screens/LegislativeHome';
 import CompareMembers from './src/screens/CompareMembers';
 import singleMember from "./src/screens/singelMember";
+import Bills from './src/screens/Bills';
 import { LoginScreen, HomeScreen, RegistrationScreen } from './src/screens'
 import { firebase } from './src/firebase/config'
+
 
 
 const Stack = createStackNavigator();
@@ -63,6 +65,7 @@ export default function App() {
           )}
           <Stack.Screen name="Legislative" component={LegislativeHome} />
           <Stack.Screen name="Compare" component={CompareMembers} />
+          <Stack.Screen name="Bills" component={Bills} />
           <Stack.Screen name="Single Member" component={singleMember} />
         </Stack.Navigator>
       </NavigationContainer>
