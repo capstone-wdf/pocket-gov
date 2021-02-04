@@ -31,26 +31,36 @@ async function getUpcomingBills(chamber) {
 }
 
 export default function Bills() {
-  const [recentBills, setRecentBills] = useState([]);
+  const [senateRecentBills, setSenateRecentBills] = useState([]);
+  const [houseRecentBills, setHouseRecentBills] = useState([]);
   const [upcomingBills, setUpcomingBills] = useState([]);
 
   const congress = '117';
-  const chamber = 'house';
   const type = 'introduced';
-  const callGetRecentBills = async () => {
-    let response = await getRecentBills(congress, chamber, type);
-    setRecentBills(response);
+  const callGetRecentBills = async (chamber) => {
+    if (chamber === 'house') {
+      let houseBills = await getRecentBills(congress, chamber, type);
+      setHouseRecentBills(houseBills);
+    }
+    if (chamber === 'senate') {
+      let senateBills = await getRecentBills(congress, chamber, type);
+      setSenateRecentBills(senateBills);
+    }
   };
 
   const callGetUpcomingBills = async () => {
-    let houseBills = await getUpcomingBills("house");
-    let senateBills = await getUpcomingBills("senate");
-    let upcomingBothChambers = [...senateBills, ...houseBills]
+    let houseBills = await getUpcomingBills('house');
+    let senateBills = await getUpcomingBills('senate');
+    let upcomingBothChambers = [...senateBills, ...houseBills];
     setUpcomingBills(upcomingBothChambers);
   };
 
-  if (!recentBills.length) {
-    callGetRecentBills();
+  if (!senateRecentBills.length) {
+    callGetRecentBills('senate');
+  }
+
+  if (!houseRecentBills.length) {
+    callGetRecentBills('house');
   }
 
   if (!upcomingBills.length) {
@@ -62,7 +72,13 @@ export default function Bills() {
   );
 
   const renderUpcomingBill = ({ item }) => (
-    <UpcomingBill bill_number={item.bill_number} description={item.description} chamber={item.chamber} scheduled_at={item.scheduled_at} legislative_day={item.legislative_day}/>
+    <UpcomingBill
+      bill_number={item.bill_number}
+      description={item.description}
+      chamber={item.chamber}
+      scheduled_at={item.scheduled_at}
+      legislative_day={item.legislative_day}
+    />
   );
 
   return (
@@ -76,11 +92,19 @@ export default function Bills() {
           renderItem={renderUpcomingBill}
           keyExtractor={(item) => item.bill_id}
         />
-        <Title>Recent Bills</Title>
+        <Title>Recently Introduced Bills in the Senate</Title>
         <FlatList
           horizontal
           showsHorizontalScrollIndicator={false}
-          data={recentBills}
+          data={senateRecentBills}
+          renderItem={renderSingleBill}
+          keyExtractor={(item) => item.bill_id}
+        />
+        <Title>Recently Introduced Bills in the House</Title>
+        <FlatList
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          data={houseRecentBills}
           renderItem={renderSingleBill}
           keyExtractor={(item) => item.bill_id}
         />

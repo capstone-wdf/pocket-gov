@@ -22,7 +22,7 @@ export default function UpcomingBill({
       <Card.Content>
         <Subheading>{bill_number}</Subheading>
         <Text>{chamber[0].toUpperCase() + chamber.slice(1)}</Text>
-        <Paragraph>{description}</Paragraph>
+        {description ? <Paragraph>{description}</Paragraph> : <Text>No description</Text>}
         <Text>{`Scheduled at: ${scheduledAt}`}</Text>
         <Text>{`Legislative day: ${legislativeDay}`}</Text>
       </Card.Content>
