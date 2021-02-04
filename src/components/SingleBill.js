@@ -16,7 +16,7 @@ export default function SingleBill({ title, number }) {
   return (
     <Card style={styles.card}>
       <Card.Content>
-        <Title>{number}</Title>
+        <Subheading>{number}</Subheading>
         <Paragraph>{title}</Paragraph>
       </Card.Content>
     </Card>
