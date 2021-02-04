@@ -7,7 +7,7 @@ import {
   StyleSheet,
   View,
 } from 'react-native';
-import { Avatar, Button, Menu, Text, Title } from 'react-native-paper';
+import { Avatar, Button, List, Menu, Text, Title } from 'react-native-paper';
 import axios from 'axios';
 import { config } from '../../secrets';
 import { VictoryPie, VictoryStack, VictoryBar } from 'victory-native';
@@ -38,6 +38,21 @@ async function compareTwoMembers(
   }
 }
 
+async function compareBillSponsorships(
+  firstmemberid,
+  secondmemberid,
+  congress,
+  chamber
+) {
+  const theUrl = `https://api.propublica.org/congress/v1/members/${firstmemberid}/bills/${secondmemberid}/${congress}/${chamber}.json`;
+  try {
+    const { data } = await axios.get(theUrl, config);
+    return data.results[0];
+  } catch (error) {
+    console.error(error);
+  }
+}
+
 export default function CompareMembers() {
   const [members, setMembers] = useState([]);
   const [member1, setMember1] = useState(null);
@@ -47,6 +62,7 @@ export default function CompareMembers() {
   const [agreeData, setAgreeData] = useState(null);
   const [switchView, setSwitchView] = useState(false);
   const [chamber, setChamber] = useState('senate');
+  const [sponsorships, setSponsorships] = useState(null);
 
   const openMenu1 = () => setVisible1(true);
   const closeMenu1 = () => setVisible1(false);
@@ -87,6 +103,7 @@ export default function CompareMembers() {
     apiCall();
   }
 
+  //compare voting records
   const getComparison = async (firstMemberId, secondMemberId) => {
     let compareTwoMemsData = await compareTwoMembers(
       firstMemberId,
@@ -95,6 +112,17 @@ export default function CompareMembers() {
       chamber
     );
     setAgreeData(compareTwoMemsData);
+  };
+
+  //compare bill sponsorships
+  const getSponsorships = async (firstMemberId, secondMemberId) => {
+    let compareSponsorshipsData = await compareBillSponsorships(
+      firstMemberId,
+      secondMemberId,
+      congress,
+      chamber
+    );
+    setSponsorships(compareSponsorshipsData);
   };
 
   return (
@@ -259,6 +287,18 @@ export default function CompareMembers() {
             </Button>
           </View>
         )}
+        <Button
+          onPress={() => {
+            getSponsorships(member1.id, member2.id);
+            console.log(sponsorships);
+          }}
+        >
+          compare bill sponsorships
+        </Button>
+        {sponsorships &&
+          sponsorships.bills.map((bill) => (
+            <Text key={bill.number}>{bill.title}</Text>
+          )) }
       </ScrollView>
     </SafeAreaView>
   );
@@ -267,7 +307,7 @@ export default function CompareMembers() {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: '#fff',
-    height: '100%'
+    height: '100%',
   },
   contentContainer: {
     backgroundColor: '#fff',
