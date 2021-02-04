@@ -1,25 +1,54 @@
 import { StatusBar } from "expo-status-bar";
 import React from "react";
-import { Button, StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, Dimensions } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
+import { Button } from "react-native-paper";
 import USMap from "../components/USMap";
+// import SvgPanZoom, { SvgPanZoomElement } from "react-native-svg-pan-zoom";
+import ZoomView from "@dudigital/react-native-zoomable-view/src/ReactNativeZoomableView";
 
 export default function LegislativeHome({ navigation }) {
   return (
     <View style={styles.container}>
-      <Text>Legislative Home</Text>
-      <View style={styles.map}>
-        <USMap onPress={() => console.log("hello")} />
+      <View style={styles.billsreps}>
+        {/*
+      Make swipable from left to right, bills to representatives?
+       */}
+        <Button>Bills</Button>
+        <Button>Representatives</Button>
+      </View>
+      {/*
+          Mess with viewStyle to fix centering
+           */}
+      <ZoomView style={styles.map}>
+        {/* <SvgPanZoom
+          canvasHeight={200}
+          canvasWidth={270}
+          initialZoom={1.2}
+          minScale={1.2}
+          maxScale={3}
+          viewStyle={{
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <USMap onPress={() => console.log("hi")} />
+        </SvgPanZoom> */}
+        <USMap />
+      </ZoomView>
+
+      <View style={styles.branchbar}>
+        <Button>Judicial</Button>
+        <Button>Executive</Button>
+        <Button>Legislative</Button>
       </View>
 
-      <Button
-        title="Go to Compare Members Screen"
-        onPress={() => navigation.navigate("Compare")}
-      />
-      <Button
-        title="Go to Single Member Screen"
-        onPress={() => navigation.navigate("Single Member")}
-      />
+      {/* <Button onPress={() => navigation.navigate("Compare")}>
+        "Go to Compare Members Screen"
+      </Button>
+      <Button onPress={() => navigation.navigate("Single Member")}>
+        "Go to Single Member Screen"
+      </Button> */}
     </View>
   );
 }
@@ -31,9 +60,28 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  map: {
-    flex: 1,
+  billsreps: {
+    flexDirection: "row",
+    backgroundColor: "#fff",
     width: "100%",
-    height: "100%",
+    height: "5%",
+    justifyContent: "space-around",
+    alignItems: "center",
+    zIndex: 1,
+  },
+  //mess with map to fix centering
+  map: {
+    paddingLeft: ".5%",
+    flex: 1,
+    width: Dimensions.get("window").width,
+    height: Dimensions.get("window").height,
+    zIndex: -1,
+  },
+  branchbar: {
+    flex: 1,
+    flexDirection: "row",
+    width: "100%",
+    backgroundColor: "#fff",
+    justifyContent: "space-around",
   },
 });
