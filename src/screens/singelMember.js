@@ -7,6 +7,7 @@ import {
   StyleSheet,
   Text,
   View,
+  Linking,
 } from "react-native";
 import { Avatar, Button, Menu } from "react-native-paper";
 import axios from "axios";
@@ -58,7 +59,7 @@ export default function CompareMembers() {
             {members.map((member) => {
               return (
                 <Menu.Item
-                  title={`${member.first_name} ${member.last_name} "${member.party}" `}
+                  title={`${member.first_name} ${member.last_name} "${member.party}"`}
                   key={member.id}
                   onPress={() => {
                     setMember1({
@@ -68,6 +69,9 @@ export default function CompareMembers() {
                       party: member.party,
                       last_updated: member.last_updated,
                       phone: member.phone,
+                      votes_against_party_pct: member.votes_against_party_pct,
+                      votes_with_party_pct: member.votes_with_party_pct,
+                      twitter_account: member.twitter_account,
                     });
                     closeMenu1();
                   }}
@@ -87,11 +91,35 @@ export default function CompareMembers() {
               />
             )}
             {member1 && (
-              <Text>{`${member1.first_name} ${member1.last_name}`}</Text>
+              <Text>{`${member1.first_name} ${member1.last_name} `}</Text>
             )}
             {member1 && <Text>{`Party: "${member1.party}"`}</Text>}
             {member1 && <Text>{`Last Updated: ${member1.last_updated} `}</Text>}
             {member1 && <Text>{`Phone number: ${member1.phone} `}</Text>}
+            {member1 && (
+              <Text>{`disagree: ${member1.votes_against_party_pct} `}</Text>
+            )}
+            {member1 && (
+              <Text>{`agree: ${member1.votes_with_party_pct} `}</Text>
+            )}
+
+            {member1 && (
+              <Text
+                style={styles.TextStyle}
+                onPress={() =>
+                  Linking.openURL(
+                    `https://twitter.com/${member1.twitter_account}`
+                  )
+                }
+              >
+                <Avatar.Image
+                  size={50}
+                  source={{
+                    uri: `https://logodownload.org/wp-content/uploads/2014/09/twitter-logo-1-1.png`,
+                  }}
+                />
+              </Text>
+            )}
           </View>
         </View>
       </ScrollView>
