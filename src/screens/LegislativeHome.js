@@ -10,6 +10,7 @@ import ZoomView from "@dudigital/react-native-zoomable-view/src/ReactNativeZooma
 export default function LegislativeHome({ navigation }) {
   return (
     <View style={styles.container}>
+
       <View style={styles.billsreps}>
         {/*
       Make swipable from left to right, bills to representatives?
@@ -38,12 +39,21 @@ export default function LegislativeHome({ navigation }) {
         <Button>Legislative</Button>
       </View>
 
-      {/* <Button onPress={() => navigation.navigate("Compare")}>
-        "Go to Compare Members Screen"
-      </Button>
-      <Button onPress={() => navigation.navigate("Single Member")}>
-        "Go to Single Member Screen"
-      </Button> */}
+     
+      <Text>Legislative Home</Text>
+      <Button
+        title="Go to Compare Members Screen"
+        onPress={() => navigation.navigate("Compare")}
+      />
+      <Button
+        title="Go to Single Member Screen"
+        onPress={() => navigation.navigate("Single Member")}
+      />
+      <Button
+        title="Go to Bills"
+        onPress={() => navigation.navigate('Bills')}
+      />
+
     </View>
   );
 }
@@ -51,6 +61,7 @@ export default function LegislativeHome({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+
     backgroundColor: "#fff",
     alignItems: "center",
     justifyContent: "center",
@@ -80,5 +91,6 @@ const styles = StyleSheet.create({
     width: "100%",
     backgroundColor: "#fff",
     justifyContent: "space-around",
+
   },
 });

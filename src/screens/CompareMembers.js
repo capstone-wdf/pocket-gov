@@ -5,13 +5,21 @@ import {
   FlatList,
   SafeAreaView,
   StyleSheet,
-  Text,
   View,
 } from 'react-native';
-import { Avatar, Button, Menu } from 'react-native-paper';
+import {
+  Avatar,
+  Button,
+  List,
+  Menu,
+  Text,
+  Title,
+  Subheading,
+} from 'react-native-paper';
 import axios from 'axios';
 import { config } from '../../secrets';
 import { VictoryPie, VictoryStack, VictoryBar } from 'victory-native';
+import SingleBill from '../components/SingleBill';
 
 async function getMembers(congress, chamber) {
   const theUrl = `https://api.propublica.org/congress/v1/${congress}/${chamber}/members.json`;
@@ -39,6 +47,21 @@ async function compareTwoMembers(
   }
 }
 
+async function compareBillSponsorships(
+  firstmemberid,
+  secondmemberid,
+  congress,
+  chamber
+) {
+  const theUrl = `https://api.propublica.org/congress/v1/members/${firstmemberid}/bills/${secondmemberid}/${congress}/${chamber}.json`;
+  try {
+    const { data } = await axios.get(theUrl, config);
+    return data.results[0];
+  } catch (error) {
+    console.error(error);
+  }
+}
+
 export default function CompareMembers() {
   const [members, setMembers] = useState([]);
   const [member1, setMember1] = useState(null);
@@ -48,6 +71,7 @@ export default function CompareMembers() {
   const [agreeData, setAgreeData] = useState(null);
   const [switchView, setSwitchView] = useState(false);
   const [chamber, setChamber] = useState('senate');
+  const [sponsorships, setSponsorships] = useState(null);
 
   const openMenu1 = () => setVisible1(true);
   const closeMenu1 = () => setVisible1(false);
@@ -61,6 +85,13 @@ export default function CompareMembers() {
     }
   }, [member1, member2]);
 
+  //useEffect for bill comparison API
+  useEffect(() => {
+    if (member1 && member2) {
+      getSponsorships(member1.id, member2.id);
+    }
+  }, [member1, member2]);
+
   //other stuff
   let congress = '117';
 
@@ -68,20 +99,30 @@ export default function CompareMembers() {
     let response = await getMembers(congress, chamber);
     setMembers(response);
   };
+
   if (!members.length) {
     apiCall();
   }
 
   //switch from senate to house
-  if (members.length < 105 && chamber === 'house') {
+  if (members.length < 105 && members.length > 0 && chamber === 'house') {
+    setMember1(null);
+    setMember2(null);
+    setMembers([]);
+    setSponsorships(null);
     apiCall();
   }
 
   //switch from house to senate
-  if (members.length > 105 && chamber === 'senate') {
+  if (members.length > 105 && members.length > 0 && chamber === 'senate') {
+    setMember1(null);
+    setMember2(null);
+    setMembers([]);
+    setSponsorships(null);
     apiCall();
   }
 
+  //compare voting records
   const getComparison = async (firstMemberId, secondMemberId) => {
     let compareTwoMemsData = await compareTwoMembers(
       firstMemberId,
@@ -92,30 +133,58 @@ export default function CompareMembers() {
     setAgreeData(compareTwoMemsData);
   };
 
+  //compare bill sponsorships
+  const getSponsorships = async (firstMemberId, secondMemberId) => {
+    let compareSponsorshipsData = await compareBillSponsorships(
+      firstMemberId,
+      secondMemberId,
+      congress,
+      chamber
+    );
+    setSponsorships(compareSponsorshipsData);
+  };
+
+  //Render SingleBill component
+  const renderItem = ({ item }) => (
+    <SingleBill title={item.title} number={item.number} />
+  );
+
   return (
-    <SafeAreaView>
+    <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.contentContainer}>
+        <Title>
+          {chamber === 'senate'
+            ? `Compare Two Senators`
+            : `Compare Two Representatives`}
+        </Title>
         <Button
           onPress={() => setChamber(chamber === 'senate' ? 'house' : 'senate')}
         >
-          {chamber}
+          switch chamber
         </Button>
-        <View style={styles.menu_container}>
+        <View style={styles.menuContainer}>
           <Menu
             visible={visible1}
             onDismiss={closeMenu1}
-            anchor={<Button onPress={openMenu1}>choose member 1</Button>}
+            anchor={
+              <Button onPress={openMenu1}>
+                {chamber === 'senate' ? '1st senator' : '1st representative'}
+              </Button>
+            }
           >
             {members.map((member) => {
               return (
                 <Menu.Item
-                  title={`${member.first_name} ${member.last_name}`}
+                  title={`${member.first_name} ${member.last_name} (${member.party})`}
                   key={member.id}
                   onPress={() => {
                     setMember1({
                       first_name: member.first_name,
                       last_name: member.last_name,
                       id: member.id,
+                      party: member.party,
+                      state: member.state,
+                      short_title: member.short_title,
                     });
                     closeMenu1();
                   }}
@@ -126,22 +195,28 @@ export default function CompareMembers() {
           <Menu
             visible={visible2}
             onDismiss={closeMenu2}
-            anchor={<Button onPress={openMenu2}>choose member 2</Button>}
+            anchor={
+              <Button onPress={openMenu2}>
+                {chamber === 'senate' ? '2nd senator' : '2nd representative'}
+              </Button>
+            }
           >
             {members &&
               members.map((member) => {
                 return (
                   <Menu.Item
-                    title={`${member.first_name} ${member.last_name}`}
+                    title={`${member.first_name} ${member.last_name} (${member.party})`}
                     key={member.id}
                     onPress={() => {
                       setMember2({
                         first_name: member.first_name,
                         last_name: member.last_name,
                         id: member.id,
+                        party: member.party,
+                        state: member.state,
+                        short_title: member.short_title,
                       });
                       closeMenu2();
-                      // getComparison(member1.id, member2.id);
                     }}
                   />
                 );
@@ -149,7 +224,7 @@ export default function CompareMembers() {
           </Menu>
         </View>
         <View style={styles.memberContainer}>
-          <View>
+          <View style={styles.member}>
             {member1 && member1.first_name && (
               <Avatar.Image
                 size={70}
@@ -159,11 +234,13 @@ export default function CompareMembers() {
               />
             )}
             {member1 && (
-              <Text>{`${member1.first_name} ${member1.last_name}`}</Text>
+              <Text
+                style={styles.text}
+              >{`${member1.first_name} ${member1.last_name} (${member1.party}), ${member1.state}`}</Text>
             )}
           </View>
-          <View>
-            {member2 && member2.first_name && (
+          <View style={styles.member}>
+            {member2 && (
               <Avatar.Image
                 size={70}
                 source={{
@@ -172,85 +249,127 @@ export default function CompareMembers() {
               />
             )}
             {member2 && (
-              <Text>{`${member2.first_name} ${member2.last_name}`}</Text>
+              <Text
+                style={styles.text}
+              >{`${member2.first_name} ${member2.last_name} (${member2.party}), ${member2.state}`}</Text>
             )}
           </View>
         </View>
-
-        {agreeData && (
+        {agreeData && member1 && member2 && (
           <View>
-            <Button onPress={() => setSwitchView(!switchView)}>
-              Switch Graph
-            </Button>
-
-            <Text>{`Agree percent: ${agreeData.agree_percent}`}</Text>
-            <Text>{`Common votes: ${agreeData.common_votes}`}</Text>
-            <Text>{`Disagree percent: ${agreeData.disagree_percent}`}</Text>
-            <Text>{`Disagree votes: ${agreeData.disagree_votes}`}</Text>
-
-            {switchView ? (
-              <VictoryStack
-                horizontal={true}
-                colorScale={['forestgreen', 'firebrick']}
-              >
-                <VictoryBar
+            <Subheading>Voting Records</Subheading>
+            <View style={styles.textContainer}>
+              <Text>{`${member1.short_title} ${member1.last_name} and ${member2.short_title} ${member2.last_name} agree ${agreeData.agree_percent}% of the time and have ${agreeData.common_votes} votes in common`}</Text>
+              {/* <Text>{`Agree percent: ${agreeData.agree_percent}`}</Text>
+              <Text>{`Common votes: ${agreeData.common_votes}`}</Text>
+              <Text>{`Disagree percent: ${agreeData.disagree_percent}`}</Text>
+              <Text>{`Disagree votes: ${agreeData.disagree_votes}`}</Text> */}
+            </View>
+            <View style={styles.graphContainer}>
+              {switchView ? (
+                <VictoryStack
+                  horizontal={true}
+                  colorScale={['forestgreen', 'firebrick']}
+                >
+                  <VictoryBar
+                    data={[
+                      {
+                        x: `Agree ${agreeData.agree_percent}%`,
+                        y: agreeData.agree_percent,
+                      },
+                    ]}
+                    barWidth={30}
+                  />
+                  <VictoryBar
+                    data={[
+                      {
+                        x: `Disagree ${agreeData.disagree_percent}%`,
+                        y: agreeData.disagree_percent,
+                      },
+                    ]}
+                    barWidth={30}
+                  />
+                </VictoryStack>
+              ) : (
+                <VictoryPie
+                  colorScale={['forestgreen', 'firebrick']}
                   data={[
                     {
-                      x: `Agree ${agreeData.agree_percent}%`,
+                      x: `${agreeData.agree_percent}%`,
                       y: agreeData.agree_percent,
                     },
-                  ]}
-                />
-                <VictoryBar
-                  data={[
                     {
-                      x: `Disagree ${agreeData.disagree_percent}%`,
+                      x: `${agreeData.disagree_percent}%`,
                       y: agreeData.disagree_percent,
                     },
                   ]}
+                  labelRadius={60}
                 />
-              </VictoryStack>
-            ) : (
-              <VictoryPie
-                colorScale={['forestgreen', 'firebrick']}
-                data={[
-                  {
-                    x: `Agree ${agreeData.agree_percent}%`,
-                    y: agreeData.agree_percent,
-                  },
-                  {
-                    x: `Disagree ${agreeData.disagree_percent}%`,
-                    y: agreeData.disagree_percent,
-                  },
-                ]}
-              />
-            )}
+              )}
+            </View>
+            <Button onPress={() => setSwitchView(!switchView)}>
+              Switch Graph
+            </Button>
           </View>
+        )}
+        {sponsorships && (
+          <View>
+            <Subheading>Bill Sponsorships</Subheading>
+            <Text
+              style={styles.bills}
+            >{`${member1.short_title} ${member1.last_name} and ${member2.short_title} ${member2.last_name} have co-sponsored ${sponsorships.common_bills} bills:`}</Text>
+          </View>
+        )}
+        {sponsorships && (
+          <FlatList
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            data={sponsorships.bills}
+            renderItem={renderItem}
+            keyExtractor={(item) => item.number}
+          />
         )}
       </ScrollView>
     </SafeAreaView>
   );
 }
 
+// {sponsorships &&
+//   // sponsorships.bills.map((bill) => (
+//   //   <Text key={bill.number}>{bill.title}</Text>
+//   ))}
 const styles = StyleSheet.create({
+  container: {
+    backgroundColor: '#fff',
+    height: '100%',
+  },
   contentContainer: {
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
   },
-  menu_container: {
-    // flex: 1,
+  menuContainer: {
     flexDirection: 'row',
-    // justifyContent: "space-around",
+    justifyContent: 'space-around',
+    width: '90%',
+  },
+  member: {
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   memberContainer: {
     flex: 1,
     flexDirection: 'row',
-    justifyContent: 'space-evenly',
+    justifyContent: 'space-around',
     width: '90%',
   },
-  dataContainer: {
-    marginHorizontal: 50,
-    paddingHorizontal: 10,
+  text: {
+    alignItems: 'center',
+    margin: 10,
   },
+  textContainer: {
+    alignItems: 'center',
+    margin: 10,
+  },
+  bills: {},
 });
