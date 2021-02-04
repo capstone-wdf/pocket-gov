@@ -99,6 +99,7 @@ export default function CompareMembers() {
     let response = await getMembers(congress, chamber);
     setMembers(response);
   };
+  
   if (!members.length) {
     apiCall();
   }

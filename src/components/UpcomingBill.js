@@ -8,12 +8,12 @@ import {
 } from 'react-native';
 import { Card, Paragraph, Text, Title, Subheading } from 'react-native-paper';
 
-export default function SingleBill({ title, number }) {
+export default function UpcomingBill({ bill_number, description }) {
   return (
     <Card style={styles.card}>
       <Card.Content>
-        <Subheading>{number}</Subheading>
-        <Paragraph>{title}</Paragraph>
+        <Subheading>{bill_number}</Subheading>
+        <Paragraph>{description}</Paragraph>
       </Card.Content>
     </Card>
   );
