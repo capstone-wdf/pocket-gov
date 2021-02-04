@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { Image, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { StyleSheet } from 'react-native';
+import { firebase } from '../firebase/config'
 
 const styles = StyleSheet.create({
     container: {
@@ -73,6 +74,7 @@ export default function RegistrationScreen({navigation}) {
     const onRegisterPress = () => {
     }
 
+    console.log("Firebase:", firebase)
     return (
         <View style={styles.container}>
             <KeyboardAwareScrollView
