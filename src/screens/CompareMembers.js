@@ -98,19 +98,27 @@ export default function CompareMembers() {
   };
 
   return (
-    <SafeAreaView>
+    <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.contentContainer}>
-  <Title>{chamber === 'senate' ? `Compare Two Senators' Voting Records` : `Compare Two Representatives' Voting Records`}</Title>
+        <Title>
+          {chamber === 'senate'
+            ? `Compare Two Senators' Voting Records`
+            : `Compare Two Representatives' Voting Records`}
+        </Title>
         <Button
           onPress={() => setChamber(chamber === 'senate' ? 'house' : 'senate')}
         >
-         switch chamber
+          switch chamber
         </Button>
         <View style={styles.menuContainer}>
           <Menu
             visible={visible1}
             onDismiss={closeMenu1}
-  anchor={<Button onPress={openMenu1}>{chamber === 'senate' ? '1st senator' : '1st representative'}</Button>}
+            anchor={
+              <Button onPress={openMenu1}>
+                {chamber === 'senate' ? '1st senator' : '1st representative'}
+              </Button>
+            }
           >
             {members.map((member) => {
               return (
@@ -135,7 +143,11 @@ export default function CompareMembers() {
           <Menu
             visible={visible2}
             onDismiss={closeMenu2}
-            anchor={<Button onPress={openMenu2}>{chamber === 'senate' ? '2nd senator' : '2nd representative'}</Button>}
+            anchor={
+              <Button onPress={openMenu2}>
+                {chamber === 'senate' ? '2nd senator' : '2nd representative'}
+              </Button>
+            }
           >
             {members &&
               members.map((member) => {
@@ -200,10 +212,6 @@ export default function CompareMembers() {
               <Text>{`Disagree percent: ${agreeData.disagree_percent}`}</Text>
               <Text>{`Disagree votes: ${agreeData.disagree_votes}`}</Text> */}
             </View>
-
-            <Button onPress={() => setSwitchView(!switchView)}>
-              Switch Graph
-            </Button>
             <View style={styles.graphContainer}>
               {switchView ? (
                 <VictoryStack
@@ -217,6 +225,7 @@ export default function CompareMembers() {
                         y: agreeData.agree_percent,
                       },
                     ]}
+                    barWidth={30}
                   />
                   <VictoryBar
                     data={[
@@ -225,6 +234,7 @@ export default function CompareMembers() {
                         y: agreeData.disagree_percent,
                       },
                     ]}
+                    barWidth={30}
                   />
                 </VictoryStack>
               ) : (
@@ -244,6 +254,9 @@ export default function CompareMembers() {
                 />
               )}
             </View>
+            <Button onPress={() => setSwitchView(!switchView)}>
+              Switch Graph
+            </Button>
           </View>
         )}
       </ScrollView>
@@ -252,6 +265,10 @@ export default function CompareMembers() {
 }
 
 const styles = StyleSheet.create({
+  container: {
+    backgroundColor: '#fff',
+    height: '100%'
+  },
   contentContainer: {
     backgroundColor: '#fff',
     alignItems: 'center',
@@ -259,6 +276,8 @@ const styles = StyleSheet.create({
   },
   menuContainer: {
     flexDirection: 'row',
+    justifyContent: 'space-around',
+    width: '90%',
   },
   member: {
     justifyContent: 'center',
@@ -270,17 +289,13 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
     width: '90%',
   },
-  dataContainer: {
-    marginHorizontal: 50,
-    paddingHorizontal: 10,
-  },
   text: {
     alignItems: 'center',
-    margin: 15,
+    margin: 10,
   },
   textContainer: {
     alignItems: 'center',
-    margin: 15,
+    margin: 10,
   },
   graphContainer: {},
 });
