@@ -108,6 +108,7 @@ export default function CompareMembers() {
     setMember1(null);
     setMember2(null);
     setMembers([]);
+    setSponsorships(null);
     apiCall();
   }
 
@@ -116,6 +117,7 @@ export default function CompareMembers() {
     setMember1(null);
     setMember2(null);
     setMembers([]);
+    setSponsorships(null);
     apiCall();
   }
 
@@ -142,7 +144,9 @@ export default function CompareMembers() {
   };
 
   //Render SingleBill component
-  const renderItem = ({ item }) => <SingleBill title={item.title} number={item.number} />;
+  const renderItem = ({ item }) => (
+    <SingleBill title={item.title} number={item.number} />
+  );
 
   return (
     <SafeAreaView style={styles.container}>
@@ -316,13 +320,12 @@ export default function CompareMembers() {
           </View>
         )}
         {sponsorships && (
-            <FlatList
-              horizontal
-              data={sponsorships.bills}
-              renderItem={renderItem}
-              keyExtractor={(item) => item.number}
-            />
-
+          <FlatList
+            horizontal
+            data={sponsorships.bills}
+            renderItem={renderItem}
+            keyExtractor={(item) => item.number}
+          />
         )}
       </ScrollView>
     </SafeAreaView>

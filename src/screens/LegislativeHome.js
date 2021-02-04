@@ -11,15 +11,19 @@ export default function LegislativeHome({ navigation }) {
         title="Go to Compare Members Screen"
         onPress={() => navigation.navigate('Compare')}
       />
+      <Button
+        title="Go to Bills"
+        onPress={() => navigation.navigate('Bills')}
+      />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  // container: {
-  //   flex: 1,
-  //   backgroundColor: '#fff',
-  //   alignItems: 'center',
-  //   justifyContent: 'center',
-  // },
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
 });
