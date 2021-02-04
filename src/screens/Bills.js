@@ -43,8 +43,10 @@ export default function Bills() {
   };
 
   const callGetUpcomingBills = async () => {
-    let response = await getUpcomingBills(chamber);
-    setUpcomingBills(response);
+    let houseBills = await getUpcomingBills("house");
+    let senateBills = await getUpcomingBills("senate");
+    let upcomingBothChambers = [...senateBills, ...houseBills]
+    setUpcomingBills(upcomingBothChambers);
   };
 
   if (!recentBills.length) {
@@ -60,7 +62,7 @@ export default function Bills() {
   );
 
   const renderUpcomingBill = ({ item }) => (
-    <UpcomingBill bill_number={item.bill_number} description={item.description} />
+    <UpcomingBill bill_number={item.bill_number} description={item.description} chamber={item.chamber} scheduled_at={item.scheduled_at} legislative_day={item.legislative_day}/>
   );
 
   return (
@@ -69,6 +71,7 @@ export default function Bills() {
         <Title>Upcoming Bills</Title>
         <FlatList
           horizontal
+          showsHorizontalScrollIndicator={false}
           data={upcomingBills}
           renderItem={renderUpcomingBill}
           keyExtractor={(item) => item.bill_id}
@@ -76,6 +79,7 @@ export default function Bills() {
         <Title>Recent Bills</Title>
         <FlatList
           horizontal
+          showsHorizontalScrollIndicator={false}
           data={recentBills}
           renderItem={renderSingleBill}
           keyExtractor={(item) => item.bill_id}
