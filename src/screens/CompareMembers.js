@@ -5,10 +5,9 @@ import {
   FlatList,
   SafeAreaView,
   StyleSheet,
-  Text,
   View,
 } from 'react-native';
-import { Avatar, Button, Menu, Title } from 'react-native-paper';
+import { Avatar, Button, Menu, Text, Title } from 'react-native-paper';
 import axios from 'axios';
 import { config } from '../../secrets';
 import { VictoryPie, VictoryStack, VictoryBar } from 'victory-native';
@@ -101,19 +100,17 @@ export default function CompareMembers() {
   return (
     <SafeAreaView>
       <ScrollView contentContainerStyle={styles.contentContainer}>
-        <Text style={styles.text}>
-          Compare two members' voting history in the Senate or House
-        </Text>
+  <Title>{chamber === 'senate' ? `Compare Two Senators' Voting Records` : `Compare Two Representatives' Voting Records`}</Title>
         <Button
           onPress={() => setChamber(chamber === 'senate' ? 'house' : 'senate')}
         >
-          {chamber}
+         switch chamber
         </Button>
         <View style={styles.menuContainer}>
           <Menu
             visible={visible1}
             onDismiss={closeMenu1}
-            anchor={<Button onPress={openMenu1}>choose member 1</Button>}
+  anchor={<Button onPress={openMenu1}>{chamber === 'senate' ? '1st senator' : '1st representative'}</Button>}
           >
             {members.map((member) => {
               return (
@@ -138,7 +135,7 @@ export default function CompareMembers() {
           <Menu
             visible={visible2}
             onDismiss={closeMenu2}
-            anchor={<Button onPress={openMenu2}>choose member 2</Button>}
+            anchor={<Button onPress={openMenu2}>{chamber === 'senate' ? '2nd senator' : '2nd representative'}</Button>}
           >
             {members &&
               members.map((member) => {
@@ -194,15 +191,14 @@ export default function CompareMembers() {
             )}
           </View>
         </View>
-
         {agreeData && member1 && member2 && (
           <View>
             <View style={styles.textContainer}>
-              <Text>{` ${member1.last_name} and ${member2.short_title} ${member2.last_name} agree ${agreeData.agree_percent} percent of the time and have ${agreeData.common_votes} votes in common`}</Text>
-              <Text>{`Agree percent: ${agreeData.agree_percent}`}</Text>
+              <Text>{`${member1.short_title} ${member1.last_name} and ${member2.short_title} ${member2.last_name} agree ${agreeData.agree_percent}% of the time and have ${agreeData.common_votes} votes in common`}</Text>
+              {/* <Text>{`Agree percent: ${agreeData.agree_percent}`}</Text>
               <Text>{`Common votes: ${agreeData.common_votes}`}</Text>
               <Text>{`Disagree percent: ${agreeData.disagree_percent}`}</Text>
-              <Text>{`Disagree votes: ${agreeData.disagree_votes}`}</Text>
+              <Text>{`Disagree votes: ${agreeData.disagree_votes}`}</Text> */}
             </View>
 
             <Button onPress={() => setSwitchView(!switchView)}>
