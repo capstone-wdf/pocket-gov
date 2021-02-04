@@ -73,12 +73,18 @@ export default function CompareMembers() {
   }
 
   //switch from senate to house
-  if (members.length < 105 && chamber === 'house') {
+  if (members.length < 105 && members.length > 0 && chamber === 'house') {
+    setMember1(null);
+    setMember2(null);
+    setMembers([]);
     apiCall();
   }
 
   //switch from house to senate
-  if (members.length > 105 && chamber === 'senate') {
+  if (members.length > 105 && members.length > 0 && chamber === 'senate') {
+    setMember1(null);
+    setMember2(null);
+    setMembers([]);
     apiCall();
   }
 
@@ -173,7 +179,7 @@ export default function CompareMembers() {
             )}
           </View>
           <View style={styles.member}>
-            {member2 && member2.first_name && (
+            {member2 && (
               <Avatar.Image
                 size={70}
                 source={{
@@ -189,10 +195,10 @@ export default function CompareMembers() {
           </View>
         </View>
 
-        {agreeData && (
+        {agreeData && member1 && member2 && (
           <View>
             <View style={styles.textContainer}>
-              <Text>{`${member1.short_title} ${member1.last_name} and ${member2.short_title} ${member2.last_name} agree ${agreeData.agree_percent} percent of the time and have ${agreeData.common_votes} votes in common`}</Text>
+              <Text>{` ${member1.last_name} and ${member2.short_title} ${member2.last_name} agree ${agreeData.agree_percent} percent of the time and have ${agreeData.common_votes} votes in common`}</Text>
               <Text>{`Agree percent: ${agreeData.agree_percent}`}</Text>
               <Text>{`Common votes: ${agreeData.common_votes}`}</Text>
               <Text>{`Disagree percent: ${agreeData.disagree_percent}`}</Text>
@@ -256,9 +262,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   menuContainer: {
-    // flex: 1,
     flexDirection: 'row',
-    // justifyContent: "space-around",
   },
   member: {
     justifyContent: 'center',
