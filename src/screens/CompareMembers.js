@@ -7,10 +7,19 @@ import {
   StyleSheet,
   View,
 } from 'react-native';
-import { Avatar, Button, List, Menu, Text, Title } from 'react-native-paper';
+import {
+  Avatar,
+  Button,
+  List,
+  Menu,
+  Text,
+  Title,
+  Subheading,
+} from 'react-native-paper';
 import axios from 'axios';
 import { config } from '../../secrets';
 import { VictoryPie, VictoryStack, VictoryBar } from 'victory-native';
+import SingleBill from '../components/SingleBill';
 
 async function getMembers(congress, chamber) {
   const theUrl = `https://api.propublica.org/congress/v1/${congress}/${chamber}/members.json`;
@@ -76,6 +85,13 @@ export default function CompareMembers() {
     }
   }, [member1, member2]);
 
+  //useEffect for bill comparison API
+  useEffect(() => {
+    if (member1 && member2) {
+      getSponsorships(member1.id, member2.id);
+    }
+  }, [member1, member2]);
+
   //other stuff
   let congress = '117';
 
@@ -125,13 +141,16 @@ export default function CompareMembers() {
     setSponsorships(compareSponsorshipsData);
   };
 
+  //Render SingleBill component
+  const renderItem = ({ item }) => <SingleBill title={item.title} number={item.number} />;
+
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.contentContainer}>
         <Title>
           {chamber === 'senate'
-            ? `Compare Two Senators' Voting Records`
-            : `Compare Two Representatives' Voting Records`}
+            ? `Compare Two Senators`
+            : `Compare Two Representatives`}
         </Title>
         <Button
           onPress={() => setChamber(chamber === 'senate' ? 'house' : 'senate')}
@@ -233,6 +252,7 @@ export default function CompareMembers() {
         </View>
         {agreeData && member1 && member2 && (
           <View>
+            <Subheading>Voting Records</Subheading>
             <View style={styles.textContainer}>
               <Text>{`${member1.short_title} ${member1.last_name} and ${member2.short_title} ${member2.last_name} agree ${agreeData.agree_percent}% of the time and have ${agreeData.common_votes} votes in common`}</Text>
               {/* <Text>{`Agree percent: ${agreeData.agree_percent}`}</Text>
@@ -287,23 +307,32 @@ export default function CompareMembers() {
             </Button>
           </View>
         )}
-        <Button
-          onPress={() => {
-            getSponsorships(member1.id, member2.id);
-            console.log(sponsorships);
-          }}
-        >
-          compare bill sponsorships
-        </Button>
-        {sponsorships &&
-          sponsorships.bills.map((bill) => (
-            <Text key={bill.number}>{bill.title}</Text>
-          )) }
+        {sponsorships && (
+          <View>
+            <Subheading>Bill Sponsorships</Subheading>
+            <Text
+              style={styles.bills}
+            >{`${member1.short_title} ${member1.last_name} and ${member2.short_title} ${member2.last_name} have co-sponsored ${sponsorships.common_bills} bills:`}</Text>
+          </View>
+        )}
+        {sponsorships && (
+            <FlatList
+              horizontal
+              data={sponsorships.bills}
+              renderItem={renderItem}
+              keyExtractor={(item) => item.number}
+            />
+
+        )}
       </ScrollView>
     </SafeAreaView>
   );
 }
 
+// {sponsorships &&
+//   // sponsorships.bills.map((bill) => (
+//   //   <Text key={bill.number}>{bill.title}</Text>
+//   ))}
 const styles = StyleSheet.create({
   container: {
     backgroundColor: '#fff',
@@ -337,5 +366,5 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     margin: 10,
   },
-  graphContainer: {},
+  bills: {},
 });
