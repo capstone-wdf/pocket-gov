@@ -1,13 +1,36 @@
 import { StatusBar } from "expo-status-bar";
-import React from "react";
-import { StyleSheet, Text, View, Dimensions } from "react-native";
+import React, { useState } from "react";
+import { StyleSheet, View, Dimensions } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
-import { Button } from "react-native-paper";
+import { Button, Searchbar, Text } from "react-native-paper";
 import USMap from "../components/USMap";
+import { gCloudKey } from "../../secrets";
+import axios from "axios";
 
 import ZoomView from "@dudigital/react-native-zoomable-view/src/ReactNativeZoomableView";
 
 export default function LegislativeHome({ navigation }) {
+  const [search, setSearch] = useState("");
+  console.log(search);
+
+  const handleSearch = async () => {
+    try {
+      const query = {
+        key: gCloudKey,
+        inputtype: "textquery",
+        input: search,
+      };
+      const result = await axios.get(
+        "https://maps.googleapis.com/maps/api/place/findplacefromtext/json",
+        { params: query }
+      );
+
+      console.log(result);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.billsreps}>
@@ -18,15 +41,12 @@ export default function LegislativeHome({ navigation }) {
         <Button>Representatives</Button>
       </View>
 
-      <Text
-        style={{
-          backgroundColor: "violet",
-          width: "100%",
-          zIndex: 1,
-        }}
-      >
-        searchbarhere
-      </Text>
+      <Searchbar
+        placeholder="Enter location"
+        value={search}
+        onChangeText={(query) => setSearch(query)}
+        onSubmitEditing={handleSearch}
+      />
 
       <ZoomView style={styles.map} maxZoom={2} minZoom={1}>
         <USMap navigation={navigation} />
