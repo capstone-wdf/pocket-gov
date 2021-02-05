@@ -8,6 +8,7 @@ import {
   Text,
   Title,
   Subheading,
+  Paragraph,
 } from 'react-native-paper';
 import axios from 'axios';
 import { config } from '../../secrets';
@@ -31,18 +32,39 @@ export default function SpecificBill({ route }) {
   const callGetSpecificBill = async () => {
     let specificBill = await getSpecificBill(congress, bill_slug);
     setBill(specificBill);
-    console.log('specific bill', specificBill.bill);
   };
 
-  if (!bill) {
-    callGetSpecificBill();
-  }
+  useEffect(() => {
+    if (!bill) {
+      callGetSpecificBill();
+    }
+  }, [bill]);
 
   return (
     <ScrollView style={styles.container}>
-      <Title>{bill.bill}</Title>
-  <Subheading>{bill.title}</Subheading>
-  <Text>{`Sponsored by ${bill.sponsor_title} ${bill.sponsor}`}</Text>
+      {bill && (
+        <View>
+          <Title>{`${bill.number}`}</Title>
+          <Subheading>{bill.title}</Subheading>
+          <Text>{`Sponsored by ${bill.sponsor_title} ${bill.sponsor} (${bill.sponsor_party}) ${bill.sponsor_state} and ${bill.cosponsors} cosponsor(s)`}</Text>
+          <Text>{`Committees: ${bill.committees}`}</Text>
+          <Text>{`The latest major action on this bill: ${bill.latest_major_action}`}</Text>
+          <Text>{`The latest major action date: ${bill.latest_major_action_date}`}</Text>
+          {bill.active ? (
+            <Text>Bill status: active</Text>
+          ) : (
+            <Text>Bill status: inactive</Text>
+          )}
+          {bill.house_passage && (
+            <Text>{`Passed in the House on ${bill.house_passage}`}</Text>
+          )}
+          {bill.senate && (
+            <Text>{`Passed in the Senate on ${bill.senate}`}</Text>
+          )}
+          {bill.enacted && <Text>{`Enacted on ${bill.enacted}`}</Text>}
+          {bill.vetoed && <Text>{`Vetoed on ${bill.vetoed}`}</Text>}
+        </View>
+      )}
     </ScrollView>
   );
 }

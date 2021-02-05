@@ -121,21 +121,33 @@ export default function Bills({ navigation }) {
   }, [searchQuery]);
 
   const renderSingleBill = ({ item }) => (
-    <TouchableOpacity onPress={()=>{navigation.navigate('Specific Bill', {
-      bill_slug: item.bill_slug
-    })}}>
+    <TouchableOpacity
+      onPress={() => {
+        navigation.navigate('Specific Bill', {
+          bill_slug: item.bill_slug,
+        });
+      }}
+    >
       <SingleBill title={item.title} number={item.number} />
     </TouchableOpacity>
   );
 
   const renderUpcomingBill = ({ item }) => (
-    <UpcomingBill
-      bill_number={item.bill_number}
-      description={item.description}
-      chamber={item.chamber}
-      scheduled_at={item.scheduled_at}
-      legislative_day={item.legislative_day}
-    />
+    <TouchableOpacity
+      onPress={() => {
+        navigation.navigate('Specific Bill', {
+          bill_slug: item.bill_slug,
+        });
+      }}
+    >
+      <UpcomingBill
+        bill_number={item.bill_number}
+        description={item.description}
+        chamber={item.chamber}
+        scheduled_at={item.scheduled_at}
+        legislative_day={item.legislative_day}
+      />
+    </TouchableOpacity>
   );
 
   return (
