@@ -37,6 +37,17 @@ async function getUpcomingBills(chamber) {
   }
 }
 
+async function searchBills(query) {
+  const theUrl = `https://api.propublica.org/congress/v1/bills/search.json?query=${query}`;
+  try {
+    const { data } = await axios.get(theUrl, config);
+    let result = await data.results[0].bills;
+    return result;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
 export default function Bills() {
   const [senateRecentBills, setSenateRecentBills] = useState([]);
   const [houseRecentBills, setHouseRecentBills] = useState([]);
@@ -67,6 +78,15 @@ export default function Bills() {
   //   useEffect(() => {
   //     getRecentBills(congress, chamber, type);
   // }, [type]);
+
+  const callSearchBills = async () => {
+    let searchResults = await searchBills(searchQuery);
+    console.log(searchResults)
+  }
+
+  useEffect(() =>  {
+    callSearchBills()
+  }, [searchQuery]);
 
   const callGetUpcomingBills = async () => {
     let houseBills = await getUpcomingBills('house');
