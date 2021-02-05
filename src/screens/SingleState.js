@@ -7,7 +7,7 @@ import ZoomView from "@dudigital/react-native-zoomable-view/src/ReactNativeZooma
 
 export default function SingleState({ route }) {
   const currentStatePath = individualStates[route.params.state];
-
+  console.log(route.params.state);
   return (
     <View style={styles.container}>
       <View style={styles.map}>{currentStatePath}</View>
@@ -25,7 +25,6 @@ export default function SingleState({ route }) {
 
 const styles = StyleSheet.create({
   container: {
-    // paddingTop: "5%",
     flex: 1,
     backgroundColor: "#fff",
     alignItems: "center",
@@ -39,7 +38,8 @@ const styles = StyleSheet.create({
     zIndex: -1,
     justifyContent: "center",
     alignItems: "center",
-    // backgroundColor: "violet",
+    backgroundColor: "violet",
+    padding: "3%",
   },
   reps: {
     flex: 1,

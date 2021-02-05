@@ -28,7 +28,7 @@ export default function LegislativeHome({ navigation }) {
         searchbarhere
       </Text>
 
-      <ZoomView style={styles.map} maxZoom={1.75} minZoom={1}>
+      <ZoomView style={styles.map} maxZoom={2} minZoom={1}>
         <USMap navigation={navigation} />
       </ZoomView>
 
