@@ -5,11 +5,10 @@ import {
   FlatList,
   SafeAreaView,
   StyleSheet,
-  Text,
   View,
   Linking,
 } from "react-native";
-import { Avatar, Button, Menu } from "react-native-paper";
+import { Avatar, Button, Menu, Text } from "react-native-paper";
 import axios from "axios";
 import { config } from "../../secrets";
 import { VictoryPie, VictoryStack, VictoryBar } from "victory-native";
@@ -72,6 +71,10 @@ export default function CompareMembers() {
                       votes_against_party_pct: member.votes_against_party_pct,
                       votes_with_party_pct: member.votes_with_party_pct,
                       twitter_account: member.twitter_account,
+                      facebook_account: member.facebook_account,
+                      youtube_account: member.youtube_account,
+                      url: member.url,
+                      contact_form: member.contact_form,
                     });
                     closeMenu1();
                   }}
@@ -104,24 +107,21 @@ export default function CompareMembers() {
             )}
 
             {member1 && (
-              <Text
-                style={styles.TextStyle}
+              <Avatar.Image
+                size={50}
+                source={{
+                  uri: `https://logodownload.org/wp-content/uploads/2014/09/twitter-logo-1-1.png`,
+                }}
                 onPress={() =>
                   Linking.openURL(
                     `https://twitter.com/${member1.twitter_account}`
                   )
                 }
-              >
-                <Avatar.Image
-                  size={50}
-                  source={{
-                    uri: `https://logodownload.org/wp-content/uploads/2014/09/twitter-logo-1-1.png`,
-                  }}
-                />
-              </Text>
+              />
             )}
           </View>
         </View>
+        <Button>Follow</Button>
       </ScrollView>
     </SafeAreaView>
   );

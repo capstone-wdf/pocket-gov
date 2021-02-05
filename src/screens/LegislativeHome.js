@@ -58,19 +58,15 @@ export default function LegislativeHome({ navigation }) {
         <Button>Legislative</Button>
       </View>
 
-      <Text>Legislative Home</Text>
-      <Button
-        title="Go to Compare Members Screen"
-        onPress={() => navigation.navigate("Compare")}
-      />
-      <Button
-        title="Go to Single Member Screen"
-        onPress={() => navigation.navigate("Single Member")}
-      />
-      <Button
-        title="Go to Bills"
-        onPress={() => navigation.navigate("Bills")}
-      />
+
+      <Button onPress={() => navigation.navigate("Compare")}>
+        Go to Compare Members Screen
+      </Button>
+      <Button onPress={() => navigation.navigate("Single Member")}>
+        Go to Single Member Screen
+      </Button>
+      <Button onPress={() => navigation.navigate("Bills")}>Go to Bills</Button>
+
     </View>
   );
 }
