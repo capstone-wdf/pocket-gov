@@ -53,6 +53,7 @@ export default function Bills() {
   const [houseRecentBills, setHouseRecentBills] = useState([]);
   const [upcomingBills, setUpcomingBills] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
+  const [searchResults, setSearchResults] = useState([]);
   const [visible, setVisible] = useState(false);
   const [type, setType] = useState('introduced');
 
@@ -79,15 +80,6 @@ export default function Bills() {
   //     getRecentBills(congress, chamber, type);
   // }, [type]);
 
-  const callSearchBills = async () => {
-    let searchResults = await searchBills(searchQuery);
-    console.log(searchResults)
-  }
-
-  useEffect(() =>  {
-    callSearchBills()
-  }, [searchQuery]);
-
   const callGetUpcomingBills = async () => {
     let houseBills = await getUpcomingBills('house');
     let senateBills = await getUpcomingBills('senate');
@@ -106,6 +98,16 @@ export default function Bills() {
   if (!upcomingBills.length) {
     callGetUpcomingBills();
   }
+
+  const callSearchBills = async () => {
+    let result = await searchBills(searchQuery);
+    setSearchResults(result);
+    console.log(searchResults);
+  };
+
+  useEffect(() => {
+    callSearchBills();
+  }, [searchQuery]);
 
   const renderSingleBill = ({ item }) => (
     <SingleBill title={item.title} number={item.number} />
@@ -128,6 +130,18 @@ export default function Bills() {
         onChangeText={onChangeSearch}
         value={searchQuery}
       />
+      {searchResults &&
+      <View style={styles.billsContainer}>
+        <Title>Results</Title>
+        <FlatList
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          data={searchResults}
+          renderItem={renderSingleBill}
+          keyExtractor={(item) => item.bill_id}
+        />
+        </View>
+        }
       <View style={styles.billsContainer}>
         <Title>Upcoming Bills</Title>
         <FlatList
