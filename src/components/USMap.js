@@ -13,7 +13,11 @@ function SvgComponent(props) {
       {...props}
     >
       <Defs></Defs>
-      <G className="prefix__state" fill="#D0D0D0">
+      <G
+        className="prefix__state"
+        fill="#D0D0D0"
+        // onPress={(event) => console.log(event.target.value)}
+      >
         <Path
           className="prefix__al"
           d="M643 467.4l.4-7.3-.9-1.2-1.7-.7-2.5-2.8.5-2.9 48.8-5.1-.7-2.2-1.5-1.5-.5-1.4.6-6.3-2.4-5.7.5-2.6.3-3.7 2.2-3.8-.2-1.1-1.7-1v-3.2l-1.8-1.9-2.9-6.1-12.9-45.8-45.7 4 1.3 2-1.3 67 4.4 33.2.9-.5 1.3.1.6.4.8-.1 2-3.8v-2.3l1.1-1.1 1.4.5 3.4 6.4v.9l-3.3 2.2 3.5-.4 4.9-1.6z"
