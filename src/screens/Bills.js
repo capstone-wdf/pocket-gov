@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useState, useEffect } from 'react';
-import { FlatList, StyleSheet, View } from 'react-native';
+import { FlatList, ScrollView, StyleSheet, View } from 'react-native';
 import {
   Button,
   Menu,
@@ -67,16 +67,19 @@ export default function Bills() {
     if (chamber === 'house') {
       let houseBills = await getRecentBills(congress, chamber, type);
       setHouseRecentBills(houseBills);
+      console.log('house', type);
     }
     if (chamber === 'senate') {
       let senateBills = await getRecentBills(congress, chamber, type);
       setSenateRecentBills(senateBills);
+      console.log('senate', type);
     }
   };
 
   // effect hook for changing type of recent bill
   //TO DO:
   //   useEffect(() => {
+  //     let chamber = "house"
   //     getRecentBills(congress, chamber, type);
   // }, [type]);
 
@@ -102,7 +105,10 @@ export default function Bills() {
   const callSearchBills = async () => {
     let result = await searchBills(searchQuery);
     setSearchResults(result);
-    console.log(searchResults);
+    console.log(searchQuery);
+    if (!searchQuery) {
+      setSearchResults([]);
+    }
   };
 
   useEffect(() => {
@@ -124,24 +130,24 @@ export default function Bills() {
   );
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <Searchbar
         placeholder="Search Bills"
         onChangeText={onChangeSearch}
         value={searchQuery}
       />
-      {searchResults &&
-      <View style={styles.billsContainer}>
-        <Title>Results</Title>
-        <FlatList
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          data={searchResults}
-          renderItem={renderSingleBill}
-          keyExtractor={(item) => item.bill_id}
-        />
+      {searchResults.length > 0 && (
+        <View style={styles.billsContainer}>
+          <Title>Results</Title>
+          <FlatList
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            data={searchResults}
+            renderItem={renderSingleBill}
+            keyExtractor={(item) => item.bill_id}
+          />
         </View>
-        }
+      )}
       <View style={styles.billsContainer}>
         <Title>Upcoming Bills</Title>
         <FlatList
@@ -159,36 +165,42 @@ export default function Bills() {
           <Menu.Item
             onPress={() => {
               setType('introduced');
+              console.log(type)
             }}
             title="Introduced"
           />
           <Menu.Item
             onPress={() => {
               setType('updated');
+              console.log(type)
             }}
             title="Updated"
           />
           <Menu.Item
             onPress={() => {
               setType('active');
+              console.log(type)
             }}
             title="Active"
           />
           <Menu.Item
             onPress={() => {
               setType('passed');
+              console.log(type)
             }}
             title="Passed"
           />
           <Menu.Item
             onPress={() => {
               setType('enacted');
+              console.log(type)
             }}
             title="Enacted"
           />
           <Menu.Item
             onPress={() => {
               setType('vetoed');
+              console.log(type)
             }}
             title="Vetoed"
           />
@@ -210,7 +222,7 @@ export default function Bills() {
           keyExtractor={(item) => item.bill_id}
         />
       </View>
-    </View>
+    </ScrollView>
   );
 }
 
