@@ -1,8 +1,8 @@
 import { StatusBar } from "expo-status-bar";
 import React from "react";
-import { StyleSheet, Text, View, Dimensions } from "react-native";
+import { StyleSheet, View, Dimensions } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
-import { Button } from "react-native-paper";
+import { Button, Text } from "react-native-paper";
 import USMap from "../components/USMap";
 
 import ZoomView from "@dudigital/react-native-zoomable-view/src/ReactNativeZoomableView";
@@ -10,7 +10,6 @@ import ZoomView from "@dudigital/react-native-zoomable-view/src/ReactNativeZooma
 export default function LegislativeHome({ navigation }) {
   return (
     <View style={styles.container}>
-
       <View style={styles.billsreps}>
         {/*
       Make swipable from left to right, bills to representatives?
@@ -39,21 +38,13 @@ export default function LegislativeHome({ navigation }) {
         <Button>Legislative</Button>
       </View>
 
-     
-      <Text>Legislative Home</Text>
-      <Button
-        title="Go to Compare Members Screen"
-        onPress={() => navigation.navigate("Compare")}
-      />
-      <Button
-        title="Go to Single Member Screen"
-        onPress={() => navigation.navigate("Single Member")}
-      />
-      <Button
-        title="Go to Bills"
-        onPress={() => navigation.navigate('Bills')}
-      />
-
+      <Button onPress={() => navigation.navigate("Compare")}>
+        Go to Compare Members Screen
+      </Button>
+      <Button onPress={() => navigation.navigate("Single Member")}>
+        Go to Single Member Screen
+      </Button>
+      <Button onPress={() => navigation.navigate("Bills")}>Go to Bills</Button>
     </View>
   );
 }
@@ -91,6 +82,5 @@ const styles = StyleSheet.create({
     width: "100%",
     backgroundColor: "#fff",
     justifyContent: "space-around",
-
   },
 });
