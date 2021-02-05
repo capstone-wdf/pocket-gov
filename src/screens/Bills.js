@@ -1,6 +1,12 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useState, useEffect } from 'react';
-import { FlatList, ScrollView, StyleSheet, View } from 'react-native';
+import {
+  FlatList,
+  ScrollView,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import {
   Button,
   Menu,
@@ -48,7 +54,7 @@ async function searchBills(query) {
   }
 }
 
-export default function Bills() {
+export default function Bills({ navigation }) {
   const [senateRecentBills, setSenateRecentBills] = useState([]);
   const [houseRecentBills, setHouseRecentBills] = useState([]);
   const [upcomingBills, setUpcomingBills] = useState([]);
@@ -105,7 +111,6 @@ export default function Bills() {
   const callSearchBills = async () => {
     let result = await searchBills(searchQuery);
     setSearchResults(result);
-    console.log(searchQuery);
     if (!searchQuery) {
       setSearchResults([]);
     }
@@ -116,7 +121,11 @@ export default function Bills() {
   }, [searchQuery]);
 
   const renderSingleBill = ({ item }) => (
-    <SingleBill title={item.title} number={item.number} />
+    <TouchableOpacity onPress={()=>{navigation.navigate('Specific Bill', {
+      bill_slug: item.bill_slug
+    })}}>
+      <SingleBill title={item.title} number={item.number} />
+    </TouchableOpacity>
   );
 
   const renderUpcomingBill = ({ item }) => (
@@ -165,42 +174,42 @@ export default function Bills() {
           <Menu.Item
             onPress={() => {
               setType('introduced');
-              console.log(type)
+              console.log(type);
             }}
             title="Introduced"
           />
           <Menu.Item
             onPress={() => {
               setType('updated');
-              console.log(type)
+              console.log(type);
             }}
             title="Updated"
           />
           <Menu.Item
             onPress={() => {
               setType('active');
-              console.log(type)
+              console.log(type);
             }}
             title="Active"
           />
           <Menu.Item
             onPress={() => {
               setType('passed');
-              console.log(type)
+              console.log(type);
             }}
             title="Passed"
           />
           <Menu.Item
             onPress={() => {
               setType('enacted');
-              console.log(type)
+              console.log(type);
             }}
             title="Enacted"
           />
           <Menu.Item
             onPress={() => {
               setType('vetoed');
-              console.log(type)
+              console.log(type);
             }}
             title="Vetoed"
           />
