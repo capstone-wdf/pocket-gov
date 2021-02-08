@@ -70,6 +70,7 @@ const styles = StyleSheet.create({
 })
 
 export default function LoginScreen({navigation}) {
+
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
 
@@ -97,7 +98,8 @@ export default function LoginScreen({navigation}) {
                       return;
                   }
                   const user = firestoreDocument.data()
-                  navigation.navigate('Home', {user})
+                  console.log("User:", user)
+                  navigation.navigate('Legislative', {user})
               })
               .catch(error => {
                   alert(error)

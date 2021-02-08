@@ -93,8 +93,7 @@ export default function RegistrationScreen({navigation}) {
                   .doc(uid)
                   .set(data)
                   .then(() => {
-                      console.log("Am I here?")
-                      navigation.navigate('Home', {user: data})
+                      navigation.navigate('Legislative', {user: data})
                   })
                   .catch((error) => {
                       alert(error)
