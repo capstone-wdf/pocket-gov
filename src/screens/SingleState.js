@@ -100,7 +100,7 @@ export default function SingleState({ route, navigation }) {
               {/**
           Change from View to something else?
            */}
-              <ScrollView contentContainerStyle={styles.reps}>
+              <ScrollView horizontal contentContainerStyle={styles.reps2}>
                 {house &&
                   house.map((rep) => (
                     <TouchableWithoutFeedback
@@ -159,5 +159,9 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     flexWrap: "wrap",
+  },
+  reps2: {
+    flexWrap: "wrap",
+    alignItems: "center",
   },
 });

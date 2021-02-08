@@ -241,9 +241,9 @@ export default function CompareMembers({ route, navigation }) {
                     uri: `https://img.favpng.com/17/10/19/logo-envelope-mail-png-favpng-C2icb0S6z8Fj651JUUtCdrih9.jpg`,
                   }}
                 />
-                <Button onPress={() => onFollowPress()}>Follow</Button>
               </Text>
             )}
+            {member1 && <Button onPress={() => onFollowPress()}>Follow</Button>}
           </View>
         </View>
       </ScrollView>
