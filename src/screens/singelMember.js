@@ -48,6 +48,8 @@ export default function CompareMembers({ route, navigation }) {
 
   const [visible1, setVisible1] = useState(false);
 
+  // console.log("ROUTEPARAMSUER", route.params.user);
+
   const openMenu1 = () => setVisible1(true);
   const closeMenu1 = () => setVisible1(false);
   console.log("MEMBER1", member1);
@@ -104,7 +106,7 @@ export default function CompareMembers({ route, navigation }) {
           .get()
           .then((updatedUser) => {
             console.log(updatedUser.data());
-            navigation.navigate("Single Member", { user : updatedUser.data() });
+            navigation.navigate("Single Member", { user: updatedUser.data() });
           })
       );
     console.log("RPUM", route.params.user.members);
@@ -164,10 +166,10 @@ export default function CompareMembers({ route, navigation }) {
             {/* {member1 && <Text>{`Last Updated: ${member1.last_updated} `}</Text>} */}
             {/* {member1 && <Text>{`Phone number: ${member1.phone} `}</Text>} */}
             {member1 && (
-              <Text>{`disagree: ${member1.votes_against_party_pct} `}</Text>
+              <Text>{`Agrees with party: ${member1.votes_with_party_pct}% `}</Text>
             )}
             {member1 && (
-              <Text>{`agree: ${member1.votes_with_party_pct} `}</Text>
+              <Text>{`Disagrees with party: ${member1.votes_against_party_pct}% `}</Text>
             )}
 
             {member1 && member1.twitter_account && (
@@ -250,13 +252,16 @@ export default function CompareMembers({ route, navigation }) {
                 />
               </Text>
             )}
-            {member1 && 
+            {member1 && route.params.user && (
+              <View>
+                {" "}
                 {route.params.user.members.includes(member1.id) ? (
                   <Button>Following</Button>
                 ) : (
                   <Button onPress={() => onFollowPress()}>Follow</Button>
-                )}
-            }
+                )}{" "}
+              </View>
+            )}
           </View>
         </View>
       </ScrollView>
