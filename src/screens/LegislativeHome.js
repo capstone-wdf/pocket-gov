@@ -1,15 +1,37 @@
 import { StatusBar } from "expo-status-bar";
 import React from "react";
-import { StyleSheet, View, Dimensions } from "react-native";
+import { StyleSheet, View, TouchableOpacity, Dimensions } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { Button, Text } from "react-native-paper";
 import USMap from "../components/USMap";
+import { firebase } from '../firebase/config'
 
 import ZoomView from "@dudigital/react-native-zoomable-view/src/ReactNativeZoomableView";
 
-export default function LegislativeHome({ navigation }) {
+export default function LegislativeHome({ route, navigation }) {
+
+  const onLogOutPress = () => {
+    console.log("User:", route.params)
+    firebase
+    .auth()
+    .signOut()
+    .then(
+      console.log("Signed Out Successfully"),
+      // need to add to navigate back to sign up page
+      navigation.navigate('Login')
+      )
+    .catch(error => {
+        alert(error)
+  })
+  }
+
   return (
     <View style={styles.container}>
+      <TouchableOpacity
+            style={styles.button}
+            onPress={() => onLogOutPress()}>
+            <Text style={styles.buttonTitle}>Log Out</Text>
+          </TouchableOpacity>
       <View style={styles.billsreps}>
         {/*
       Make swipable from left to right, bills to representatives?
@@ -83,4 +105,19 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     justifyContent: "space-around",
   },
+  button: {
+    backgroundColor: '#788eec',
+    marginLeft: 30,
+    marginRight: 30,
+    marginTop: 20,
+    height: 48,
+    borderRadius: 5,
+    alignItems: "center",
+    justifyContent: 'center'
+  },
+  buttonTitle: {
+      color: 'white',
+      fontSize: 16,
+      fontWeight: "bold"
+  }
 });

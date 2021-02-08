@@ -45,7 +45,7 @@ export default function CompareMembers() {
   if (!members.length) {
     apiCall();
   }
-  console.log(members);
+  // console.log(members);
   return (
     <SafeAreaView>
       <ScrollView contentContainerStyle={styles.contentContainer}>
