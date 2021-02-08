@@ -4,6 +4,7 @@ import {
   StyleSheet,
   Dimensions,
   TouchableWithoutFeedback,
+  ScrollView,
 } from "react-native";
 import { Text, Title, Avatar } from "react-native-paper";
 import { individualStates } from "../components/IndividualStates2";
@@ -51,10 +52,14 @@ export default function SingleState({ route, navigation }) {
     setLoading(false);
   }, []);
 
-  const handlePageChange = (chamber, id) => {
-    const selectedRep = chamber.filter((reps) => reps.id === id)[0];
-    console.log(selectedRep);
-    navigation.navigate("Single Member", { selectedRep });
+  const handlePageChange = async (chamber, id) => {
+    // const selectedRep = chamber.filter((reps) => reps.id === id)[0];
+    // console.log(selectedRep);
+    const { data } = await axios.get(
+      `https://api.propublica.org/congress/v1/members/${id}.json`,
+      config
+    );
+    navigation.navigate("Single Member", { selectedRep: data.results[0] });
   };
 
   return (
@@ -95,7 +100,7 @@ export default function SingleState({ route, navigation }) {
               {/**
           Change from View to something else?
            */}
-              <View style={styles.reps} pointerEvents="box-none">
+              <ScrollView horizontal contentContainerStyle={styles.reps2}>
                 {house &&
                   house.map((rep) => (
                     <TouchableWithoutFeedback
@@ -116,7 +121,7 @@ export default function SingleState({ route, navigation }) {
                       </View>
                     </TouchableWithoutFeedback>
                   ))}
-              </View>
+              </ScrollView>
             </View>
           </React.Fragment>
         )}
@@ -154,5 +159,9 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     flexWrap: "wrap",
+  },
+  reps2: {
+    flexWrap: "wrap",
+    alignItems: "center",
   },
 });
