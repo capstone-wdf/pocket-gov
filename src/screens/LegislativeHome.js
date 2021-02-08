@@ -134,7 +134,7 @@ export default function LegislativeHome({ navigation }) {
         >
           Executive
         </Button>
-        <Button icon="book-open-variant">Legislative</Button>
+        {/* <Button icon="book-open-variant">Legislative</Button> */}
       </View>
       <View style={styles.buttonContainer}>
         <Button onPress={() => navigation.navigate('Compare')}>
@@ -201,6 +201,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   buttonContainer: {
-    marginBottom: 50
-  }
+    marginBottom: 50,
+  },
 });
