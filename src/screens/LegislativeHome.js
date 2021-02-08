@@ -2,7 +2,7 @@ import { StatusBar } from "expo-status-bar";
 import React, { useState } from "react";
 import { StyleSheet, View, Dimensions } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
-import { Button, Searchbar, Text } from "react-native-paper";
+import { Button, Searchbar, Text, Chip } from "react-native-paper";
 import USMap from "../components/USMap";
 import { gCloudKey } from "../../secrets";
 import axios from "axios";
@@ -20,12 +20,14 @@ export default function LegislativeHome({ navigation }) {
         inputtype: "textquery",
         input: search,
       };
-      const result = await axios.get(
+      const {
+        data,
+      } = await axios.get(
         "https://maps.googleapis.com/maps/api/place/findplacefromtext/json",
         { params: query }
       );
 
-      console.log(result);
+      console.log(data);
     } catch (error) {
       console.log(error);
     }
@@ -37,8 +39,8 @@ export default function LegislativeHome({ navigation }) {
         {/*
       Make swipable from left to right, bills to representatives?
        */}
-        <Button>Bills</Button>
-        <Button>Representatives</Button>
+        <Chip>Bills</Chip>
+        <Chip>Representatives</Chip>
       </View>
 
       <Searchbar
@@ -58,7 +60,6 @@ export default function LegislativeHome({ navigation }) {
         <Button>Legislative</Button>
       </View>
 
-
       <Button onPress={() => navigation.navigate("Compare")}>
         Go to Compare Members Screen
       </Button>
@@ -66,7 +67,6 @@ export default function LegislativeHome({ navigation }) {
         Go to Single Member Screen
       </Button>
       <Button onPress={() => navigation.navigate("Bills")}>Go to Bills</Button>
-
     </View>
   );
 }
