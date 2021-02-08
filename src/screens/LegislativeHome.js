@@ -125,22 +125,28 @@ export default function LegislativeHome({ navigation }) {
       </ZoomView>
 
       <View style={styles.branchbar}>
-        <Button icon='gavel' onPress={() => navigation.navigate('Judicial')}>
+        <Button icon="gavel" onPress={() => navigation.navigate('Judicial')}>
           Judicial
         </Button>
-        <Button icon='fountain-pen'onPress={() => navigation.navigate('Executive')}>
+        <Button
+          icon="fountain-pen"
+          onPress={() => navigation.navigate('Executive')}
+        >
           Executive
         </Button>
-        <Button icon='book-open-variant'>Legislative</Button>
+        <Button icon="book-open-variant">Legislative</Button>
       </View>
-
-      <Button onPress={() => navigation.navigate('Compare')}>
-        Go to Compare Members Screen
-      </Button>
-      <Button onPress={() => navigation.navigate('Single Member', { user })}>
-        Go to Single Member Screen
-      </Button>
-      <Button onPress={() => navigation.navigate('Bills')}>Go to Bills</Button>
+      <View style={styles.buttonContainer}>
+        <Button onPress={() => navigation.navigate('Compare')}>
+          Go to Compare Members Screen
+        </Button>
+        <Button onPress={() => navigation.navigate('Single Member', { user })}>
+          Go to Single Member Screen
+        </Button>
+        <Button onPress={() => navigation.navigate('Bills')}>
+          Go to Bills
+        </Button>
+      </View>
     </View>
   );
 }
@@ -194,4 +200,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
   },
+  buttonContainer: {
+    marginBottom: 50
+  }
 });
