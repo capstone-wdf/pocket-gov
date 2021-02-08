@@ -34,6 +34,7 @@ async function getMembers(congress, chamber) {
   try {
     const { data } = await axios.get(theUrl, config);
     let result = await data.results[0].members;
+
     return result;
   } catch (error) {
     console.error(error);
@@ -43,10 +44,14 @@ async function getMembers(congress, chamber) {
 export default function CompareMembers({ route, navigation }) {
   const [members, setMembers] = useState([]);
   const [member1, setMember1] = useState(null);
+  const [member2, setMember2] = useState(null);
+
   const [visible1, setVisible1] = useState(false);
 
   const openMenu1 = () => setVisible1(true);
   const closeMenu1 = () => setVisible1(false);
+  console.log("MEMBER1", member1);
+  console.log("MEMBER2", member2);
 
   //useEffect for comparison API
 
@@ -63,7 +68,20 @@ export default function CompareMembers({ route, navigation }) {
   }
 
   useEffect(() => {
-    setMember1(route.params.selectedRep);
+    const selectedRep = route.params.selectedRep;
+    setMember1({
+      id: selectedRep.id,
+      first_name: selectedRep.first_name,
+      last_name: selectedRep.last_name,
+      party: selectedRep.current_party,
+      twitter_account: selectedRep.twitter_account,
+      facebook_account: selectedRep.facebook_account,
+      youtube_account: selectedRep.youtube_account,
+      url: selectedRep.url,
+      votes_against_party_pct: selectedRep.roles[0].votes_against_party_pct,
+      votes_with_party_pct: selectedRep.roles[0].votes_with_party_pct,
+      contact_form: selectedRep.roles[0].contact_form,
+    });
   }, []);
   //commented out for now to not clutter log -EZ
   // console.log(members);
@@ -71,7 +89,6 @@ export default function CompareMembers({ route, navigation }) {
 
   const onFollowPress = () => {
     console.log("Foo: ", route.params.user.members);
-
     firebase
       .firestore()
       .collection("users")
@@ -108,7 +125,7 @@ export default function CompareMembers({ route, navigation }) {
                   title={`${member.first_name} ${member.last_name} "${member.party}"`}
                   key={member.id}
                   onPress={() => {
-                    setMember1({
+                    setMember2({
                       first_name: member.first_name,
                       last_name: member.last_name,
                       id: member.id,
@@ -141,11 +158,11 @@ export default function CompareMembers({ route, navigation }) {
               />
             )}
             {member1 && (
-              <Text>{`${member1.first_name} ${member1.last_name} `}</Text>
+              <Text>{`${member1.first_name} ${member1.last_name} (${member1.party})`}</Text>
             )}
-            {member1 && <Text>{`Party: "${member1.party}"`}</Text>}
-            {member1 && <Text>{`Last Updated: ${member1.last_updated} `}</Text>}
-            {member1 && <Text>{`Phone number: ${member1.phone} `}</Text>}
+            {/* {member1 && <Text>{`Party: "${member1.party}"`}</Text>} */}
+            {/* {member1 && <Text>{`Last Updated: ${member1.last_updated} `}</Text>} */}
+            {/* {member1 && <Text>{`Phone number: ${member1.phone} `}</Text>} */}
             {member1 && (
               <Text>{`disagree: ${member1.votes_against_party_pct} `}</Text>
             )}
@@ -153,7 +170,7 @@ export default function CompareMembers({ route, navigation }) {
               <Text>{`agree: ${member1.votes_with_party_pct} `}</Text>
             )}
 
-            {member1 && (
+            {member1 && member1.twitter_account && (
               <Text
                 style={styles.TextStyle}
                 onPress={() =>
@@ -220,7 +237,7 @@ export default function CompareMembers({ route, navigation }) {
                 />
               </Text>
             )}
-            {member1 && (
+            {member1 && member1.contact_form && (
               <Text
                 style={styles.TextStyle}
                 onPress={() => Linking.openURL(`${member1.contact_form}`)}
@@ -231,14 +248,15 @@ export default function CompareMembers({ route, navigation }) {
                     uri: `https://img.favpng.com/17/10/19/logo-envelope-mail-png-favpng-C2icb0S6z8Fj651JUUtCdrih9.jpg`,
                   }}
                 />
-
+              </Text>
+            )}
+            {member1 && 
                 {route.params.user.members.includes(member1.id) ? (
                   <Button>Following</Button>
                 ) : (
                   <Button onPress={() => onFollowPress()}>Follow</Button>
                 )}
-              </Text>
-            )}
+            }
           </View>
         </View>
       </ScrollView>

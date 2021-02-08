@@ -63,6 +63,7 @@ export default function SpecificBill({ route }) {
           )}
           {bill.enacted && <Text>{`Enacted on ${bill.enacted}`}</Text>}
           {bill.vetoed && <Text>{`Vetoed on ${bill.vetoed}`}</Text>}
+          <Button>Follow</Button>
         </View>
       )}
     </ScrollView>
