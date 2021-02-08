@@ -88,19 +88,26 @@ export default function CompareMembers({ route, navigation }) {
   // fetchUserData();
 
   const onFollowPress = () => {
-    console.log("Foo: ", route);
+    console.log("Foo: ", route.params.user.members);
     firebase
       .firestore()
       .collection("users")
       .doc(route.params.user.id)
-      .get()
-      .then((doc) =>
+      .update({
+        members: firebase.firestore.FieldValue.arrayUnion(member1.id),
+      })
+      .then(() =>
         firebase
           .firestore()
           .collection("users")
           .doc(route.params.user.id)
-          .update({ members: doc.data().members + [member1.id] })
+          .get()
+          .then((updatedUser) => {
+            console.log(updatedUser.data());
+            navigation.navigate("Single Member", { user : updatedUser.data() });
+          })
       );
+    console.log("RPUM", route.params.user.members);
   };
 
   return (
@@ -243,7 +250,13 @@ export default function CompareMembers({ route, navigation }) {
                 />
               </Text>
             )}
-            {member1 && <Button onPress={() => onFollowPress()}>Follow</Button>}
+            {member1 && 
+                {route.params.user.members.includes(member1.id) ? (
+                  <Button>Following</Button>
+                ) : (
+                  <Button onPress={() => onFollowPress()}>Follow</Button>
+                )}
+            }
           </View>
         </View>
       </ScrollView>

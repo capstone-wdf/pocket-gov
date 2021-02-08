@@ -73,7 +73,7 @@ export default function LegislativeHome({ navigation }) {
   };
 
   const onFollowingPress = () => {
-    navigation.navigate('Following');
+    navigation.navigate('Following', {user})
   };
 
   console.log('User before signout:', user);
