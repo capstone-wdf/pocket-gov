@@ -1,5 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { View, StyleSheet, Dimensions } from "react-native";
+import {
+  View,
+  StyleSheet,
+  Dimensions,
+  TouchableWithoutFeedback,
+} from "react-native";
 import { Text, Title, Avatar } from "react-native-paper";
 import { individualStates } from "../components/IndividualStates2";
 import { config } from "../../secrets";
@@ -44,6 +49,12 @@ export default function SingleState({ route, navigation }) {
     loadReps();
   }, []);
 
+  const handlePageChange = (chamber, id) => {
+    const selectedRep = chamber.filter((reps) => reps.id === id)[0];
+    console.log(selectedRep);
+    navigation.navigate("Single Member", { selectedRep });
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.map}>{currentStatePath}</View>
@@ -55,18 +66,20 @@ export default function SingleState({ route, navigation }) {
           <View style={styles.reps}>
             {senate &&
               senate.map((senator) => (
-                <View
+                <TouchableWithoutFeedback
                   key={senator.id}
-                  style={{ alignItems: "center", padding: "1%" }}
+                  onPress={() => handlePageChange(senate, senator.id)}
                 >
-                  <Avatar.Image
-                    size={70}
-                    source={{
-                      uri: `https://theunitedstates.io/images/congress/225x275/${senator.id}.jpg`,
-                    }}
-                  />
-                  <Text>{`${senator.last_name} (${senator.party})`}</Text>
-                </View>
+                  <View style={{ alignItems: "center", padding: "1%" }}>
+                    <Avatar.Image
+                      size={70}
+                      source={{
+                        uri: `https://theunitedstates.io/images/congress/225x275/${senator.id}.jpg`,
+                      }}
+                    />
+                    <Text>{`${senator.last_name} (${senator.party})`}</Text>
+                  </View>
+                </TouchableWithoutFeedback>
               ))}
           </View>
         </View>
@@ -75,22 +88,26 @@ export default function SingleState({ route, navigation }) {
           {/**
           Change from View to something else?
            */}
-          <View style={styles.reps}>
+          <View style={styles.reps} pointerEvents="box-none">
             {house &&
               house.map((rep) => (
-                <View
+                <TouchableWithoutFeedback
                   key={rep.id}
-                  style={{ alignItems: "center", padding: "1%" }}
+                  onPress={() => handlePageChange(house, rep.id)}
                 >
-                  <Avatar.Image
-                    size={70}
-                    source={{
-                      uri: `https://theunitedstates.io/images/congress/225x275/${rep.id}.jpg`,
-                    }}
-                    onPress={() => navigation.navigate("Single Member")}
-                  />
-                  <Text>{`${rep.last_name} (${rep.party})`}</Text>
-                </View>
+                  <View
+                    pointerEvents="auto"
+                    style={{ alignItems: "center", padding: "1%" }}
+                  >
+                    <Avatar.Image
+                      size={70}
+                      source={{
+                        uri: `https://theunitedstates.io/images/congress/225x275/${rep.id}.jpg`,
+                      }}
+                    />
+                    <Text>{`${rep.last_name} (${rep.party})`}</Text>
+                  </View>
+                </TouchableWithoutFeedback>
               ))}
           </View>
         </View>
