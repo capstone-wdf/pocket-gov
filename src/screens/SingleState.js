@@ -12,6 +12,7 @@ import axios from "axios";
 
 export default function SingleState({ route, navigation }) {
   const currentStatePath = individualStates[route.params.state];
+  const [loading, setLoading] = useState(true);
   const [senate, setSenate] = useState([]);
   const [house, setHouse] = useState([]);
   const [pseudoCache, setPseudoCache] = useState({});
@@ -47,6 +48,7 @@ export default function SingleState({ route, navigation }) {
 
   useEffect(() => {
     loadReps();
+    setLoading(false);
   }, []);
 
   const handlePageChange = (chamber, id) => {
@@ -58,59 +60,66 @@ export default function SingleState({ route, navigation }) {
   return (
     <View style={styles.container}>
       <View style={styles.map}>{currentStatePath}</View>
-      <View style={styles.reps_container}>
-        <View style={{ alignItems: "center" }}>
-          <Title>{route.params.state}</Title>
 
-          <Title>Senators</Title>
-          <View style={styles.reps}>
-            {senate &&
-              senate.map((senator) => (
-                <TouchableWithoutFeedback
-                  key={senator.id}
-                  onPress={() => handlePageChange(senate, senator.id)}
-                >
-                  <View style={{ alignItems: "center", padding: "1%" }}>
-                    <Avatar.Image
-                      size={70}
-                      source={{
-                        uri: `https://theunitedstates.io/images/congress/225x275/${senator.id}.jpg`,
-                      }}
-                    />
-                    <Text>{`${senator.last_name} (${senator.party})`}</Text>
-                  </View>
-                </TouchableWithoutFeedback>
-              ))}
-          </View>
-        </View>
-        <View style={{ alignItems: "center" }}>
-          <Title> House of Representatives</Title>
-          {/**
+      <View style={styles.reps_container}>
+        {loading ? (
+          <Text>Loading your representatives...</Text>
+        ) : (
+          <React.Fragment>
+            <View style={{ alignItems: "center" }}>
+              <Title>{route.params.state}</Title>
+
+              <Title>Senators</Title>
+              <View style={styles.reps}>
+                {senate &&
+                  senate.map((senator) => (
+                    <TouchableWithoutFeedback
+                      key={senator.id}
+                      onPress={() => handlePageChange(senate, senator.id)}
+                    >
+                      <View style={{ alignItems: "center", padding: "1%" }}>
+                        <Avatar.Image
+                          size={70}
+                          source={{
+                            uri: `https://theunitedstates.io/images/congress/225x275/${senator.id}.jpg`,
+                          }}
+                        />
+                        <Text>{`${senator.last_name} (${senator.party})`}</Text>
+                      </View>
+                    </TouchableWithoutFeedback>
+                  ))}
+              </View>
+            </View>
+            <View style={{ alignItems: "center" }}>
+              <Title> House of Representatives</Title>
+              {/**
           Change from View to something else?
            */}
-          <View style={styles.reps} pointerEvents="box-none">
-            {house &&
-              house.map((rep) => (
-                <TouchableWithoutFeedback
-                  key={rep.id}
-                  onPress={() => handlePageChange(house, rep.id)}
-                >
-                  <View
-                    pointerEvents="auto"
-                    style={{ alignItems: "center", padding: "1%" }}
-                  >
-                    <Avatar.Image
-                      size={70}
-                      source={{
-                        uri: `https://theunitedstates.io/images/congress/225x275/${rep.id}.jpg`,
-                      }}
-                    />
-                    <Text>{`${rep.last_name} (${rep.party})`}</Text>
-                  </View>
-                </TouchableWithoutFeedback>
-              ))}
-          </View>
-        </View>
+              <View style={styles.reps} pointerEvents="box-none">
+                {house &&
+                  house.map((rep) => (
+                    <TouchableWithoutFeedback
+                      key={rep.id}
+                      onPress={() => handlePageChange(house, rep.id)}
+                    >
+                      <View
+                        pointerEvents="auto"
+                        style={{ alignItems: "center", padding: "1%" }}
+                      >
+                        <Avatar.Image
+                          size={70}
+                          source={{
+                            uri: `https://theunitedstates.io/images/congress/225x275/${rep.id}.jpg`,
+                          }}
+                        />
+                        <Text>{`${rep.last_name} (${rep.party})`}</Text>
+                      </View>
+                    </TouchableWithoutFeedback>
+                  ))}
+              </View>
+            </View>
+          </React.Fragment>
+        )}
       </View>
     </View>
   );
