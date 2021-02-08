@@ -178,7 +178,7 @@ export default function Bills({ navigation }) {
           renderItem={renderUpcomingBill}
           keyExtractor={(item) => item.bill_id}
         />
-        <Menu
+        {/* <Menu
           visible={visible}
           onDismiss={closeMenu}
           anchor={<Button onPress={openMenu}>select recent bill type</Button>}
@@ -225,7 +225,7 @@ export default function Bills({ navigation }) {
             }}
             title="Vetoed"
           />
-        </Menu>
+        </Menu> */}
         <Title>Recent Bills in the Senate</Title>
         <FlatList
           horizontal
