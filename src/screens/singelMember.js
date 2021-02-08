@@ -40,9 +40,7 @@ async function getMembers(congress, chamber) {
   }
 }
 
-
-export default function CompareMembers({route, navigation}) {
-
+export default function CompareMembers({ route, navigation }) {
   const [members, setMembers] = useState([]);
   const [member1, setMember1] = useState(null);
   const [visible1, setVisible1] = useState(false);
@@ -72,17 +70,27 @@ export default function CompareMembers({route, navigation}) {
   // fetchUserData();
 
   const onFollowPress = () => {
-    console.log("Foo: ", route)
+    console.log("Foo: ", route.params.user.members);
+
     firebase
-    .firestore()
-    .collection('users')
-    .doc(route.params.user.id).get().then(doc =>
-      firebase
       .firestore()
-      .collection('users')
+      .collection("users")
       .doc(route.params.user.id)
-      .update({ members: doc.data().members + [member1.id]})
-    )
+      .update({
+        members: firebase.firestore.FieldValue.arrayUnion(member1.id),
+      })
+      .then(() =>
+        firebase
+          .firestore()
+          .collection("users")
+          .doc(route.params.user.id)
+          .get()
+          .then((updatedUser) => {
+            console.log(updatedUser.data());
+            navigation.navigate("Single Member", { user : updatedUser.data() });
+          })
+      );
+    console.log("RPUM", route.params.user.members);
   };
 
   return (
@@ -223,7 +231,12 @@ export default function CompareMembers({route, navigation}) {
                     uri: `https://img.favpng.com/17/10/19/logo-envelope-mail-png-favpng-C2icb0S6z8Fj651JUUtCdrih9.jpg`,
                   }}
                 />
-                <Button onPress={() => onFollowPress()}>Follow</Button>
+
+                {route.params.user.members.includes(member1.id) ? (
+                  <Button>Following</Button>
+                ) : (
+                  <Button onPress={() => onFollowPress()}>Follow</Button>
+                )}
               </Text>
             )}
           </View>
