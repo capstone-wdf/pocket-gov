@@ -2,7 +2,7 @@ import { StatusBar } from "expo-status-bar";
 import React, { useState,  useEffect } from "react";
 import { StyleSheet, View, TouchableOpacity, Dimensions } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
-import { Button, Searchbar, Text } from "react-native-paper";
+import { Button, Searchbar, Text, Chip } from "react-native-paper";
 import USMap from "../components/USMap";
 import { firebase } from "../firebase/config";
 import { gCloudKey } from "../../secrets";
@@ -43,12 +43,14 @@ export default function LegislativeHome({ navigation }) {
         inputtype: "textquery",
         input: search,
       };
-      const result = await axios.get(
+      const {
+        data,
+      } = await axios.get(
         "https://maps.googleapis.com/maps/api/place/findplacefromtext/json",
         { params: query }
       );
 
-      console.log(result);
+      console.log(data);
     } catch (error) {
       console.log(error);
     }
@@ -107,8 +109,8 @@ export default function LegislativeHome({ navigation }) {
         {/*
       Make swipable from left to right, bills to representatives?
        */}
-        <Button>Bills</Button>
-        <Button>Representatives</Button>
+        <Chip>Bills</Chip>
+        <Chip>Representatives</Chip>
       </View>
 
       <Searchbar

@@ -18,6 +18,7 @@ import { firebase } from "../firebase/config";
 import * as rssParser from "react-native-rss-parser";
 
 async function fetchUserData() {
+  //function invocation was commented out to not clutter console -EZ
   const theUrl = "https://www.blumenthal.senate.gov/rss/feeds/?type=press";
   try {
     const { data } = await axios.get(theUrl);
@@ -39,7 +40,9 @@ async function getMembers(congress, chamber) {
   }
 }
 
+
 export default function CompareMembers({route, navigation}) {
+
   const [members, setMembers] = useState([]);
   const [member1, setMember1] = useState(null);
   const [visible1, setVisible1] = useState(false);
@@ -60,8 +63,13 @@ export default function CompareMembers({route, navigation}) {
   if (!members.length) {
     apiCall();
   }
+
+  useEffect(() => {
+    setMember1(route.params.selectedRep);
+  }, []);
+  //commented out for now to not clutter log -EZ
   // console.log(members);
-  fetchUserData();
+  // fetchUserData();
 
   const onFollowPress = () => {
     console.log("Foo: ", route)
