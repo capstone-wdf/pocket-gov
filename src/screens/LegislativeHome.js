@@ -125,10 +125,10 @@ export default function LegislativeHome({ navigation }) {
       </ZoomView>
 
       <View style={styles.branchbar}>
-        <Button icon='gavel' onPress={() => navigation.navigate('Judicial Branch')}>
+        <Button icon='gavel' onPress={() => navigation.navigate('Judicial')}>
           Judicial
         </Button>
-        <Button icon='fountain-pen'onPress={() => navigation.navigate('Executive Branch')}>
+        <Button icon='fountain-pen'onPress={() => navigation.navigate('Executive')}>
           Executive
         </Button>
         <Button icon='book-open-variant'>Legislative</Button>

@@ -13,7 +13,7 @@ export default function SingleBill({ title, number }) {
     <Card style={styles.card}>
       <Card.Content>
         <Subheading>{number}</Subheading>
-        <Paragraph>{title}</Paragraph>
+          <Paragraph>{title}</Paragraph>
       </Card.Content>
     </Card>
   );
@@ -21,6 +21,8 @@ export default function SingleBill({ title, number }) {
 
 const styles = StyleSheet.create({
   card: {
-    width: 350
-  }
-})
+    width: 350,
+    height: 250,
+    margin: 10,
+  },
+});

@@ -33,5 +33,7 @@ export default function UpcomingBill({
 const styles = StyleSheet.create({
   card: {
     width: 350,
+    height: 250,
+    margin: 10,
   },
 });
