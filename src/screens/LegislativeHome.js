@@ -79,46 +79,19 @@ export default function LegislativeHome({ navigation }) {
   console.log('User before signout:', user);
   return (
     <View style={styles.container}>
-      {user ? (
-        <>
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => onFollowingPress()}
-          >
-            <Text style={styles.buttonTitle}>Following</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => onLogOutPress()}
-          >
-            <Text style={styles.buttonTitle}>Log Out</Text>
-          </TouchableOpacity>
-        </>
-      ) : (
-        <>
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => navigation.navigate('Login')}
-          >
-            <Text style={styles.buttonTitle}>Log In</Text>
-          </TouchableOpacity>
-        </>
-      )}
-
-      <View style={styles.billsreps}>
-        {/*
-      Make swipable from left to right, bills to representatives?
-       */}
-        <Chip>Bills</Chip>
-        <Chip>Representatives</Chip>
-      </View>
-
       <Searchbar
         placeholder="Enter location"
         value={search}
         onChangeText={(query) => setSearch(query)}
         onSubmitEditing={handleSearch}
       />
+      <View style={styles.billsreps}>
+        {/*
+      Make swipable from left to right, bills to representatives?
+       */}
+        {/* <Chip>Bills</Chip>
+        <Chip>Representatives</Chip> */}
+      </View>
 
       <ZoomView style={styles.map} maxZoom={2} minZoom={1}>
         <USMap navigation={navigation} />
@@ -146,6 +119,31 @@ export default function LegislativeHome({ navigation }) {
         <Button onPress={() => navigation.navigate('Bills')}>
           Go to Bills
         </Button>
+        {user ? (
+          <>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => onFollowingPress()}
+            >
+              <Text style={styles.buttonTitle}>Following</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => onLogOutPress()}
+            >
+              <Text style={styles.buttonTitle}>Log Out</Text>
+            </TouchableOpacity>
+          </>
+        ) : (
+          <>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => navigation.navigate('Login')}
+            >
+              <Text style={styles.buttonTitle}>Log In</Text>
+            </TouchableOpacity>
+          </>
+        )}
       </View>
     </View>
   );
