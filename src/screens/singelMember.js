@@ -17,6 +17,7 @@ import { VictoryPie, VictoryStack, VictoryBar } from "victory-native";
 import * as rssParser from "react-native-rss-parser";
 
 async function fetchUserData() {
+  //function invocation was commented out to not clutter console -EZ
   const theUrl = "https://www.blumenthal.senate.gov/rss/feeds/?type=press";
   try {
     const { data } = await axios.get(theUrl);
@@ -38,7 +39,7 @@ async function getMembers(congress, chamber) {
   }
 }
 
-export default function CompareMembers() {
+export default function CompareMembers({ route }) {
   const [members, setMembers] = useState([]);
   const [member1, setMember1] = useState(null);
   const [visible1, setVisible1] = useState(false);
@@ -59,8 +60,13 @@ export default function CompareMembers() {
   if (!members.length) {
     apiCall();
   }
-  console.log(members);
-  fetchUserData();
+
+  useEffect(() => {
+    setMember1(route.params.selectedRep);
+  }, []);
+  //commented out for now to not clutter log -EZ
+  // console.log(members);
+  // fetchUserData();
 
   return (
     <SafeAreaView>
