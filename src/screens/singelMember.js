@@ -58,7 +58,7 @@ export default function CompareMembers({ route, navigation }) {
   //useEffect for comparison API
 
   //other stuff
-  let congress = "116";
+  let congress = "117";
   let senate = "senate";
 
   const apiCall = async () => {
@@ -127,7 +127,7 @@ export default function CompareMembers({ route, navigation }) {
                   title={`${member.first_name} ${member.last_name} "${member.party}"`}
                   key={member.id}
                   onPress={() => {
-                    setMember2({
+                    setMember1({
                       first_name: member.first_name,
                       last_name: member.last_name,
                       id: member.id,
