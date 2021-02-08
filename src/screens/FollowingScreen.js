@@ -37,32 +37,14 @@ const styles = StyleSheet.create({
   }
 })
 
-export default function HomeScreen({navigation}, props) {
-
-    const onLogOutPress = () => {
-      firebase
-      .auth()
-      .signOut()
-      .then(
-        console.log("Signed Out Successfully", props)
-        // need to add to navigate back to sign up page
-        )
-      .catch(error => {
-          alert(error)
-    })
-    }
+export default function HomeScreen({navigation}) {
 
     return (
       <View style={styles.container}>
       <KeyboardAwareScrollView
           style={{ flex: 1, width: '100%' }}
           keyboardShouldPersistTaps="always">
-          <Text>Welcome to Pocket Gov</Text>
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => onLogOutPress()}>
-            <Text style={styles.buttonTitle}>Log Out</Text>
-          </TouchableOpacity>
+          <Text>Following</Text>
       </KeyboardAwareScrollView>
     </View>
     )

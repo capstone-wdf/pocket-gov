@@ -12,6 +12,7 @@ import { Avatar, Button, Menu, Text } from "react-native-paper";
 import axios from "axios";
 import { config } from "../../secrets";
 import { VictoryPie, VictoryStack, VictoryBar } from "victory-native";
+import { firebase } from "../firebase/config";
 
 // const rssParser = require("react-native-rss-parser");
 import * as rssParser from "react-native-rss-parser";
@@ -21,7 +22,7 @@ async function fetchUserData() {
   try {
     const { data } = await axios.get(theUrl);
     const rss = await rssParser.parse(data);
-    console.log(rss);
+    // console.log(rss);
   } catch (error) {
     console.error(error);
   }
@@ -38,7 +39,7 @@ async function getMembers(congress, chamber) {
   }
 }
 
-export default function CompareMembers() {
+export default function CompareMembers({route, navigation}) {
   const [members, setMembers] = useState([]);
   const [member1, setMember1] = useState(null);
   const [visible1, setVisible1] = useState(false);
@@ -61,6 +62,20 @@ export default function CompareMembers() {
   }
   // console.log(members);
   fetchUserData();
+
+  const onFollowPress = () => {
+    console.log("Foo: ", route)
+    firebase
+    .firestore()
+    .collection('users')
+    .doc(route.params.user.id).get().then(doc =>
+      firebase
+      .firestore()
+      .collection('users')
+      .doc(route.params.user.id)
+      .update({ members: doc.data().members + [member1.id]})
+    )
+  };
 
   return (
     <SafeAreaView>
@@ -200,11 +215,11 @@ export default function CompareMembers() {
                     uri: `https://img.favpng.com/17/10/19/logo-envelope-mail-png-favpng-C2icb0S6z8Fj651JUUtCdrih9.jpg`,
                   }}
                 />
+                <Button onPress={() => onFollowPress()}>Follow</Button>
               </Text>
             )}
           </View>
         </View>
-        <Button>Follow</Button>
       </ScrollView>
     </SafeAreaView>
   );

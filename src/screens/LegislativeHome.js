@@ -1,10 +1,10 @@
 import { StatusBar } from "expo-status-bar";
-import React, { useState } from "react";
+import React, { useState,  useEffect } from "react";
 import { StyleSheet, View, TouchableOpacity, Dimensions } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { Button, Searchbar, Text } from "react-native-paper";
 import USMap from "../components/USMap";
-import { firebase } from '../firebase/config'
+import { firebase } from "../firebase/config";
 import { gCloudKey } from "../../secrets";
 import axios from "axios";
 
@@ -12,7 +12,29 @@ import ZoomView from "@dudigital/react-native-zoomable-view/src/ReactNativeZooma
 
 export default function LegislativeHome({ navigation }) {
   const [search, setSearch] = useState("");
-  console.log(search);
+  // console.log(search);
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const usersRef = firebase.firestore().collection("users");
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        usersRef
+          .doc(user.uid)
+          .get()
+          .then((document) => {
+            const userData = document.data();
+            // setLoading(false);
+            setUser(userData);
+          })
+          .catch((error) => {
+            // setLoading(false);
+          });
+      } else {
+        // setLoading(false);
+      }
+    });
+  }, []);
 
   const handleSearch = async () => {
     try {
@@ -33,27 +55,54 @@ export default function LegislativeHome({ navigation }) {
   };
 
   const onLogOutPress = () => {
-    console.log("User:", route.params)
     firebase
-    .auth()
-    .signOut()
-    .then(
-      console.log("Signed Out Successfully"),
-      // need to add to navigate back to sign up page
-      navigation.navigate('Login')
+      .auth()
+      .signOut()
+      .then(
+        console.log("User after signout:", user),
+        console.log("Signed Out Successfully"),
+        setUser(undefined),
+        // need to add to navigate back to sign up page
+        navigation.navigate("Login")
       )
-    .catch(error => {
-        alert(error)
-  })
-  }
-  
+      .catch((error) => {
+        alert(error);
+      });
+  };
+
+  const onFollowingPress = () => {
+    navigation.navigate('Following')
+  };
+
+  console.log("User before signout:", user)
   return (
     <View style={styles.container}>
-      <TouchableOpacity
+      {user ? (
+        <>
+          <TouchableOpacity
             style={styles.button}
-            onPress={() => onLogOutPress()}>
+            onPress={() => onFollowingPress()}
+          >
+            <Text style={styles.buttonTitle}>Following</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => onLogOutPress()}
+          >
             <Text style={styles.buttonTitle}>Log Out</Text>
           </TouchableOpacity>
+        </>
+      ) : (
+        <>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => navigation.navigate("Login")}
+          >
+            <Text style={styles.buttonTitle}>Log In</Text>
+          </TouchableOpacity>
+        </>
+      )}
+
       <View style={styles.billsreps}>
         {/*
       Make swipable from left to right, bills to representatives?
@@ -79,15 +128,13 @@ export default function LegislativeHome({ navigation }) {
         <Button>Legislative</Button>
       </View>
 
-
       <Button onPress={() => navigation.navigate("Compare")}>
         Go to Compare Members Screen
       </Button>
-      <Button onPress={() => navigation.navigate("Single Member")}>
+      <Button onPress={() => navigation.navigate("Single Member", {user})}>
         Go to Single Member Screen
       </Button>
       <Button onPress={() => navigation.navigate("Bills")}>Go to Bills</Button>
-
     </View>
   );
 }
@@ -127,18 +174,18 @@ const styles = StyleSheet.create({
     justifyContent: "space-around",
   },
   button: {
-    backgroundColor: '#788eec',
+    backgroundColor: "#788eec",
     marginLeft: 30,
     marginRight: 30,
     marginTop: 20,
     height: 48,
     borderRadius: 5,
     alignItems: "center",
-    justifyContent: 'center'
+    justifyContent: "center",
   },
   buttonTitle: {
-      color: 'white',
-      fontSize: 16,
-      fontWeight: "bold"
-  }
+    color: "white",
+    fontSize: 16,
+    fontWeight: "bold",
+  },
 });
