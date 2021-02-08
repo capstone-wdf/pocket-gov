@@ -1,14 +1,36 @@
 import { StatusBar } from "expo-status-bar";
-import React from "react";
+import React, { useState } from "react";
 import { StyleSheet, View, TouchableOpacity, Dimensions } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
-import { Button, Text } from "react-native-paper";
+import { Button, Searchbar, Text } from "react-native-paper";
 import USMap from "../components/USMap";
 import { firebase } from '../firebase/config'
+import { gCloudKey } from "../../secrets";
+import axios from "axios";
 
 import ZoomView from "@dudigital/react-native-zoomable-view/src/ReactNativeZoomableView";
 
-export default function LegislativeHome({ route, navigation }) {
+export default function LegislativeHome({ navigation }) {
+  const [search, setSearch] = useState("");
+  console.log(search);
+
+  const handleSearch = async () => {
+    try {
+      const query = {
+        key: gCloudKey,
+        inputtype: "textquery",
+        input: search,
+      };
+      const result = await axios.get(
+        "https://maps.googleapis.com/maps/api/place/findplacefromtext/json",
+        { params: query }
+      );
+
+      console.log(result);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const onLogOutPress = () => {
     console.log("User:", route.params)
@@ -24,7 +46,7 @@ export default function LegislativeHome({ route, navigation }) {
         alert(error)
   })
   }
-
+  
   return (
     <View style={styles.container}>
       <TouchableOpacity
@@ -40,18 +62,15 @@ export default function LegislativeHome({ route, navigation }) {
         <Button>Representatives</Button>
       </View>
 
-      <Text
-        style={{
-          backgroundColor: "violet",
-          width: "100%",
-          zIndex: 1,
-        }}
-      >
-        searchbarhere
-      </Text>
+      <Searchbar
+        placeholder="Enter location"
+        value={search}
+        onChangeText={(query) => setSearch(query)}
+        onSubmitEditing={handleSearch}
+      />
 
-      <ZoomView style={styles.map} maxZoom={1.75} minZoom={1}>
-        <USMap />
+      <ZoomView style={styles.map} maxZoom={2} minZoom={1}>
+        <USMap navigation={navigation} />
       </ZoomView>
 
       <View style={styles.branchbar}>
@@ -60,6 +79,7 @@ export default function LegislativeHome({ route, navigation }) {
         <Button>Legislative</Button>
       </View>
 
+
       <Button onPress={() => navigation.navigate("Compare")}>
         Go to Compare Members Screen
       </Button>
@@ -67,6 +87,7 @@ export default function LegislativeHome({ route, navigation }) {
         Go to Single Member Screen
       </Button>
       <Button onPress={() => navigation.navigate("Bills")}>Go to Bills</Button>
+
     </View>
   );
 }

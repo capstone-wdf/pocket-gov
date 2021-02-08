@@ -13,6 +13,20 @@ import axios from "axios";
 import { config } from "../../secrets";
 import { VictoryPie, VictoryStack, VictoryBar } from "victory-native";
 
+// const rssParser = require("react-native-rss-parser");
+import * as rssParser from "react-native-rss-parser";
+
+async function fetchUserData() {
+  const theUrl = "https://www.blumenthal.senate.gov/rss/feeds/?type=press";
+  try {
+    const { data } = await axios.get(theUrl);
+    const rss = await rssParser.parse(data);
+    console.log(rss);
+  } catch (error) {
+    console.error(error);
+  }
+}
+
 async function getMembers(congress, chamber) {
   const theUrl = `https://api.propublica.org/congress/v1/${congress}/${chamber}/members.json`;
   try {
@@ -46,6 +60,8 @@ export default function CompareMembers() {
     apiCall();
   }
   // console.log(members);
+  fetchUserData();
+
   return (
     <SafeAreaView>
       <ScrollView contentContainerStyle={styles.contentContainer}>
@@ -107,17 +123,84 @@ export default function CompareMembers() {
             )}
 
             {member1 && (
-              <Avatar.Image
-                size={50}
-                source={{
-                  uri: `https://logodownload.org/wp-content/uploads/2014/09/twitter-logo-1-1.png`,
-                }}
+              <Text
+                style={styles.TextStyle}
                 onPress={() =>
                   Linking.openURL(
                     `https://twitter.com/${member1.twitter_account}`
                   )
                 }
-              />
+              >
+                <Avatar.Image
+                  size={50}
+                  source={{
+                    uri: `https://logodownload.org/wp-content/uploads/2014/09/twitter-logo-1-1.png`,
+                  }}
+                />
+              </Text>
+            )}
+
+            {member1 && (
+              <Text
+                style={styles.TextStyle}
+                onPress={() =>
+                  Linking.openURL(
+                    `https://www.facebook.com/${member1.facebook_account}/`
+                  )
+                }
+              >
+                <Avatar.Image
+                  size={50}
+                  source={{
+                    uri: `https://facebookbrand.com/wp-content/uploads/2019/04/f_logo_RGB-Hex-Blue_512.png?w=512&h=512`,
+                  }}
+                />
+              </Text>
+            )}
+
+            {member1 && (
+              <Text
+                style={styles.TextStyle}
+                onPress={() =>
+                  Linking.openURL(
+                    `https://www.youtube.com/user/${member1.youtube_account}`
+                  )
+                }
+              >
+                <Avatar.Image
+                  size={50}
+                  source={{
+                    uri: `https://www.online-tech-tips.com/wp-content/uploads/2019/07/youtube-1.png.webp`,
+                  }}
+                />
+              </Text>
+            )}
+
+            {member1 && (
+              <Text
+                style={styles.TextStyle}
+                onPress={() => Linking.openURL(`${member1.url}`)}
+              >
+                <Avatar.Image
+                  size={50}
+                  source={{
+                    uri: `https://cdn4.iconfinder.com/data/icons/internet-3-5/512/102-512.png`,
+                  }}
+                />
+              </Text>
+            )}
+            {member1 && (
+              <Text
+                style={styles.TextStyle}
+                onPress={() => Linking.openURL(`${member1.contact_form}`)}
+              >
+                <Avatar.Image
+                  size={50}
+                  source={{
+                    uri: `https://img.favpng.com/17/10/19/logo-envelope-mail-png-favpng-C2icb0S6z8Fj651JUUtCdrih9.jpg`,
+                  }}
+                />
+              </Text>
             )}
           </View>
         </View>
