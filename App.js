@@ -19,8 +19,8 @@ import {
   ExecutiveHome,
   JudicialHome,
   MyReps,
-  HomeScreen as PocketGov,
 } from './src/screens';
+import HomeScreen from './src/screens/HomeScreen';
 import { firebase } from './src/firebase/config';
 import { Provider } from 'react-redux';
 import { store } from './redux/app-redux';
@@ -32,7 +32,7 @@ const Drawer = createDrawerNavigator();
 function Home() {
   return (
     <Stack.Navigator>
-      <Stack.Screen name="PocketGov" component={PocketGov} />
+      <Stack.Screen name="PocketGov" component={HomeScreen} />
       <Stack.Screen name="Registration" component={RegistrationScreen} />
       <Stack.Screen name="Compare" component={CompareMembers} />
       <Stack.Screen name="Bills" component={Bills} />
