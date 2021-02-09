@@ -19,7 +19,7 @@ import {
   JudicialHome,
   MyReps,
 } from './src/screens';
-import { firebase } from './src/firebase/config';
+// import { firebase } from './src/firebase/config';
 import { Provider } from 'react-redux';
 import { store } from './redux/app-redux';
 
@@ -36,25 +36,27 @@ export default function App() {
   // }
 
   return (
-    <PaperProvider store={store}>
-      <NavigationContainer>
-        <Stack.Navigator>
-          <Stack.Screen name="Legislative">
-            {(props) => <LegislativeHome {...props} />}
-          </Stack.Screen>
-          <Stack.Screen name="Login" component={LoginScreen} />
-          <Stack.Screen name="Registration" component={RegistrationScreen} />
-          <Stack.Screen name="Following" component={FollowingScreen} />
-          <Stack.Screen name="Compare" component={CompareMembers} />
-          <Stack.Screen name="Bills" component={Bills} />
-          <Stack.Screen name="Single Member" component={singleMember} />
-          <Stack.Screen name="Single State" component={SingleState} />
-          <Stack.Screen name="Specific Bill" component={SpecificBill} />
-          <Stack.Screen name="Executive" component={ExecutiveHome} />
-          <Stack.Screen name="Judicial" component={JudicialHome} />
-        </Stack.Navigator>
-      </NavigationContainer>
-    </PaperProvider>
+    <Provider store={store}>
+      <PaperProvider store={store}>
+        <NavigationContainer>
+          <Stack.Navigator>
+            <Stack.Screen name="Legislative">
+              {(props) => <LegislativeHome {...props} />}
+            </Stack.Screen>
+            <Stack.Screen name="Login" component={LoginScreen} />
+            <Stack.Screen name="Registration" component={RegistrationScreen} />
+            <Stack.Screen name="Following" component={FollowingScreen} />
+            <Stack.Screen name="Compare" component={CompareMembers} />
+            <Stack.Screen name="Bills" component={Bills} />
+            <Stack.Screen name="Single Member" component={singleMember} />
+            <Stack.Screen name="Single State" component={SingleState} />
+            <Stack.Screen name="Specific Bill" component={SpecificBill} />
+            <Stack.Screen name="Executive" component={ExecutiveHome} />
+            <Stack.Screen name="Judicial" component={JudicialHome} />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </PaperProvider>
+    </Provider>
   );
 }
 
