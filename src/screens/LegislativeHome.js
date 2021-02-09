@@ -76,7 +76,6 @@ export default function LegislativeHome({ navigation }) {
     navigation.navigate("Following", { user });
   };
 
-  console.log("User before signout:", user);
   return (
     <View style={styles.container}>
       {/* <Searchbar

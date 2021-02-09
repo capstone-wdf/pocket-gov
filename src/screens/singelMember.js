@@ -13,6 +13,8 @@ import axios from "axios";
 import { config } from "../../secrets";
 import { VictoryPie, VictoryStack, VictoryBar } from "victory-native";
 import { firebase } from "../firebase/config";
+import {connect} from 'react-redux'
+import {fetchUser} from '../../redux/app-redux'
 
 // const rssParser = require("react-native-rss-parser");
 import * as rssParser from "react-native-rss-parser";
@@ -99,6 +101,7 @@ export default function CompareMembers({ route, navigation }) {
         members: firebase.firestore.FieldValue.arrayUnion(member1.id),
       })
       .then(() =>
+      // replace this with updateUser thunk
         firebase
           .firestore()
           .collection("users")
