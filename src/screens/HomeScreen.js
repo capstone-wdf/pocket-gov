@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { IconButton, Menu, Text } from 'react-native-paper';
+import { Colors, IconButton, Menu, Text } from 'react-native-paper';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { LegislativeHome, JudicialHome, ExecutiveHome } from './index';
@@ -17,19 +17,19 @@ export default function HomeScreen({ navigation }) {
             let iconName;
             if (route.name === 'Legislative') {
               iconName = 'gavel';
-            } else if (route.name === 'Judicial') {
+            } else if (route.name === 'Executive') {
               iconName = 'fountain-pen';
             } else {
               iconName = 'book-open-variant';
             }
             return (
-              <MaterialCommunityIcons name={iconName} size={24} color="blue" />
+              <MaterialCommunityIcons name={iconName} size={24} color={Colors.cyan700}/>
             );
           },
         })}
         tabBarOptions={{
-          activeTintColor: 'blue',
-          inactiveTintColor: 'gray',
+          activeTintColor: Colors.cyan700,
+          inactiveTintColor: Colors.gray900,
         }}
       >
         <Tab.Screen name="Legislative">

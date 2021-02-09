@@ -2,7 +2,7 @@ import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { useState, useEffect } from 'react';
 import { Button, StyleSheet, Text, View } from 'react-native';
-import { Provider as PaperProvider } from 'react-native-paper';
+import { Provider as PaperProvider, Colors } from 'react-native-paper';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createDrawerNavigator } from '@react-navigation/drawer';
@@ -57,7 +57,11 @@ export default function App() {
   <Provider store={store}>
     <PaperProvider store={store}>
       <NavigationContainer>
-        <Drawer.Navigator initialRouteName="Home">
+        <Drawer.Navigator initialRouteName="Home"
+        drawerContentOptions={{
+          activeTintColor: Colors.cyan700
+        }}
+        >
           <Drawer.Screen name="Home" component={Home} />
           <Drawer.Screen name="My Representatives" component={MyReps} />
           <Drawer.Screen name="Following" component={FollowingScreen} />
