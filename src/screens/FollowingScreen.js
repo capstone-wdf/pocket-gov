@@ -1,36 +1,38 @@
-
-import React from 'react'
-import { TouchableOpacity, View, TouchableWithoutFeedback } from 'react-native'
+import React from "react";
+import { TouchableOpacity, View, TouchableWithoutFeedback } from "react-native";
 import { Text, Avatar } from "react-native-paper";
-import { StyleSheet } from 'react-native';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import {connect} from 'react-redux'
+import { StyleSheet } from "react-native";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { connect } from "react-redux";
 
-function FollowingScreen({route, navigation, user}) {
-    console.log("Route Param:", route.params.user.members)
-    console.log("State user:", user)
-    // const handlePageChange = (chamber, id) => {
-    //     const selectedRep = chamber.filter((reps) => reps.id === id)[0];
-    //     console.log(selectedRep);
-    //     navigation.navigate("Single Member", { selectedRep });
-    //   };
+function FollowingScreen({ route, navigation, user }) {
+  // console.log("Route Param:", route.params.user.members)
+  console.log("State user:", user);
+  // const handlePageChange = (chamber, id) => {
+  //     const selectedRep = chamber.filter((reps) => reps.id === id)[0];
+  //     console.log(selectedRep);
+  //     navigation.navigate("Single Member", { selectedRep });
+  //   };
 
-    return (
-      <View style={styles.container}>
+  return (
+    <View style={styles.container}>
       <KeyboardAwareScrollView
-          style={{ flex: 1, width: '100%' }}
-          keyboardShouldPersistTaps="always">
-          <Text>Following</Text>
-          {user.members && user.members.map((memberId) => (
+        style={{ flex: 1, width: "100%" }}
+        keyboardShouldPersistTaps="always"
+      >
+        <Text>Following</Text>
+        {user.members &&
+          user.members.map((memberId) => (
             <TouchableWithoutFeedback
               key={memberId}
-            //   onPress={() => handlePageChange("117", memberId)}
+              //   onPress={() => handlePageChange("117", memberId)}
             >
-                <Avatar.Image
+              <Avatar.Image
                 size={70}
                 source={{
-                uri: `https://theunitedstates.io/images/congress/225x275/${memberId}.jpg`,
-                }}/>
+                  uri: `https://theunitedstates.io/images/congress/225x275/${memberId}.jpg`,
+                }}
+              />
             </TouchableWithoutFeedback>
           ))}
       </KeyboardAwareScrollView>
@@ -41,15 +43,14 @@ function FollowingScreen({route, navigation, user}) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
   },
 });
 
-
-const mapState = state => {
+const mapState = (state) => {
   return {
-    user: state
-  }
-}
+    user: state,
+  };
+};
 
-export default connect(mapState)(FollowingScreen)
+export default connect(mapState)(FollowingScreen);

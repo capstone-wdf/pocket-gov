@@ -13,8 +13,8 @@ import axios from "axios";
 import { config } from "../../secrets";
 import { VictoryPie, VictoryStack, VictoryBar } from "victory-native";
 import { firebase } from "../firebase/config";
-import {connect} from 'react-redux'
-import {updateUserThunk} from '../../redux/app-redux'
+import { connect } from "react-redux";
+import { updateUserThunk } from "../../redux/app-redux";
 
 // const rssParser = require("react-native-rss-parser");
 import * as rssParser from "react-native-rss-parser";
@@ -51,11 +51,11 @@ function singleMemberScreen({ route, navigation, user, updateUser }) {
   const [visible1, setVisible1] = useState(false);
 
   // console.log("ROUTEPARAMSUER", route.params.user);
-
+  console.log("USER", user);
   const openMenu1 = () => setVisible1(true);
   const closeMenu1 = () => setVisible1(false);
-  console.log("MEMBER1", member1);
-  console.log("MEMBER2", member2);
+  // console.log("MEMBER1", member1);
+  // console.log("MEMBER2", member2);
 
   //useEffect for comparison API
 
@@ -93,13 +93,13 @@ function singleMemberScreen({ route, navigation, user, updateUser }) {
 
   const onFollowPress = async () => {
     try {
-        await updateUser(user.id, member1.id)
-        console.log("user state after update u:", user, member1.id)
-        // navigation.navigate('singelMember')
-      } catch (error) {
-        console.log('Follow Error', error)
-      }
-  }
+      await updateUser(user.id, member1.id);
+      console.log("user state after update u:", user, member1.id);
+      // navigation.navigate('singelMember')
+    } catch (error) {
+      console.log("Follow Error", error);
+    }
+  };
 
   return (
     <SafeAreaView>
@@ -280,16 +280,17 @@ const styles = StyleSheet.create({
   },
 });
 
-const mapState = state => {
+const mapState = (state) => {
   return {
-    user: state
-  }
-}
+    user: state,
+  };
+};
 
-const mapDispatch = dispatch => {
+const mapDispatch = (dispatch) => {
   return {
-    updateUser: (userId, memberId) => dispatch(updateUserThunk(userId, memberId))
-  }
-}
+    updateUser: (userId, memberId) =>
+      dispatch(updateUserThunk(userId, memberId)),
+  };
+};
 
-export default connect(mapState, mapDispatch)(singleMemberScreen)
+export default connect(mapState, mapDispatch)(singleMemberScreen);
