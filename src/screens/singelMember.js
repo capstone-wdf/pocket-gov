@@ -14,7 +14,7 @@ import { config } from "../../secrets";
 import { VictoryPie, VictoryStack, VictoryBar } from "victory-native";
 import { firebase } from "../firebase/config";
 import {connect} from 'react-redux'
-import {fetchUser} from '../../redux/app-redux'
+import {updateUserThunk} from '../../redux/app-redux'
 
 // const rssParser = require("react-native-rss-parser");
 import * as rssParser from "react-native-rss-parser";
@@ -43,7 +43,7 @@ async function getMembers(congress, chamber) {
   }
 }
 
-export default function CompareMembers({ route, navigation }) {
+function singleMemberScreen({ route, navigation, user, updateUser }) {
   const [members, setMembers] = useState([]);
   const [member1, setMember1] = useState(null);
   const [member2, setMember2] = useState(null);
@@ -91,29 +91,15 @@ export default function CompareMembers({ route, navigation }) {
   // console.log(members);
   // fetchUserData();
 
-  const onFollowPress = () => {
-    console.log("Foo: ", route.params.user.members);
-    firebase
-      .firestore()
-      .collection("users")
-      .doc(route.params.user.id)
-      .update({
-        members: firebase.firestore.FieldValue.arrayUnion(member1.id),
-      })
-      .then(() =>
-      // replace this with updateUser thunk
-        firebase
-          .firestore()
-          .collection("users")
-          .doc(route.params.user.id)
-          .get()
-          .then((updatedUser) => {
-            console.log(updatedUser.data());
-            navigation.navigate("Single Member", { user: updatedUser.data() });
-          })
-      );
-    console.log("RPUM", route.params.user.members);
-  };
+  const onFollowPress = async () => {
+    try {
+        await updateUser(user.id, member1.id)
+        console.log("user state after update u:", user, member1.id)
+        // navigation.navigate('singelMember')
+      } catch (error) {
+        console.log('Follow Error', error)
+      }
+  }
 
   return (
     <SafeAreaView>
@@ -255,14 +241,13 @@ export default function CompareMembers({ route, navigation }) {
                 />
               </Text>
             )}
-            {member1 && route.params.user && (
+            {member1 && user.id && (
               <View>
-                {" "}
-                {route.params.user.members.includes(member1.id) ? (
+                {user.members.includes(member1.id) ? (
                   <Button>Following</Button>
                 ) : (
                   <Button onPress={() => onFollowPress()}>Follow</Button>
-                )}{" "}
+                )}
               </View>
             )}
           </View>
@@ -294,3 +279,17 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
   },
 });
+
+const mapState = state => {
+  return {
+    user: state
+  }
+}
+
+const mapDispatch = dispatch => {
+  return {
+    updateUser: (userId, memberId) => dispatch(updateUserThunk(userId, memberId))
+  }
+}
+
+export default connect(mapState, mapDispatch)(singleMemberScreen)

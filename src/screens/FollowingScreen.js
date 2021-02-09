@@ -4,10 +4,11 @@ import { TouchableOpacity, View, TouchableWithoutFeedback } from 'react-native'
 import { Text, Avatar } from "react-native-paper";
 import { StyleSheet } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import {connect} from 'react-redux'
 
-export default function FollowingScreen({route, navigation}) {
+function FollowingScreen({route, navigation, user}) {
     console.log("Route Param:", route.params.user.members)
-
+    console.log("State user:", user)
     // const handlePageChange = (chamber, id) => {
     //     const selectedRep = chamber.filter((reps) => reps.id === id)[0];
     //     console.log(selectedRep);
@@ -20,7 +21,7 @@ export default function FollowingScreen({route, navigation}) {
           style={{ flex: 1, width: '100%' }}
           keyboardShouldPersistTaps="always">
           <Text>Following</Text>
-          {route.params.user.members.map((memberId) => (
+          {user.members && user.members.map((memberId) => (
             <TouchableWithoutFeedback
               key={memberId}
             //   onPress={() => handlePageChange("117", memberId)}
@@ -43,3 +44,12 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
 });
+
+
+const mapState = state => {
+  return {
+    user: state
+  }
+}
+
+export default connect(mapState)(FollowingScreen)
