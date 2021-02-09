@@ -21,7 +21,7 @@ import {
   MyReps,
 } from './src/screens';
 import HomeScreen from './src/screens/HomeScreen';
-import { firebase } from './src/firebase/config';
+// import { firebase } from './src/firebase/config';
 import { Provider } from 'react-redux';
 import { store } from './redux/app-redux';
 import BottomNav from './src/components/BottomNav';
@@ -54,6 +54,7 @@ export default function App() {
   // }
 
   return (
+  <Provider store={store}>
     <PaperProvider store={store}>
       <NavigationContainer>
         <Drawer.Navigator initialRouteName="Home">
@@ -64,6 +65,7 @@ export default function App() {
         </Drawer.Navigator>
       </NavigationContainer>
     </PaperProvider>
+   </Provider>
   );
 }
 
