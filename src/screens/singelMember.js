@@ -8,24 +8,24 @@ import {
   View,
   Linking,
 } from "react-native";
-import { Avatar, Button, Menu, Text } from "react-native-paper";
+import { Avatar, Button, Menu, Text, card, Card } from "react-native-paper";
 import axios from "axios";
 import { config } from "../../secrets";
 import { VictoryPie, VictoryStack, VictoryBar } from "victory-native";
 import { firebase } from "../firebase/config";
-import {connect} from 'react-redux'
-import {fetchUser} from '../../redux/app-redux'
+import { connect } from "react-redux";
+import { fetchUser } from "../../redux/app-redux";
 
 // const rssParser = require("react-native-rss-parser");
 import * as rssParser from "react-native-rss-parser";
 
-async function fetchUserData() {
+async function fetchUserData(name) {
   //function invocation was commented out to not clutter console -EZ
-  const theUrl = "https://www.blumenthal.senate.gov/rss/feeds/?type=press";
+  const theUrl = `https://www.${name.toLowerCase()}.senate.gov/rss/feeds/?type=press`;
   try {
     const { data } = await axios.get(theUrl);
     const rss = await rssParser.parse(data);
-    // console.log(rss);
+    return rss.items;
   } catch (error) {
     console.error(error);
   }
@@ -46,7 +46,7 @@ async function getMembers(congress, chamber) {
 export default function CompareMembers({ route, navigation }) {
   const [members, setMembers] = useState([]);
   const [member1, setMember1] = useState(null);
-  const [member2, setMember2] = useState(null);
+  const [newsFeed, setNewsFeed] = useState(null);
 
   const [visible1, setVisible1] = useState(false);
 
@@ -54,8 +54,8 @@ export default function CompareMembers({ route, navigation }) {
 
   const openMenu1 = () => setVisible1(true);
   const closeMenu1 = () => setVisible1(false);
-  console.log("MEMBER1", member1);
-  console.log("MEMBER2", member2);
+  //   console.log("MEMBER1", member1);
+  //   console.log("MEMBER2", member2);
 
   //useEffect for comparison API
 
@@ -71,6 +71,15 @@ export default function CompareMembers({ route, navigation }) {
     apiCall();
   }
 
+  const rssCall = async () => {
+    let response = await fetchUserData(member1.last_name);
+    setNewsFeed(response);
+  };
+  if (!newsFeed && member1) {
+    rssCall();
+  }
+  //   console.log(member1);
+
   useEffect(() => {
     const selectedRep = route.params.selectedRep;
     setMember1({
@@ -82,6 +91,7 @@ export default function CompareMembers({ route, navigation }) {
       facebook_account: selectedRep.facebook_account,
       youtube_account: selectedRep.youtube_account,
       url: selectedRep.url,
+      rss_url: selectedRep.rss_url,
       votes_against_party_pct: selectedRep.roles[0].votes_against_party_pct,
       votes_with_party_pct: selectedRep.roles[0].votes_with_party_pct,
       contact_form: selectedRep.roles[0].contact_form,
@@ -89,7 +99,7 @@ export default function CompareMembers({ route, navigation }) {
   }, []);
   //commented out for now to not clutter log -EZ
   // console.log(members);
-  // fetchUserData();
+  fetchUserData();
 
   const onFollowPress = () => {
     console.log("Foo: ", route.params.user.members);
@@ -101,7 +111,7 @@ export default function CompareMembers({ route, navigation }) {
         members: firebase.firestore.FieldValue.arrayUnion(member1.id),
       })
       .then(() =>
-      // replace this with updateUser thunk
+        // replace this with updateUser thunk
         firebase
           .firestore()
           .collection("users")
@@ -115,6 +125,16 @@ export default function CompareMembers({ route, navigation }) {
     console.log("RPUM", route.params.user.members);
   };
 
+  const renderItem = ({ item }) => {
+    return (
+      <Card>
+        <Card.Content>
+          <Text title={item.title}>{item.title} </Text>
+        </Card.Content>
+      </Card>
+    );
+  };
+
   return (
     <SafeAreaView>
       <ScrollView contentContainerStyle={styles.contentContainer}>
@@ -122,12 +142,12 @@ export default function CompareMembers({ route, navigation }) {
           <Menu
             visible={visible1}
             onDismiss={closeMenu1}
-            anchor={<Button onPress={openMenu1}>choose member 1</Button>}
+            anchor={<Button onPress={openMenu1}>select another member </Button>}
           >
             {members.map((member) => {
               return (
                 <Menu.Item
-                  title={`${member.first_name} ${member.last_name} "${member.party}"`}
+                  title={`${member.first_name} ${member.last_name} (${member.party})`}
                   key={member.id}
                   onPress={() => {
                     setMember1({
@@ -155,106 +175,105 @@ export default function CompareMembers({ route, navigation }) {
         <View style={styles.memberContainer}>
           <View>
             {member1 && member1.first_name && (
-              <Avatar.Image
-                size={275}
-                source={{
-                  uri: `https://theunitedstates.io/images/congress/225x275/${member1.id}.jpg`,
-                }}
-              />
+              <View>
+                <Avatar.Image
+                  size={275}
+                  source={{
+                    uri: `https://theunitedstates.io/images/congress/225x275/${member1.id}.jpg`,
+                  }}
+                />
+                <Text>{`${member1.first_name} ${member1.last_name}`}</Text>
+                <Text>{`Party: ${
+                  member1.party === "D" ? "Democrat" : "Republican"
+                }`}</Text>
+
+                <Text>{`Agrees with party: ${member1.votes_with_party_pct}% `}</Text>
+                <Text>{`Disagrees with party: ${member1.votes_against_party_pct}% `}</Text>
+                {/*<Text>{`Phone number: ${member1.phone} `}</Text>*/}
+
+                <View style={styles.AvatarContainer}>
+                  <Text
+                    style={styles.TextStyle}
+                    onPress={() =>
+                      Linking.openURL(
+                        `https://twitter.com/${member1.twitter_account}`
+                      )
+                    }
+                  >
+                    <Avatar.Image
+                      size={50}
+                      source={{
+                        uri: `https://logodownload.org/wp-content/uploads/2014/09/twitter-logo-1-1.png`,
+                      }}
+                    />
+                  </Text>
+
+                  <Text
+                    style={styles.TextStyle}
+                    onPress={() =>
+                      Linking.openURL(
+                        `https://www.facebook.com/${member1.facebook_account}/`
+                      )
+                    }
+                  >
+                    <Avatar.Image
+                      size={50}
+                      source={{
+                        uri: `https://facebookbrand.com/wp-content/uploads/2019/04/f_logo_RGB-Hex-Blue_512.png?w=512&h=512`,
+                      }}
+                    />
+                  </Text>
+
+                  <Text
+                    style={styles.TextStyle}
+                    onPress={() =>
+                      Linking.openURL(
+                        `https://www.youtube.com/user/${member1.youtube_account}`
+                      )
+                    }
+                  >
+                    <Avatar.Image
+                      size={50}
+                      source={{
+                        uri: `https://www.online-tech-tips.com/wp-content/uploads/2019/07/youtube-1.png.webp`,
+                      }}
+                    />
+                  </Text>
+
+                  <Text
+                    style={styles.TextStyle}
+                    onPress={() => Linking.openURL(`${member1.url}`)}
+                  >
+                    <Avatar.Image
+                      size={50}
+                      source={{
+                        uri: `https://cdn4.iconfinder.com/data/icons/internet-3-5/512/102-512.png`,
+                      }}
+                    />
+                  </Text>
+
+                  <Text
+                    style={styles.TextStyle}
+                    onPress={() => Linking.openURL(`${member1.contact_form}`)}
+                  >
+                    <Avatar.Image
+                      size={50}
+                      source={{
+                        uri: `https://img.favpng.com/17/10/19/logo-envelope-mail-png-favpng-C2icb0S6z8Fj651JUUtCdrih9.jpg`,
+                      }}
+                    />
+                  </Text>
+                </View>
+
+                <FlatList
+                  horizontal
+                  data={newsFeed}
+                  renderItem={renderItem}
+                  keyExtractor={(item) => item.id}
+                />
+              </View>
             )}
-            {member1 && (
-              <Text>{`${member1.first_name} ${member1.last_name} (${member1.party})`}</Text>
-            )}
-            {/* {member1 && <Text>{`Party: "${member1.party}"`}</Text>} */}
             {/* {member1 && <Text>{`Last Updated: ${member1.last_updated} `}</Text>} */}
-            {/* {member1 && <Text>{`Phone number: ${member1.phone} `}</Text>} */}
-            {member1 && (
-              <Text>{`Agrees with party: ${member1.votes_with_party_pct}% `}</Text>
-            )}
-            {member1 && (
-              <Text>{`Disagrees with party: ${member1.votes_against_party_pct}% `}</Text>
-            )}
-
-            {member1 && member1.twitter_account && (
-              <Text
-                style={styles.TextStyle}
-                onPress={() =>
-                  Linking.openURL(
-                    `https://twitter.com/${member1.twitter_account}`
-                  )
-                }
-              >
-                <Avatar.Image
-                  size={50}
-                  source={{
-                    uri: `https://logodownload.org/wp-content/uploads/2014/09/twitter-logo-1-1.png`,
-                  }}
-                />
-              </Text>
-            )}
-
-            {member1 && (
-              <Text
-                style={styles.TextStyle}
-                onPress={() =>
-                  Linking.openURL(
-                    `https://www.facebook.com/${member1.facebook_account}/`
-                  )
-                }
-              >
-                <Avatar.Image
-                  size={50}
-                  source={{
-                    uri: `https://facebookbrand.com/wp-content/uploads/2019/04/f_logo_RGB-Hex-Blue_512.png?w=512&h=512`,
-                  }}
-                />
-              </Text>
-            )}
-
-            {member1 && (
-              <Text
-                style={styles.TextStyle}
-                onPress={() =>
-                  Linking.openURL(
-                    `https://www.youtube.com/user/${member1.youtube_account}`
-                  )
-                }
-              >
-                <Avatar.Image
-                  size={50}
-                  source={{
-                    uri: `https://www.online-tech-tips.com/wp-content/uploads/2019/07/youtube-1.png.webp`,
-                  }}
-                />
-              </Text>
-            )}
-
-            {member1 && (
-              <Text
-                style={styles.TextStyle}
-                onPress={() => Linking.openURL(`${member1.url}`)}
-              >
-                <Avatar.Image
-                  size={50}
-                  source={{
-                    uri: `https://cdn4.iconfinder.com/data/icons/internet-3-5/512/102-512.png`,
-                  }}
-                />
-              </Text>
-            )}
-            {member1 && member1.contact_form && (
-              <Text
-                style={styles.TextStyle}
-                onPress={() => Linking.openURL(`${member1.contact_form}`)}
-              >
-                <Avatar.Image
-                  size={50}
-                  source={{
-                    uri: `https://img.favpng.com/17/10/19/logo-envelope-mail-png-favpng-C2icb0S6z8Fj651JUUtCdrih9.jpg`,
-                  }}
-                />
-              </Text>
-            )}
             {member1 && route.params.user && (
               <View>
                 {" "}
@@ -277,6 +296,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     alignItems: "center",
     justifyContent: "center",
+    height: "100%",
   },
   menu_container: {
     // flex: 1,
@@ -292,5 +312,11 @@ const styles = StyleSheet.create({
   dataContainer: {
     marginHorizontal: 50,
     paddingHorizontal: 10,
+  },
+
+  AvatarContainer: {
+    flexDirection: "row",
+    marginVertical: 20,
+    justifyContent: "space-evenly",
   },
 });
