@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { IconButton, Menu, Text } from 'react-native-paper';
+import { Colors, IconButton, Menu, Text } from 'react-native-paper';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { LegislativeHome, JudicialHome, ExecutiveHome } from './index';
-import Ionicons from 'react-native-vector-icons/Ionicons';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 const Tab = createBottomTabNavigator();
 
@@ -13,21 +13,23 @@ export default function HomeScreen({ navigation }) {
     <View style={styles.container}>
       <Tab.Navigator
         screenOptions={({ route }) => ({
-          tabBarIcon: ({ focused, color, size }) => {
+          tabBarIcon: () => {
             let iconName;
-            if (route.name === 'Legislative Home') {
-              iconName = focused
-                ? 'ios-information-circle'
-                : 'ios-information-circle-outline';
-            } else if (route.name === 'Settings') {
-              iconName = focused ? 'ios-list-box' : 'ios-list';
+            if (route.name === 'Legislative') {
+              iconName = 'gavel';
+            } else if (route.name === 'Executive') {
+              iconName = 'fountain-pen';
+            } else {
+              iconName = 'book-open-variant';
             }
-            return <Ionicons name={iconName} size={size} color={color} />;
+            return (
+              <MaterialCommunityIcons name={iconName} size={24} color={Colors.cyan700}/>
+            );
           },
         })}
         tabBarOptions={{
-          activeTintColor: 'purple',
-          inactiveTintColor: 'gray',
+          activeTintColor: Colors.cyan700,
+          inactiveTintColor: Colors.gray900,
         }}
       >
         <Tab.Screen name="Legislative">

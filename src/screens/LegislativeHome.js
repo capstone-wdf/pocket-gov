@@ -7,34 +7,36 @@ import USMap from "../components/USMap";
 import { firebase } from "../firebase/config";
 import { gCloudKey } from "../../secrets";
 import axios from "axios";
+import { connect } from "react-redux";
+import { logOutUserThunk } from "../../redux/app-redux";
 
 import ZoomView from "@dudigital/react-native-zoomable-view/src/ReactNativeZoomableView";
 
-export default function LegislativeHome({ navigation }) {
+function LegislativeHome({ navigation, user, logOutUser }) {
   const [search, setSearch] = useState("");
-  // console.log(search);
-  const [user, setUser] = useState(null);
+  console.log("USER", user);
+  // const [user, setUser] = useState(null);
 
-  useEffect(() => {
-    const usersRef = firebase.firestore().collection("users");
-    firebase.auth().onAuthStateChanged((user) => {
-      if (user) {
-        usersRef
-          .doc(user.uid)
-          .get()
-          .then((document) => {
-            const userData = document.data();
-            // setLoading(false);
-            setUser(userData);
-          })
-          .catch((error) => {
-            // setLoading(false);
-          });
-      } else {
-        // setLoading(false);
-      }
-    });
-  }, []);
+  // useEffect(() => {
+  //   const usersRef = firebase.firestore().collection("users");
+  //   firebase.auth().onAuthStateChanged((user) => {
+  //     if (user) {
+  //       usersRef
+  //         .doc(user.uid)
+  //         .get()
+  //         .then((document) => {
+  //           const userData = document.data();
+  //           // setLoading(false);
+  //           setUser(userData);
+  //         })
+  //         .catch((error) => {
+  //           // setLoading(false);
+  //         });
+  //     } else {
+  //       // setLoading(false);
+  //     }
+  //   });
+  // }, []);
 
   const handleSearch = async () => {
     try {
@@ -57,19 +59,9 @@ export default function LegislativeHome({ navigation }) {
   };
 
   const onLogOutPress = () => {
-    firebase
-      .auth()
-      .signOut()
-      .then(
-        console.log("User after signout:", user),
-        console.log("Signed Out Successfully"),
-        setUser(undefined),
-        // need to add to navigate back to sign up page
-        navigation.navigate("Login")
-      )
-      .catch((error) => {
-        alert(error);
-      });
+    logOutUser();
+    console.log("User logged out, USER:", user);
+    navigation.navigate("Legislative");
   };
 
   const onFollowingPress = () => {
@@ -118,7 +110,7 @@ export default function LegislativeHome({ navigation }) {
         <Button onPress={() => navigation.navigate("Bills")}>
           Go to Bills
         </Button>
-        {user ? (
+        {user.id ? (
           <>
             <TouchableOpacity
               style={styles.button}
@@ -201,3 +193,15 @@ const styles = StyleSheet.create({
     marginBottom: 50,
   },
 });
+
+const mapState = (state) => {
+  return { user: state };
+};
+
+const mapDispatch = (dispatch) => {
+  return {
+    logOutUser: () => dispatch(logOutUserThunk()),
+  };
+};
+
+export default connect(mapState, mapDispatch)(LegislativeHome);

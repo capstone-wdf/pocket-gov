@@ -1,93 +1,109 @@
-import { createStore, applyMiddleware } from 'redux';
-import thunkMiddleware from 'redux-thunk';
-import { firebase } from '../src/firebase/config'
+import { createStore, applyMiddleware } from "redux";
+import thunkMiddleware from "redux-thunk";
+import { firebase } from "../src/firebase/config";
 
-const SET_USER = 'SET_USER'
-const UPDATE_USER = 'UPDATE_USER'
+const SET_USER = "SET_USER";
+const LOG_OUT_USER = "LOG_OUT_USER";
+const UPDATE_USER = "UPDATE_USER";
 
-export const setUser = user => {
+export const setUser = (user) => {
   return {
     type: SET_USER,
-    user
-  }
-}
+    user,
+  };
+};
 
-// export const updateUser = user => {
-//   return {
-//     type: UPDATE_USER,
-//     user
-//   }
-// }
+export const updateUser = (memberId) => {
+  return {
+    type: UPDATE_USER,
+    memberId,
+  };
+};
+
+export const logOutUser = () => {
+  return {
+    type: LOG_OUT_USER,
+  };
+};
 
 export const fetchUser = (email, password) => {
-  return dispatch => {
-      firebase
+  return (dispatch) => {
+    firebase
       .auth()
       .signInWithEmailAndPassword(email, password)
       .then((response) => {
-          const uid = response.user.uid
-          const usersRef = firebase.firestore().collection('users')
-          usersRef
-              .doc(uid)
-              .get()
-              .then(firestoreDocument => {
-                  if (!firestoreDocument.exists) {
-                      alert("User does not exist anymore.")
-                      return;
-                  }
-                  const user = firestoreDocument.data()
-                  dispatch(setUser(user))}
-      )
-      .catch(error => {
-        alert(error)
-    });
-  })
-  .catch(error => {
-  alert(error)
-  })
-  }}
+        const uid = response.user.uid;
+        const usersRef = firebase.firestore().collection("users");
+        usersRef
+          .doc(uid)
+          .get()
+          .then((firestoreDocument) => {
+            if (!firestoreDocument.exists) {
+              alert("User does not exist anymore.");
+              return;
+            }
+            const user = firestoreDocument.data();
+            dispatch(setUser(user));
+          })
+          .catch((error) => {
+            alert(error);
+          });
+      })
+      .catch((error) => {
+        alert(error);
+      });
+  };
+};
 
-  // export const updateUser = (user, memberId) => {
-  //   return dispatch => {
-  //       firebase
-  //       .auth()
-  //       .signInWithEmailAndPassword(email, password)
-  //       .then((response) => {
-  //           const uid = response.user.uid
-  //           const usersRef = firebase.firestore().collection('users')
-  //           usersRef
-  //               .doc(uid)
-  //               .get()
-  //               .then(firestoreDocument => {
-  //                   if (!firestoreDocument.exists) {
-  //                       alert("User does not exist anymore.")
-  //                       return;
-  //                   }
-  //                   const user = firestoreDocument.data()
-  //                   dispatch(setUser(user))}
-  //       )
-  //       .catch(error => {
-  //         alert(error)
-  //     });
-  //   })
-  //   .catch(error => {
-  //   alert(error)
-  //   })
-  // }}
+export const updateUserThunk = (userId, memberId) => {
+  return (dispatch) => {
+    firebase
+      .firestore()
+      .collection("users")
+      .doc(userId)
+      .update({
+        members: firebase.firestore.FieldValue.arrayUnion(memberId),
+      });
+    dispatch(updateUser(memberId));
+    // .catch(error => {
+    //   alert(error)
+    // })
+  };
+};
+
+export const logOutUserThunk = () => {
+  return (dispatch) => {
+    firebase
+      .auth()
+      .signOut()
+      .then(
+        // console.log("User after signout:", user),
+        console.log("Signed Out Successfully"),
+        dispatch(logOutUser())
+      )
+      .catch((error) => {
+        alert(error);
+      });
+  };
+};
 
 // initial state
-const initialState = {}
+const initialState = {};
 
 // reducer
 const userReducer = (state = initialState, action) => {
   switch (action.type) {
     case SET_USER:
-      return action.user
+      return action.user;
+    case UPDATE_USER:
+      return { ...state, members: [...state.members, action.memberId] };
+    case LOG_OUT_USER:
+      return {};
     default:
-      return state
+      return state;
   }
-}
+};
 
-const store = createStore(userReducer, applyMiddleware(thunkMiddleware))
+const store = createStore(userReducer, applyMiddleware(thunkMiddleware));
 
 export { store };
