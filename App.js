@@ -1,14 +1,16 @@
-import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { useState, useEffect } from 'react';
-import { Button, StyleSheet, Text, View } from 'react-native';
-import { Provider as PaperProvider, Colors } from 'react-native-paper';
-import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
-import { createDrawerNavigator,
+import { StatusBar } from "expo-status-bar";
+import React from "react";
+import { useState, useEffect } from "react";
+import { Button, StyleSheet, Text, View } from "react-native";
+import { Provider as PaperProvider, Colors } from "react-native-paper";
+import { NavigationContainer } from "@react-navigation/native";
+import { createStackNavigator } from "@react-navigation/stack";
+import {
+  createDrawerNavigator,
   DrawerContentScrollView,
   DrawerItemList,
-  DrawerItem } from '@react-navigation/drawer';
+  DrawerItem,
+} from "@react-navigation/drawer";
 import {
   LoginScreen,
   RegistrationScreen,
@@ -22,30 +24,63 @@ import {
   ExecutiveHome,
   JudicialHome,
   MyReps,
-} from './src/screens';
-import HomeScreen from './src/screens/HomeScreen';
+} from "./src/screens";
+import HomeScreen from "./src/screens/HomeScreen";
 // import { firebase } from './src/firebase/config';
-import { Provider } from 'react-redux';
-import { store, logOutUserThunk } from './redux/app-redux';
-import BottomNav from './src/components/BottomNav';
+import { Provider } from "react-redux";
+import { store, logOutUserThunk } from "./redux/app-redux";
+import BottomNav from "./src/components/BottomNav";
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
 
 function CustomDrawerContent(props) {
-  const user = store.getState()
+  const user = store.getState();
   return (
     <DrawerContentScrollView {...props}>
       <DrawerItemList {...props} />
       {user.id ? (
-        <DrawerItem label="Log Out" onPress={() =>
-          {
-           store.dispatch(logOutUserThunk())
-           props.navigation.navigate('Legislative')
-          }
-        } />
+        <>
+          <DrawerItem
+            label="My Representatives"
+            activeTintColor={Colors.cyan700}
+            onPress={() => {
+              props.navigation.navigate("My Representatives");
+            }}
+          />
+          <DrawerItem
+            label="Following"
+            onPress={() => {
+              props.navigation.navigate("Following");
+            }}
+          />
+          <DrawerItem
+            label="Log Out"
+            onPress={() => {
+              store.dispatch(logOutUserThunk());
+              props.navigation.navigate("Legislative");
+            }}
+          />
+        </>
       ) : (
-        <DrawerItem label="Log In" onPress={() => props.navigation.navigate('Login')} />
+        <>
+          <DrawerItem
+            label="My Representatives"
+            onPress={() => {
+              props.navigation.navigate("Login");
+            }}
+          />
+          <DrawerItem
+            label="Following"
+            onPress={() => {
+              props.navigation.navigate("Login");
+            }}
+          />
+          <DrawerItem
+            label="Log In"
+            onPress={() => props.navigation.navigate("Login")}
+          />
+        </>
       )}
     </DrawerContentScrollView>
   );
@@ -71,6 +106,8 @@ function Home() {
       <Stack.Screen name="Single State" component={SingleState} />
       <Stack.Screen name="Specific Bill" component={SpecificBill} />
       <Stack.Screen name="Login" component={LoginScreen} />
+      <Stack.Screen name="My Representatives" component={MyReps} />
+      <Stack.Screen name="Following" component={FollowingScreen} />
     </Stack.Navigator>
   );
 }
@@ -86,29 +123,31 @@ export default function App() {
   // }
 
   return (
-  <Provider store={store}>
-    <PaperProvider store={store}>
-      <NavigationContainer>
-        <Drawer.Navigator initialRouteName="Home"
-        drawerContentOptions={{
-          activeTintColor: Colors.cyan700
-        }} drawerContent={props => <CustomDrawerContent {...props} />}
-        >
-          <Drawer.Screen name="Home" component={Home} />
-          <Drawer.Screen name="My Representatives" component={MyReps} />
-          <Drawer.Screen name="Following" component={FollowingScreen} />
-        </Drawer.Navigator>
-      </NavigationContainer>
-    </PaperProvider>
-   </Provider>
+    <Provider store={store}>
+      <PaperProvider store={store}>
+        <NavigationContainer>
+          <Drawer.Navigator
+            initialRouteName="Home"
+            drawerContentOptions={{
+              activeTintColor: Colors.cyan700,
+            }}
+            drawerContent={(props) => <CustomDrawerContent {...props} />}
+          >
+            <Drawer.Screen name="Home" component={Home} />
+            {/* <Drawer.Screen name="My Representatives" component={MyReps} />
+            <Drawer.Screen name="Following" component={FollowingScreen} /> */}
+          </Drawer.Navigator>
+        </NavigationContainer>
+      </PaperProvider>
+    </Provider>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: "#fff",
+    alignItems: "center",
+    justifyContent: "center",
   },
 });
