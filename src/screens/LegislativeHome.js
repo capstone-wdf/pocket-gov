@@ -110,31 +110,6 @@ function LegislativeHome({ navigation, user, logOutUser }) {
         <Button onPress={() => navigation.navigate("Bills")}>
           Go to Bills
         </Button>
-        {user.id ? (
-          <>
-            <TouchableOpacity
-              style={styles.button}
-              onPress={() => onFollowingPress()}
-            >
-              <Text style={styles.buttonTitle}>Following</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.button}
-              onPress={() => onLogOutPress()}
-            >
-              <Text style={styles.buttonTitle}>Log Out</Text>
-            </TouchableOpacity>
-          </>
-        ) : (
-          <>
-            <TouchableOpacity
-              style={styles.button}
-              onPress={() => navigation.navigate("Login")}
-            >
-              <Text style={styles.buttonTitle}>Log In</Text>
-            </TouchableOpacity>
-          </>
-        )}
       </View>
     </View>
   );

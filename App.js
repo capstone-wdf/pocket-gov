@@ -5,7 +5,10 @@ import { Button, StyleSheet, Text, View } from 'react-native';
 import { Provider as PaperProvider, Colors } from 'react-native-paper';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import { createDrawerNavigator } from '@react-navigation/drawer';
+import { createDrawerNavigator,
+  DrawerContentScrollView,
+  DrawerItemList,
+  DrawerItem } from '@react-navigation/drawer';
 import {
   LoginScreen,
   RegistrationScreen,
@@ -23,11 +26,39 @@ import {
 import HomeScreen from './src/screens/HomeScreen';
 // import { firebase } from './src/firebase/config';
 import { Provider } from 'react-redux';
-import { store } from './redux/app-redux';
+import { store, logOutUserThunk } from './redux/app-redux';
 import BottomNav from './src/components/BottomNav';
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
+
+function CustomDrawerContent(props) {
+  const user = store.getState()
+  return (
+    <DrawerContentScrollView {...props}>
+      <DrawerItemList {...props} />
+      {user.id ? (
+        <DrawerItem label="Log Out" onPress={() =>
+          {
+           store.dispatch(logOutUserThunk())
+           props.navigation.navigate('Legislative')
+          }
+        } />
+      ) : (
+        <DrawerItem label="Log In" onPress={() => props.navigation.navigate('Login')} />
+      )}
+    </DrawerContentScrollView>
+  );
+}
+
+// function TestContent(props) {
+//   return (
+//     <DrawerContentScrollView {...props}>
+//       <DrawerItemList {...props} />
+//       <DrawerItem label="Test" onPress={() => alert('test')} />
+//     </DrawerContentScrollView>
+//   );
+// }
 
 function Home() {
   return (
@@ -39,6 +70,7 @@ function Home() {
       <Stack.Screen name="Single Member" component={singleMember} />
       <Stack.Screen name="Single State" component={SingleState} />
       <Stack.Screen name="Specific Bill" component={SpecificBill} />
+      <Stack.Screen name="Login" component={LoginScreen} />
     </Stack.Navigator>
   );
 }
@@ -60,12 +92,11 @@ export default function App() {
         <Drawer.Navigator initialRouteName="Home"
         drawerContentOptions={{
           activeTintColor: Colors.cyan700
-        }}
+        }} drawerContent={props => <CustomDrawerContent {...props} />}
         >
           <Drawer.Screen name="Home" component={Home} />
           <Drawer.Screen name="My Representatives" component={MyReps} />
           <Drawer.Screen name="Following" component={FollowingScreen} />
-          <Drawer.Screen name="Login" component={LoginScreen} />
         </Drawer.Navigator>
       </NavigationContainer>
     </PaperProvider>
