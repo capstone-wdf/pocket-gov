@@ -8,6 +8,7 @@ import {
   View,
 } from 'react-native';
 import {
+  Appbar,
   Button,
   Menu,
   Searchbar,
@@ -84,9 +85,9 @@ export default function Bills({ navigation }) {
 
   // effect hook for changing type of recent bill
   //TO DO:
-    useEffect(() => {
-      let chamber = "house"
-      getRecentBills(congress, chamber, type);
+  useEffect(() => {
+    let chamber = 'house';
+    getRecentBills(congress, chamber, type);
   }, [type]);
 
   const callGetUpcomingBills = async () => {
@@ -152,6 +153,10 @@ export default function Bills({ navigation }) {
 
   return (
     <ScrollView style={styles.container}>
+      <Appbar.Header>
+        <Appbar.Content title="Bills" />
+        <Appbar.Action icon="menu" onPress={() => navigation.openDrawer()} />
+      </Appbar.Header>
       <Searchbar
         placeholder="Search Bills"
         onChangeText={onChangeSearch}
