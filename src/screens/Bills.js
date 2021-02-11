@@ -162,7 +162,7 @@ export default function Bills({ navigation }) {
         onChangeText={onChangeSearch}
         value={searchQuery}
       />
-      {searchResults && (
+      {searchResults && searchResults.length > 0 && (
         <View style={styles.billsContainer}>
           <Title>Results</Title>
           <FlatList
