@@ -55,11 +55,11 @@ async function searchBills(query) {
 }
 
 export default function Bills({ navigation }) {
-  const [senateRecentBills, setSenateRecentBills] = useState([]);
-  const [houseRecentBills, setHouseRecentBills] = useState([]);
-  const [upcomingBills, setUpcomingBills] = useState([]);
+  const [senateRecentBills, setSenateRecentBills] = useState(null);
+  const [houseRecentBills, setHouseRecentBills] = useState(null);
+  const [upcomingBills, setUpcomingBills] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
-  const [searchResults, setSearchResults] = useState([]);
+  const [searchResults, setSearchResults] = useState(null);
   const [visible, setVisible] = useState(false);
   const [type, setType] = useState('introduced');
 
@@ -84,10 +84,10 @@ export default function Bills({ navigation }) {
 
   // effect hook for changing type of recent bill
   //TO DO:
-  //   useEffect(() => {
-  //     let chamber = "house"
-  //     getRecentBills(congress, chamber, type);
-  // }, [type]);
+    useEffect(() => {
+      let chamber = "house"
+      getRecentBills(congress, chamber, type);
+  }, [type]);
 
   const callGetUpcomingBills = async () => {
     let houseBills = await getUpcomingBills('house');
@@ -96,15 +96,15 @@ export default function Bills({ navigation }) {
     setUpcomingBills(upcomingBothChambers);
   };
 
-  if (!senateRecentBills.length) {
+  if (!senateRecentBills) {
     callGetRecentBills('senate');
   }
 
-  if (!houseRecentBills.length) {
+  if (!houseRecentBills) {
     callGetRecentBills('house');
   }
 
-  if (!upcomingBills.length) {
+  if (!upcomingBills) {
     callGetUpcomingBills();
   }
 
@@ -157,7 +157,7 @@ export default function Bills({ navigation }) {
         onChangeText={onChangeSearch}
         value={searchQuery}
       />
-      {searchResults.length > 0 && (
+      {searchResults && (
         <View style={styles.billsContainer}>
           <Title>Results</Title>
           <FlatList
