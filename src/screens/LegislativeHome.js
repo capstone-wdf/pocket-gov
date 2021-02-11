@@ -1,116 +1,60 @@
-import { StatusBar } from "expo-status-bar";
 import React, { useState, useEffect } from "react";
 import { StyleSheet, View, TouchableOpacity, Dimensions } from "react-native";
-import { NavigationContainer } from "@react-navigation/native";
-import { Button, Searchbar, Text, Chip } from "react-native-paper";
+import { Button, Menu, Text, Title } from "react-native-paper";
 import USMap from "../components/USMap";
-import { firebase } from "../firebase/config";
-import { gCloudKey } from "../../secrets";
-import axios from "axios";
-import { connect } from "react-redux";
-import { logOutUserThunk } from "../../redux/app-redux";
-
 import ZoomView from "@dudigital/react-native-zoomable-view/src/ReactNativeZoomableView";
+import { stateNames, usStates } from "../components/usStates";
 
-function LegislativeHome({ navigation, user, logOutUser }) {
-  const [search, setSearch] = useState("");
-  console.log("USER", user);
-  // const [user, setUser] = useState(null);
+function LegislativeHome({ navigation }) {
+  const [menuVisible, setMenuVisible] = useState(false);
 
-  // useEffect(() => {
-  //   const usersRef = firebase.firestore().collection("users");
-  //   firebase.auth().onAuthStateChanged((user) => {
-  //     if (user) {
-  //       usersRef
-  //         .doc(user.uid)
-  //         .get()
-  //         .then((document) => {
-  //           const userData = document.data();
-  //           // setLoading(false);
-  //           setUser(userData);
-  //         })
-  //         .catch((error) => {
-  //           // setLoading(false);
-  //         });
-  //     } else {
-  //       // setLoading(false);
-  //     }
-  //   });
-  // }, []);
+  const openMenu = () => setMenuVisible(true);
+  const closeMenu = () => setMenuVisible(false);
 
-  const handleSearch = async () => {
-    try {
-      const query = {
-        key: gCloudKey,
-        inputtype: "textquery",
-        input: search,
-      };
-      const {
-        data,
-      } = await axios.get(
-        "https://maps.googleapis.com/maps/api/place/findplacefromtext/json",
-        { params: query }
+  const generateMenuItems = (arr) => {
+    return arr.map((usState) => {
+      const fullName = stateNames[usState.id];
+      return (
+        <Menu.Item
+          key={usState.id}
+          title={fullName}
+          onPress={() => {
+            closeMenu();
+            navigation.navigate("Single State", {
+              state: `${usState.id.toLowerCase()}`,
+            });
+          }}
+        />
       );
-
-      console.log(data);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const onLogOutPress = () => {
-    logOutUser();
-    console.log("User logged out, USER:", user);
-    navigation.navigate("Legislative");
-  };
-
-  const onFollowingPress = () => {
-    navigation.navigate("Following", { user });
+    });
   };
 
   return (
     <View style={styles.container}>
-      {/* <Searchbar
-        placeholder="Enter location"
-        value={search}
-        onChangeText={(query) => setSearch(query)}
-        onSubmitEditing={handleSearch}
-      /> */}
-      <View style={styles.billsreps}>
-        {/*
-      Make swipable from left to right, bills to representatives?
-       */}
-        {/* <Chip>Bills</Chip>
-        <Chip>Representatives</Chip> */}
+      <View style={styles.menu}>
+        <Title>Legislative Branch</Title>
+        <View style={{ alignItems: "center" }}>
+          <Text>
+            Find your state's federal representatives from the drop-down or
+            interacting with the map!
+          </Text>
+          <Menu
+            visible={menuVisible}
+            onDismiss={closeMenu}
+            anchor={<Button onPress={openMenu}>Select a state</Button>}
+          >
+            {generateMenuItems(usStates)}
+          </Menu>
+        </View>
       </View>
 
       <ZoomView style={styles.map} maxZoom={2} minZoom={1}>
         <USMap navigation={navigation} />
       </ZoomView>
 
-      {/* <View style={styles.branchbar}>
-        <Button icon="gavel" onPress={() => navigation.navigate("Judicial")}>
-          Judicial
-        </Button>
-        <Button
-          icon="fountain-pen"
-          onPress={() => navigation.navigate("Executive")}
-        >
-          Executive
-        </Button> */}
-        {/* <Button icon="book-open-variant">Legislative</Button>
+      <View style={styles.bottom}>
+        <Text>* iOS devices might have trouble interacting with the map</Text>
       </View>
-      <View style={styles.buttonContainer}>
-        <Button onPress={() => navigation.navigate("Compare")}>
-          Go to Compare Members Screen
-        </Button>
-        <Button onPress={() => navigation.navigate('Single Member', { user })}>
-          Go to Single Member Screen
-        </Button>
-        <Button onPress={() => navigation.navigate("Bills")}>
-          Go to Bills
-        </Button> */}
-      {/* </View>  */}
     </View>
   );
 }
@@ -118,19 +62,16 @@ function LegislativeHome({ navigation, user, logOutUser }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-
     backgroundColor: "#fff",
     alignItems: "center",
     justifyContent: "center",
   },
-  billsreps: {
-    flexDirection: "row",
+  menu: {
+    flex: 1,
     backgroundColor: "#fff",
-    width: "100%",
-    height: "5%",
-    justifyContent: "space-around",
-    alignItems: "center",
     zIndex: 1,
+    justifyContent: "space-between",
+    alignItems: "center",
   },
   //width HAS to be defined like this for map to work
   map: {
@@ -142,13 +83,14 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  branchbar: {
+  bottom: {
     flex: 1,
-    flexDirection: "row",
     width: "100%",
     backgroundColor: "#fff",
-    justifyContent: "space-around",
+    zIndex: 1,
+    justifyContent: "flex-start",
   },
+  //not currently used
   button: {
     backgroundColor: "#788eec",
     marginLeft: 30,
@@ -167,16 +109,7 @@ const styles = StyleSheet.create({
   buttonContainer: {
     marginBottom: 50,
   },
+  //--------
 });
 
-const mapState = (state) => {
-  return { user: state };
-};
-
-const mapDispatch = (dispatch) => {
-  return {
-    logOutUser: () => dispatch(logOutUserThunk()),
-  };
-};
-
-export default connect(mapState, mapDispatch)(LegislativeHome);
+export default LegislativeHome;

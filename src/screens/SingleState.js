@@ -5,6 +5,7 @@ import {
   Dimensions,
   TouchableWithoutFeedback,
   ScrollView,
+  FlatList,
 } from "react-native";
 import { Text, Title, Avatar } from "react-native-paper";
 import { individualStates } from "../components/IndividualStates2";
@@ -69,62 +70,53 @@ export default function SingleState({ route, navigation }) {
       <View style={styles.map}>{currentStatePath}</View>
 
       <View style={styles.reps_container}>
-        {loading ? (
-          <Text>Loading your representatives...</Text>
-        ) : (
-          <React.Fragment>
-            <View style={{ alignItems: "center" }}>
-              <Title>Senators</Title>
-              <View style={styles.reps}>
-                {senate &&
-                  senate.map((senator) => (
-                    <TouchableWithoutFeedback
-                      key={senator.id}
-                      onPress={() => handlePageChange(senate, senator.id)}
-                    >
-                      <View style={{ alignItems: "center", padding: "1%" }}>
-                        <Avatar.Image
-                          size={70}
-                          source={{
-                            uri: `https://theunitedstates.io/images/congress/225x275/${senator.id}.jpg`,
-                          }}
-                        />
-                        <Text>{`${senator.last_name} (${senator.party})`}</Text>
-                      </View>
-                    </TouchableWithoutFeedback>
-                  ))}
-              </View>
-            </View>
-            <View style={{ alignItems: "center" }}>
-              <Title> House of Representatives</Title>
-              {/**
+        <View style={{ alignItems: "center" }}>
+          <Title>Senators</Title>
+          <View style={styles.reps}>
+            {senate &&
+              senate.map((senator) => (
+                <TouchableWithoutFeedback
+                  key={senator.id}
+                  onPress={() => handlePageChange(senate, senator.id)}
+                >
+                  <View style={{ alignItems: "center", padding: "1%" }}>
+                    <Avatar.Image
+                      size={70}
+                      source={{
+                        uri: `https://theunitedstates.io/images/congress/225x275/${senator.id}.jpg`,
+                      }}
+                    />
+                    <Text>{`${senator.first_name} ${senator.last_name} (${senator.party})`}</Text>
+                  </View>
+                </TouchableWithoutFeedback>
+              ))}
+          </View>
+        </View>
+        <View style={{ alignItems: "center" }}>
+          <Title>Representatives</Title>
+          {/**
           Change from View to something else?
            */}
-              <ScrollView horizontal contentContainerStyle={styles.reps2}>
-                {house &&
-                  house.map((rep) => (
-                    <TouchableWithoutFeedback
-                      key={rep.id}
-                      onPress={() => handlePageChange(house, rep.id)}
-                    >
-                      <View
-                        pointerEvents="auto"
-                        style={{ alignItems: "center", padding: "1%" }}
-                      >
-                        <Avatar.Image
-                          size={70}
-                          source={{
-                            uri: `https://theunitedstates.io/images/congress/225x275/${rep.id}.jpg`,
-                          }}
-                        />
-                        <Text>{`${rep.last_name} (${rep.party})`}</Text>
-                      </View>
-                    </TouchableWithoutFeedback>
-                  ))}
-              </ScrollView>
-            </View>
-          </React.Fragment>
-        )}
+          <ScrollView horizontal contentContainerStyle={styles.reps2}>
+            {house &&
+              house.map((rep) => (
+                <TouchableWithoutFeedback
+                  key={rep.id}
+                  onPress={() => handlePageChange(house, rep.id)}
+                >
+                  <View style={{ alignItems: "center", padding: "1%" }}>
+                    <Avatar.Image
+                      size={70}
+                      source={{
+                        uri: `https://theunitedstates.io/images/congress/225x275/${rep.id}.jpg`,
+                      }}
+                    />
+                    <Text>{`${rep.last_name} (${rep.party})`}</Text>
+                  </View>
+                </TouchableWithoutFeedback>
+              ))}
+          </ScrollView>
+        </View>
       </View>
     </View>
   );
@@ -161,7 +153,7 @@ const styles = StyleSheet.create({
     flexWrap: "wrap",
   },
   reps2: {
-    flexWrap: "wrap",
-    alignItems: "center",
+    // flexWrap: "wrap",
+    // alignItems: "center",
   },
 });
