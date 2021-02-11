@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
-import { Avatar, List, Text } from 'react-native-paper';
+import { Avatar, List, Text, Title } from 'react-native-paper';
 
 export default function JudicialHome() {
   return (
     <ScrollView style={styles.container}>
+      <Title>Judicial Branch</Title>
       <List.Item
         title="John G. Roberts, Jr."
         description="Chief Justice"

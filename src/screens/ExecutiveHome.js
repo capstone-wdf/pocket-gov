@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
-import { Avatar, List, Text } from 'react-native-paper';
+import { Avatar, List, Text, Title } from 'react-native-paper';
 
 export default function ExecuitveHome() {
   return (
     <ScrollView style={styles.container}>
+       <Title>Executive Branch</Title>
       <List.Item
         title="Joe Biden"
         description="President"
