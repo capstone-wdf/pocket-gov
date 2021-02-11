@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from "react";
-import { StyleSheet, View, TouchableOpacity, Dimensions } from "react-native";
-import { Button, Menu, Text, Title } from "react-native-paper";
-import USMap from "../components/USMap";
-import ZoomView from "@dudigital/react-native-zoomable-view/src/ReactNativeZoomableView";
-import { stateNames, usStates } from "../components/usStates";
+import React, { useState, useEffect } from 'react';
+import { StyleSheet, View, TouchableOpacity, Dimensions } from 'react-native';
+import { Button, Menu, Text, Title } from 'react-native-paper';
+import USMap from '../components/USMap';
+import ZoomView from '@dudigital/react-native-zoomable-view/src/ReactNativeZoomableView';
+import { stateNames, usStates } from '../components/usStates';
 
 function LegislativeHome({ navigation }) {
   const [menuVisible, setMenuVisible] = useState(false);
@@ -20,7 +20,7 @@ function LegislativeHome({ navigation }) {
           title={fullName}
           onPress={() => {
             closeMenu();
-            navigation.navigate("Single State", {
+            navigation.navigate('Single State', {
               state: `${usState.id.toLowerCase()}`,
             });
           }}
@@ -33,7 +33,7 @@ function LegislativeHome({ navigation }) {
     <View style={styles.container}>
       <View style={styles.menu}>
         <Title>Legislative Branch</Title>
-        <View style={{ alignItems: "center" }}>
+        <View style={{ alignItems: 'center' }}>
           <Text>
             Find your state's federal representatives from the drop-down or
             interacting with the map!
@@ -62,49 +62,50 @@ function LegislativeHome({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   menu: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: '#fff',
     zIndex: 1,
-    justifyContent: "space-between",
-    alignItems: "center",
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    width: '100%',
   },
   //width HAS to be defined like this for map to work
   map: {
-    paddingLeft: "3%",
+    paddingLeft: '3%',
     flex: 1,
-    width: Dimensions.get("window").width,
-    height: Dimensions.get("window").height,
+    width: Dimensions.get('window').width,
+    height: Dimensions.get('window').height,
     zIndex: -1,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   bottom: {
     flex: 1,
-    width: "100%",
-    backgroundColor: "#fff",
+    width: '100%',
+    backgroundColor: '#fff',
     zIndex: 1,
-    justifyContent: "flex-start",
+    justifyContent: 'flex-start',
   },
   //not currently used
   button: {
-    backgroundColor: "#788eec",
+    backgroundColor: '#788eec',
     marginLeft: 30,
     marginRight: 30,
     marginTop: 20,
     height: 48,
     borderRadius: 5,
-    alignItems: "center",
-    justifyContent: "center",
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   buttonTitle: {
-    color: "white",
+    color: 'white',
     fontSize: 16,
-    fontWeight: "bold",
+    fontWeight: 'bold',
   },
   buttonContainer: {
     marginBottom: 50,

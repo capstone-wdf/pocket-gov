@@ -5,7 +5,9 @@ import { Avatar, List, Text, Title } from 'react-native-paper';
 export default function JudicialHome() {
   return (
     <ScrollView style={styles.container}>
-      <Title>Judicial Branch</Title>
+      <View style={styles.title}>
+        <Title>Judicial Branch</Title>
+      </View>
       <List.Item
         title="John G. Roberts, Jr."
         description="Chief Justice"
@@ -118,7 +120,7 @@ export default function JudicialHome() {
           />
         )}
       />
-       <List.Item
+      <List.Item
         title="Amy Coney Barrett"
         description="Associate Justice"
         left={(props) => (
@@ -140,5 +142,9 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: '#fff',
     height: '100%',
+  },
+  title: {
+    alignItems: 'center',
+    margin: 10,
   },
 });
