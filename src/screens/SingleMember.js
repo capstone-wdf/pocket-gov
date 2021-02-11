@@ -155,7 +155,9 @@ function SingleMemberScreen({ route, navigation, user, updateUser }) {
         <Card.Content>
           <Text
             title={item.title}
-            onPress={() => Linking.openURL(item.links[0].url)}
+            // onPress={() =>
+            //   item.links[0].url && Linking.openURL(item.links[0].url)
+            // }
           >
             {item.title}
           </Text>
@@ -374,7 +376,7 @@ const styles = StyleSheet.create({
   },
   cards: {
     width: 275,
-    height: 250,
+    height: 200,
     margin: 5,
     backgroundColor: '#D3D3D3',
   },
