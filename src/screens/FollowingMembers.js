@@ -5,9 +5,10 @@ import { StyleSheet } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { connect } from "react-redux";
 
-function FollowingScreen({ navigation, user }) {
-  // console.log("Route Param:", route.params.user.members)
+function FollowingMembers({ navigation, user }) {
+
   console.log("State user:", user);
+  
   // const handlePageChange = (chamber, id) => {
   //     const selectedRep = chamber.filter((reps) => reps.id === id)[0];
   //     console.log(selectedRep);
@@ -53,4 +54,4 @@ const mapState = (state) => {
   };
 };
 
-export default connect(mapState)(FollowingScreen);
+export default connect(mapState)(FollowingMembers);

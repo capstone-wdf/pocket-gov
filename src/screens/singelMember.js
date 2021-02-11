@@ -8,7 +8,7 @@ import {
   View,
   Linking,
 } from "react-native";
-import { Avatar, Button, Menu, Text, Title, Card } from "react-native-paper";
+import { Avatar, Button, Menu, Text, Title, Card, Dialog, Portal, Paragraph } from "react-native-paper";
 import axios from "axios";
 import { config } from "../../secrets";
 import { VictoryPie, VictoryStack, VictoryBar } from "victory-native";
@@ -52,8 +52,12 @@ function singleMemberScreen({ route, navigation, user, updateUser }) {
   const [members, setMembers] = useState([]);
   const [member1, setMember1] = useState(null);
   const [newsFeed, setNewsFeed] = useState(null);
-
   const [visible1, setVisible1] = useState(false);
+
+  const [visible, setVisible] = React.useState(false);
+
+  const showDialog = () => setVisible(true);
+  const hideDialog = () => setVisible(false);
 
   // console.log("ROUTEPARAMSUER", route.params.user);
   console.log("USER", user);
@@ -114,6 +118,15 @@ function singleMemberScreen({ route, navigation, user, updateUser }) {
       // navigation.navigate('singelMember')
     } catch (error) {
       console.log("Follow Error", error);
+    }
+  };
+
+  const onRedirectToLogin = async () => {
+    try {
+      setVisible(false);
+      navigation.navigate('Login')
+    } catch (error) {
+      console.log("Redirect Error", error);
     }
   };
 
@@ -235,13 +248,29 @@ function singleMemberScreen({ route, navigation, user, updateUser }) {
               </View>
             </View>
           )}
-          {member1 && user.id && (
+          {member1 && user.id ? (
             <View>
               {user.members.includes(member1.id) ? (
                 <Button>Following</Button>
               ) : (
                 <Button onPress={() => onFollowPress()}>Follow</Button>
               )}
+            </View>
+          ) : (
+            <View>
+              <Button onPress={showDialog}>Follow</Button>
+              <Portal>
+                <Dialog visible={visible} onDismiss={hideDialog}>
+                  <Dialog.Title>Hi there 👋 </Dialog.Title>
+                  <Dialog.Content>
+                    <Paragraph>Please login to follow members and bills.</Paragraph>
+                  </Dialog.Content>
+                  <Dialog.Actions>
+                    <Button onPress={hideDialog}>Close</Button>
+                    <Button onPress={() => onRedirectToLogin()}>Login</Button>
+                  </Dialog.Actions>
+                </Dialog>
+              </Portal>
             </View>
           )}
         </View>
