@@ -6,7 +6,7 @@ export { default as LegislativeHome } from './LegislativeHome';
 export { default as ExecutiveHome } from './ExecutiveHome';
 export { default as JudicialHome } from './JudicialHome';
 export { default as CompareMembers } from './CompareMembers';
-export { default as singleMember } from './singelMember';
+export { default as singleMember } from './SingleMember';
 export { default as Bills } from './Bills';
 export { default as SpecificBill } from './SpecificBill';
 export { default as SingleState } from './SingleState';

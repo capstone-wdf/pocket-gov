@@ -1,5 +1,5 @@
-import { StatusBar } from "expo-status-bar";
-import React, { useState, useEffect } from "react";
+import { StatusBar } from 'expo-status-bar';
+import React, { useState, useEffect } from 'react';
 import {
   ScrollView,
   FlatList,
@@ -7,17 +7,27 @@ import {
   StyleSheet,
   View,
   Linking,
-} from "react-native";
-import { Avatar, Button, Menu, Text, Title, Card, Dialog, Portal, Paragraph } from "react-native-paper";
-import axios from "axios";
-import { config } from "../../secrets";
-import { VictoryPie, VictoryStack, VictoryBar } from "victory-native";
-import { firebase } from "../firebase/config";
-import { connect } from "react-redux";
-import { updateUserThunk } from "../../redux/app-redux";
+} from 'react-native';
+import {
+  Avatar,
+  Button,
+  Menu,
+  Text,
+  Title,
+  Card,
+  Dialog,
+  Portal,
+  Paragraph,
+} from 'react-native-paper';
+import axios from 'axios';
+import { config } from '../../secrets';
+import { VictoryPie, VictoryStack, VictoryBar } from 'victory-native';
+import { firebase } from '../firebase/config';
+import { connect } from 'react-redux';
+import { updateUserThunk } from '../../redux/app-redux';
 
 // const rssParser = require("react-native-rss-parser");
-import * as rssParser from "react-native-rss-parser";
+import * as rssParser from 'react-native-rss-parser';
 
 async function fetchUserData(rss_url) {
   //function invocation was commented out to not clutter console -EZ
@@ -25,7 +35,7 @@ async function fetchUserData(rss_url) {
   //   let theUrl = "https://www.blumenthal.senate.gov/rss/feeds/?type=press";
 
   const theUrl =
-    rss_url || "https://www.blumenthal.senate.gov/rss/feeds/?type=press";
+    rss_url || 'https://www.blumenthal.senate.gov/rss/feeds/?type=press';
 
   try {
     const { data } = await axios.get(theUrl);
@@ -48,7 +58,7 @@ async function getMembers(congress, chamber) {
   }
 }
 
-function singleMemberScreen({ route, navigation, user, updateUser }) {
+function SingleMemberScreen({ route, navigation, user, updateUser }) {
   const [members, setMembers] = useState([]);
   const [member1, setMember1] = useState(null);
   const [newsFeed, setNewsFeed] = useState(null);
@@ -60,7 +70,7 @@ function singleMemberScreen({ route, navigation, user, updateUser }) {
   const hideDialog = () => setVisible(false);
 
   // console.log("ROUTEPARAMSUER", route.params.user);
-  console.log("USER", user);
+  console.log('USER', user);
   const openMenu1 = () => setVisible1(true);
   const closeMenu1 = () => setVisible1(false);
   // console.log("MEMBER1", member1);
@@ -69,8 +79,8 @@ function singleMemberScreen({ route, navigation, user, updateUser }) {
   //useEffect for comparison API
 
   //other stuff
-  let congress = "117";
-  let senate = "senate";
+  let congress = '117';
+  let senate = 'senate';
 
   const apiCall = async () => {
     let response = await getMembers(congress, senate);
@@ -105,6 +115,12 @@ function singleMemberScreen({ route, navigation, user, updateUser }) {
       votes_against_party_pct: selectedRep.roles[0].votes_against_party_pct,
       votes_with_party_pct: selectedRep.roles[0].votes_with_party_pct,
       contact_form: selectedRep.roles[0].contact_form,
+      next_election: selectedRep.roles[0].next_election,
+      bills_sponsored: selectedRep.roles[0].bills_sponsored,
+      bills_cosponsored: selectedRep.roles[0].bills_cosponsored,
+      total_votes: selectedRep.roles[0].total_votes,
+      missed_votes: selectedRep.roles[0].missed_votes,
+      committees: selectedRep.roles[0].committees,
     });
   }, []);
   //commented out for now to not clutter log -EZ
@@ -114,19 +130,19 @@ function singleMemberScreen({ route, navigation, user, updateUser }) {
   const onFollowPress = async () => {
     try {
       await updateUser(user.id, member1.id);
-      console.log("user state after update u:", user, member1.id);
+      console.log('user state after update u:', user, member1.id);
       // navigation.navigate('singelMember')
     } catch (error) {
-      console.log("Follow Error", error);
+      console.log('Follow Error', error);
     }
   };
 
   const onRedirectToLogin = async () => {
     try {
       setVisible(false);
-      navigation.navigate('Login')
+      navigation.navigate('Login');
     } catch (error) {
-      console.log("Redirect Error", error);
+      console.log('Redirect Error', error);
     }
   };
 
@@ -142,33 +158,50 @@ function singleMemberScreen({ route, navigation, user, updateUser }) {
 
   return (
     <SafeAreaView style={styles.contentContainer}>
-      <View style={styles.memberContainer}>
-        <View>
+      <ScrollView>
+        {member1 && (
+          <View style={styles.photoContainer}>
+            <Avatar.Image
+              size={275}
+              source={{
+                uri: `https://theunitedstates.io/images/congress/225x275/${member1.id}.jpg`,
+              }}
+            />
+          </View>
+        )}
+        <View style={styles.memberContainer}>
           {member1 && member1.first_name && (
             <View>
-              <Avatar.Image
-                size={275}
-                source={{
-                  uri: `https://theunitedstates.io/images/congress/225x275/${member1.id}.jpg`,
-                }}
-              />
-              <Text>{`${member1.first_name} ${member1.last_name}`}</Text>
+              <Title>{`${member1.first_name} ${member1.last_name}`}</Title>
               <Text>{`Party: ${
-                member1.party === "D" ? "Democrat" : "Republican"
+                member1.party === 'D' ? 'Democrat' : 'Republican'
               }`}</Text>
 
               <Text>{`Agrees with party: ${member1.votes_with_party_pct}% `}</Text>
               <Text>{`Disagrees with party: ${member1.votes_against_party_pct}% `}</Text>
               {/*<Text>{`Phone number: ${member1.phone} `}</Text>*/}
+              <Text>{`Next Election: ${member1.next_election}`}</Text>
+              <Text>{`Stats for the 117th Session of Congress (Jan. 3rd, 2021 - Jan. 3rd, 2023):`}</Text>
+              <Text>{`Bills Sponsored: ${member1.bills_sponsored}`}</Text>
+              <Text>{`Bills Cosponsored: ${member1.bills_cosponsored}`}</Text>
+              <Text>{`Total Votes: ${member1.total_votes}`}</Text>
+              <Text>{`Missed Votes: ${member1.missed_votes}`}</Text>
+              <Text>{`Agrees with Party: ${member1.votes_with_party_pct}% `}</Text>
+              <Text>{`Disagrees with Party: ${member1.votes_against_party_pct}% `}</Text>
+              {member1.phone && (
+                <Text>{`Phone Number: ${member1.phone} `}</Text>
+              )}
 
               {member1.rss_url && (
                 <View>
                   <Title>Recent News</Title>
                   <FlatList
+                    horizontal
+                    showsHorizontalScrollIndicator={false}
                     style={styles.flatlist}
                     data={newsFeed}
                     renderItem={renderItem}
-                    keyExtractor={(item) => item.id}
+                    keyExtractor={(item) => `${item.title}${item.published}`}
                   />
                 </View>
               )}
@@ -263,7 +296,9 @@ function singleMemberScreen({ route, navigation, user, updateUser }) {
                 <Dialog visible={visible} onDismiss={hideDialog}>
                   <Dialog.Title>Hi there 👋 </Dialog.Title>
                   <Dialog.Content>
-                    <Paragraph>Please login to follow members and bills.</Paragraph>
+                    <Paragraph>
+                      Please login to follow members and bills.
+                    </Paragraph>
                   </Dialog.Content>
                   <Dialog.Actions>
                     <Button onPress={hideDialog}>Close</Button>
@@ -274,28 +309,25 @@ function singleMemberScreen({ route, navigation, user, updateUser }) {
             </View>
           )}
         </View>
-      </View>
+      </ScrollView>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   contentContainer: {
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-    height: "100%",
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: '100%',
   },
   menu_container: {
     // flex: 1,
-    flexDirection: "row",
+    flexDirection: 'row',
     // justifyContent: "space-around",
   },
   memberContainer: {
-    flex: 1,
-    flexDirection: "row",
-    justifyContent: "space-evenly",
-    width: "90%",
+    margin: 10,
   },
   dataContainer: {
     marginHorizontal: 50,
@@ -303,18 +335,23 @@ const styles = StyleSheet.create({
   },
 
   AvatarContainer: {
-    flexDirection: "row",
+    flexDirection: 'row',
     marginVertical: 20,
-    justifyContent: "space-evenly",
+    justifyContent: 'space-evenly',
   },
   cards: {
-    width: 350,
-    height: 100,
-    marginBottom: 4,
-    backgroundColor: "gray",
+    width: 200,
+    height: 150,
+    margin: 5,
+    backgroundColor: '#D3D3D3',
   },
   flatlist: {
     height: 200,
+  },
+  photoContainer: {
+    flex: 1,
+    justifyContent: 'space-evenly',
+    alignItems: 'center',
   },
 });
 
@@ -331,4 +368,4 @@ const mapDispatch = (dispatch) => {
   };
 };
 
-export default connect(mapState, mapDispatch)(singleMemberScreen);
+export default connect(mapState, mapDispatch)(SingleMemberScreen);
