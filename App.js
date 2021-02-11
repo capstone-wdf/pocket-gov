@@ -42,13 +42,6 @@ function CustomDrawerContent(props) {
       {user.id ? (
         <>
           <DrawerItem
-            label="My Representatives"
-            activeTintColor={Colors.cyan700}
-            onPress={() => {
-              props.navigation.navigate("My Representatives");
-            }}
-          />
-          <DrawerItem
             label="Following"
             onPress={() => {
               props.navigation.navigate("Following");
@@ -64,18 +57,6 @@ function CustomDrawerContent(props) {
         </>
       ) : (
         <>
-          <DrawerItem
-            label="My Representatives"
-            onPress={() => {
-              props.navigation.navigate("Login");
-            }}
-          />
-          <DrawerItem
-            label="Following"
-            onPress={() => {
-              props.navigation.navigate("Login");
-            }}
-          />
           <DrawerItem
             label="Log In"
             onPress={() => props.navigation.navigate("Login")}
@@ -100,8 +81,6 @@ function Home() {
     <Stack.Navigator>
       <Stack.Screen name="PocketGov" component={HomeScreen} />
       <Stack.Screen name="Registration" component={RegistrationScreen} />
-      <Stack.Screen name="Compare" component={CompareMembers} />
-      <Stack.Screen name="Bills" component={Bills} />
       <Stack.Screen name="Single Member" component={singleMember} />
       <Stack.Screen name="Single State" component={SingleState} />
       <Stack.Screen name="Specific Bill" component={SpecificBill} />
@@ -134,8 +113,9 @@ export default function App() {
             drawerContent={(props) => <CustomDrawerContent {...props} />}
           >
             <Drawer.Screen name="Home" component={Home} />
-            {/* <Drawer.Screen name="My Representatives" component={MyReps} />
-            <Drawer.Screen name="Following" component={FollowingScreen} /> */}
+            <Drawer.Screen name="My Representatives" component={MyReps} />
+            <Drawer.Screen name="Compare Members" component={CompareMembers} />
+            <Stack.Screen name="Search Bills" component={Bills} />
           </Drawer.Navigator>
         </NavigationContainer>
       </PaperProvider>
