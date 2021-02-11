@@ -403,4 +403,4 @@ const mapDispatch = (dispatch) => {
   };
 };
 
-export default connect(mapState, mapDispatch)(SingleMemberScreen);
+export default connect(mapState, mapDispatch)(singleMemberScreen);
