@@ -123,10 +123,10 @@ function SingleMemberScreen({ route, navigation, user, updateUser }) {
       missed_votes: selectedRep.roles[0].missed_votes,
       committees: selectedRep.roles[0].committees,
       district: selectedRep.roles[0].district,
+      state: selectedRep.roles[0].state,
     });
   }, []);
-  //commented out for now to not clutter log -EZ
-  // console.log(members);
+
   fetchUserData();
 
   const onFollowPress = async () => {
@@ -178,7 +178,8 @@ function SingleMemberScreen({ route, navigation, user, updateUser }) {
               <Text>{`Party: ${
                 member.party === 'D' ? 'Democrat' : 'Republican'
               }`}</Text>
-              {member.district && <Text>{`District: ${member.district}`}</Text>}
+              {member.district && <Text>{`District: ${member.state} ${member.district}`}</Text>}
+              {/* <Text>{`Committees: ${member.committees.length}`}</Text> */}
               <Text>{`Next Election: ${member.next_election}`}</Text>
               <Text>{`Stats for the 117th Session of Congress (Jan. 3rd, 2021 - Jan. 3rd, 2023):`}</Text>
               <Text>{`Bills Sponsored: ${member.bills_sponsored}`}</Text>
@@ -187,29 +188,31 @@ function SingleMemberScreen({ route, navigation, user, updateUser }) {
               <Text>{`Missed Votes: ${member.missed_votes}`}</Text>
               <Text>{`Votes with Party: ${member.votes_with_party_pct}% `}</Text>
               <Text>{`Votes Against Party: ${member.votes_against_party_pct}% `}</Text>
-              <VictoryStack
-                horizontal={true}
-                colorScale={['forestgreen', 'firebrick']}
-              >
-                <VictoryBar
-                  data={[
-                    {
-                      x: `Agree ${member.votes_with_party_pct}%`,
-                      y: member.votes_with_party_pct,
-                    },
-                  ]}
-                  barWidth={30}
-                />
-                <VictoryBar
-                  data={[
-                    {
-                      x: `Disagree ${member.votes_against_party_pct}%`,
-                      y: member.votes_against_party_pct,
-                    },
-                  ]}
-                  barWidth={30}
-                />
-              </VictoryStack>
+              <View>
+                {/* <VictoryStack
+                  horizontal={true}
+                  colorScale={['forestgreen', 'firebrick']}
+                >
+                  <VictoryBar
+                    data={[
+                      {
+                        x: `Agree ${member.votes_with_party_pct}%`,
+                        y: member.votes_with_party_pct,
+                      },
+                    ]}
+                    barWidth={30}
+                  />
+                  <VictoryBar
+                    data={[
+                      {
+                        x: `Disagree ${member.votes_against_party_pct}%`,
+                        y: member.votes_against_party_pct,
+                      },
+                    ]}
+                    barWidth={30}
+                  />
+                </VictoryStack> */}
+              </View>
               {member.phone && <Text>{`Phone Number: ${member.phone} `}</Text>}
 
               {member.rss_url && (
