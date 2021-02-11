@@ -8,7 +8,15 @@ import {
   View,
   Linking,
 } from 'react-native';
-import { Avatar, Button, Menu, Text, Title, Card } from 'react-native-paper';
+import {
+  Avatar,
+  Button,
+  Menu,
+  Subheading,
+  Text,
+  Title,
+  Card,
+} from 'react-native-paper';
 import axios from 'axios';
 import { config } from '../../secrets';
 import { VictoryPie, VictoryStack, VictoryBar } from 'victory-native';
@@ -106,6 +114,7 @@ function SingleMemberScreen({ route, navigation, user, updateUser }) {
       bills_cosponsored: selectedRep.roles[0].bills_cosponsored,
       total_votes: selectedRep.roles[0].total_votes,
       missed_votes: selectedRep.roles[0].missed_votes,
+      committees: selectedRep.roles[0].committees,
     });
   }, []);
   //commented out for now to not clutter log -EZ
@@ -153,100 +162,118 @@ function SingleMemberScreen({ route, navigation, user, updateUser }) {
                   member1.party === 'D' ? 'Democrat' : 'Republican'
                 }`}</Text>
                 <Text>{`Next election: ${member1.next_election}`}</Text>
+                {/* <Text>
+                  {`Committees: ${member1.committees.length}`}
+                </Text> */}
+                <Subheading>{`Stats for the 117th Session of Congress (Jan. 3rd, 2021 - Jan. 3rd, 2023)`}</Subheading>
                 <Text>{`Bills Sponsored: ${member1.bills_sponsored}`}</Text>
                 <Text>{`Bills Cosponsored: ${member1.bills_cosponsored}`}</Text>
                 <Text>{`Total votes: ${member1.total_votes}`}</Text>
                 <Text>{`Missed votes: ${member1.missed_votes}`}</Text>
                 <Text>{`Agrees with party: ${member1.votes_with_party_pct}% `}</Text>
                 <Text>{`Disagrees with party: ${member1.votes_against_party_pct}% `}</Text>
-                {/*<Text>{`Phone number: ${member1.phone} `}</Text>*/}
+                {member1.phone && (
+                  <Text>{`Phone number: ${member1.phone} `}</Text>
+                )}
 
                 {member1.rss_url && (
-                  <View>
+                  <SafeAreaView>
                     <Title>Recent News</Title>
                     <FlatList
                       style={styles.flatlist}
                       data={newsFeed}
                       renderItem={renderItem}
-                      keyExtractor={(item) => item.id}
+                      keyExtractor={(item) => `${item.title}${item.published}`}
                     />
-                  </View>
+                  </SafeAreaView>
                 )}
               </View>
             )}
-            <View style={styles.AvatarContainer}>
-            {member1.twitter_account && <Text
-                style={styles.TextStyle}
-                onPress={() =>
-                  Linking.openURL(
-                    `https://twitter.com/${member1.twitter_account}`
-                  )
-                }
-              >
-                <Avatar.Image
-                  size={50}
-                  source={{
-                    uri: `https://logodownload.org/wp-content/uploads/2014/09/twitter-logo-1-1.png`,
-                  }}
-                />
-              </Text>}
+            {member1 && (
+              <View style={styles.AvatarContainer}>
+                {member1.twitter_account !== null && (
+                  <Text
+                    style={styles.TextStyle}
+                    onPress={() =>
+                      Linking.openURL(
+                        `https://twitter.com/${member1.twitter_account}`
+                      )
+                    }
+                  >
+                    <Avatar.Image
+                      size={50}
+                      source={{
+                        uri: `https://logodownload.org/wp-content/uploads/2014/09/twitter-logo-1-1.png`,
+                      }}
+                    />
+                  </Text>
+                )}
 
-            {member1.facebook_account &&  <Text
-                style={styles.TextStyle}
-                onPress={() =>
-                  Linking.openURL(
-                    `https://www.facebook.com/${member1.facebook_account}/`
-                  )
-                }
-              >
-                <Avatar.Image
-                  size={50}
-                  source={{
-                    uri: `https://facebookbrand.com/wp-content/uploads/2019/04/f_logo_RGB-Hex-Blue_512.png?w=512&h=512`,
-                  }}
-                />
-              </Text>}
+                {member1.facebook_account && (
+                  <Text
+                    style={styles.TextStyle}
+                    onPress={() =>
+                      Linking.openURL(
+                        `https://www.facebook.com/${member1.facebook_account}/`
+                      )
+                    }
+                  >
+                    <Avatar.Image
+                      size={50}
+                      source={{
+                        uri: `https://facebookbrand.com/wp-content/uploads/2019/04/f_logo_RGB-Hex-Blue_512.png?w=512&h=512`,
+                      }}
+                    />
+                  </Text>
+                )}
 
-           {member1.youtube_account &&   <Text
-                style={styles.TextStyle}
-                onPress={() =>
-                  Linking.openURL(
-                    `https://www.youtube.com/user/${member1.youtube_account}`
-                  )
-                }
-              >
-                <Avatar.Image
-                  size={50}
-                  source={{
-                    uri: `https://www.online-tech-tips.com/wp-content/uploads/2019/07/youtube-1.png.webp`,
-                  }}
-                />
-              </Text>}
+                {member1.youtube_account && (
+                  <Text
+                    style={styles.TextStyle}
+                    onPress={() =>
+                      Linking.openURL(
+                        `https://www.youtube.com/user/${member1.youtube_account}`
+                      )
+                    }
+                  >
+                    <Avatar.Image
+                      size={50}
+                      source={{
+                        uri: `https://www.online-tech-tips.com/wp-content/uploads/2019/07/youtube-1.png.webp`,
+                      }}
+                    />
+                  </Text>
+                )}
 
-            {member1.url &&  <Text
-                style={styles.TextStyle}
-                onPress={() => Linking.openURL(`${member1.url}`)}
-              >
-                <Avatar.Image
-                  size={50}
-                  source={{
-                    uri: `https://cdn4.iconfinder.com/data/icons/internet-3-5/512/102-512.png`,
-                  }}
-                />
-              </Text>}
+                {member1.url && (
+                  <Text
+                    style={styles.TextStyle}
+                    onPress={() => Linking.openURL(`${member1.url}`)}
+                  >
+                    <Avatar.Image
+                      size={50}
+                      source={{
+                        uri: `https://cdn4.iconfinder.com/data/icons/internet-3-5/512/102-512.png`,
+                      }}
+                    />
+                  </Text>
+                )}
 
-              {member1.contact_form && <Text
-                style={styles.TextStyle}
-                onPress={() => Linking.openURL(`${member1.contact_form}`)}
-              >
-                <Avatar.Image
-                  size={50}
-                  source={{
-                    uri: `https://img.favpng.com/17/10/19/logo-envelope-mail-png-favpng-C2icb0S6z8Fj651JUUtCdrih9.jpg`,
-                  }}
-                />
-              </Text>}
-            </View>
+                {member1.contact_form && (
+                  <Text
+                    style={styles.TextStyle}
+                    onPress={() => Linking.openURL(`${member1.contact_form}`)}
+                  >
+                    <Avatar.Image
+                      size={50}
+                      source={{
+                        uri: `https://img.favpng.com/17/10/19/logo-envelope-mail-png-favpng-C2icb0S6z8Fj651JUUtCdrih9.jpg`,
+                      }}
+                    />
+                  </Text>
+                )}
+              </View>
+            )}
             {member1 && user.id && (
               <View>
                 {user.members.includes(member1.id) ? (
@@ -275,10 +302,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-evenly',
     width: '100%',
-    marginTop: 20
+    marginTop: 20,
   },
   infoContainer: {
-    margin: 20
+    margin: 20,
   },
   AvatarContainer: {
     flexDirection: 'row',
@@ -287,9 +314,8 @@ const styles = StyleSheet.create({
   },
   cards: {
     width: 350,
-    height: 100,
     marginBottom: 4,
-    backgroundColor: 'gray',
+    backgroundColor: '#D3D3D3',
   },
   flatlist: {
     height: 200,
