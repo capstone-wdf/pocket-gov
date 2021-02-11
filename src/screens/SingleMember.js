@@ -154,6 +154,7 @@ function SingleMemberScreen({ route, navigation, user, updateUser }) {
       <Card style={styles.cards}>
         <Card.Content>
           <Text title={item.title}>{item.title} </Text>
+          <Text>{item.links[0].url} </Text>
         </Card.Content>
       </Card>
     );

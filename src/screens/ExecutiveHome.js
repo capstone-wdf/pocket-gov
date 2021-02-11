@@ -1,11 +1,22 @@
 import React, { useState } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
-import { Avatar, Colors, IconButton, List, Text, Title } from 'react-native-paper';
+import {
+  Avatar,
+  Colors,
+  IconButton,
+  List,
+  Text,
+  Title,
+} from 'react-native-paper';
 
 export default function ExecuitveHome({ navigation }) {
   return (
     <ScrollView style={styles.container}>
-      <IconButton icon="menu" color={Colors.cyan700} onPress={() => navigation.openDrawer()} />
+      <IconButton
+        icon="menu"
+        color={Colors.cyan700}
+        onPress={() => navigation.openDrawer()}
+      />
       <View style={styles.title}>
         <Title>Executive Branch</Title>
       </View>
