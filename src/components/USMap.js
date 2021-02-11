@@ -366,8 +366,8 @@ function SvgComponent(props) {
         onPress={() =>
           props.navigation.navigate("Single State", { state: "hi" })
         }
-        onPressIn={() => setPathColor({ ...pathColor, HI: "red" })}
-        onPressOut={() => setPathColor({ ...pathColor, HI: "D0D0D0" })}
+        onPressIn={() => setPathColor({ ...pathColor, HI: Colors.cyan700 })}
+        onPressOut={() => setPathColor({ ...pathColor, HI: "#D0D0D0" })}
       />
     </Svg>
   );
