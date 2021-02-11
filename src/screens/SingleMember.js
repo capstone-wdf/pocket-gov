@@ -12,6 +12,7 @@ import {
   Avatar,
   Button,
   Menu,
+  Subheading,
   Text,
   Title,
   Card,
@@ -60,7 +61,7 @@ async function getMembers(congress, chamber) {
 
 function SingleMemberScreen({ route, navigation, user, updateUser }) {
   const [members, setMembers] = useState([]);
-  const [member1, setMember1] = useState(null);
+  const [member, setMember] = useState(null);
   const [newsFeed, setNewsFeed] = useState(null);
   const [visible1, setVisible1] = useState(false);
 
@@ -73,7 +74,7 @@ function SingleMemberScreen({ route, navigation, user, updateUser }) {
   console.log('USER', user);
   const openMenu1 = () => setVisible1(true);
   const closeMenu1 = () => setVisible1(false);
-  // console.log("MEMBER1", member1);
+  // console.log("Member", member);
   // console.log("MEMBER2", member2);
 
   //useEffect for comparison API
@@ -91,18 +92,18 @@ function SingleMemberScreen({ route, navigation, user, updateUser }) {
   }
 
   const rssCall = async () => {
-    let response = await fetchUserData(member1.rss_url);
+    let response = await fetchUserData(member.rss_url);
     setNewsFeed(response);
   };
-  if (!newsFeed && member1 && member1.rss_url) {
+  if (!newsFeed && member && member.rss_url) {
     rssCall();
   }
-  //   console.log(member1);
+  //   console.log(member);
 
   useEffect(() => {
     const selectedRep = route.params.selectedRep;
     console.log(selectedRep.rss_url);
-    setMember1({
+    setMember({
       id: selectedRep.id,
       first_name: selectedRep.first_name,
       last_name: selectedRep.last_name,
@@ -121,6 +122,7 @@ function SingleMemberScreen({ route, navigation, user, updateUser }) {
       total_votes: selectedRep.roles[0].total_votes,
       missed_votes: selectedRep.roles[0].missed_votes,
       committees: selectedRep.roles[0].committees,
+      district: selectedRep.roles[0].district,
     });
   }, []);
   //commented out for now to not clutter log -EZ
@@ -129,8 +131,8 @@ function SingleMemberScreen({ route, navigation, user, updateUser }) {
 
   const onFollowPress = async () => {
     try {
-      await updateUser(user.id, member1.id);
-      console.log('user state after update u:', user, member1.id);
+      await updateUser(user.id, member.id);
+      console.log('user state after update u:', user, member.id);
       // navigation.navigate('singelMember')
     } catch (error) {
       console.log('Follow Error', error);
@@ -159,40 +161,58 @@ function SingleMemberScreen({ route, navigation, user, updateUser }) {
   return (
     <SafeAreaView style={styles.contentContainer}>
       <ScrollView>
-        {member1 && (
+        {member && (
           <View style={styles.photoContainer}>
             <Avatar.Image
               size={275}
               source={{
-                uri: `https://theunitedstates.io/images/congress/225x275/${member1.id}.jpg`,
+                uri: `https://theunitedstates.io/images/congress/225x275/${member.id}.jpg`,
               }}
             />
           </View>
         )}
         <View style={styles.memberContainer}>
-          {member1 && member1.first_name && (
+          {member && member.first_name && (
             <View>
-              <Title>{`${member1.first_name} ${member1.last_name}`}</Title>
+              <Title>{`${member.first_name} ${member.last_name}`}</Title>
               <Text>{`Party: ${
-                member1.party === 'D' ? 'Democrat' : 'Republican'
+                member.party === 'D' ? 'Democrat' : 'Republican'
               }`}</Text>
-
-              <Text>{`Agrees with party: ${member1.votes_with_party_pct}% `}</Text>
-              <Text>{`Disagrees with party: ${member1.votes_against_party_pct}% `}</Text>
-              {/*<Text>{`Phone number: ${member1.phone} `}</Text>*/}
-              <Text>{`Next Election: ${member1.next_election}`}</Text>
+              {member.district && <Text>{`District: ${member.district}`}</Text>}
+              <Text>{`Next Election: ${member.next_election}`}</Text>
               <Text>{`Stats for the 117th Session of Congress (Jan. 3rd, 2021 - Jan. 3rd, 2023):`}</Text>
-              <Text>{`Bills Sponsored: ${member1.bills_sponsored}`}</Text>
-              <Text>{`Bills Cosponsored: ${member1.bills_cosponsored}`}</Text>
-              <Text>{`Total Votes: ${member1.total_votes}`}</Text>
-              <Text>{`Missed Votes: ${member1.missed_votes}`}</Text>
-              <Text>{`Agrees with Party: ${member1.votes_with_party_pct}% `}</Text>
-              <Text>{`Disagrees with Party: ${member1.votes_against_party_pct}% `}</Text>
-              {member1.phone && (
-                <Text>{`Phone Number: ${member1.phone} `}</Text>
-              )}
+              <Text>{`Bills Sponsored: ${member.bills_sponsored}`}</Text>
+              <Text>{`Bills Cosponsored: ${member.bills_cosponsored}`}</Text>
+              <Text>{`Total Votes: ${member.total_votes}`}</Text>
+              <Text>{`Missed Votes: ${member.missed_votes}`}</Text>
+              <Text>{`Votes with Party: ${member.votes_with_party_pct}% `}</Text>
+              <Text>{`Votes Against Party: ${member.votes_against_party_pct}% `}</Text>
+              <VictoryStack
+                horizontal={true}
+                colorScale={['forestgreen', 'firebrick']}
+              >
+                <VictoryBar
+                  data={[
+                    {
+                      x: `Agree ${member.votes_with_party_pct}%`,
+                      y: member.votes_with_party_pct,
+                    },
+                  ]}
+                  barWidth={30}
+                />
+                <VictoryBar
+                  data={[
+                    {
+                      x: `Disagree ${member.votes_against_party_pct}%`,
+                      y: member.votes_against_party_pct,
+                    },
+                  ]}
+                  barWidth={30}
+                />
+              </VictoryStack>
+              {member.phone && <Text>{`Phone Number: ${member.phone} `}</Text>}
 
-              {member1.rss_url && (
+              {member.rss_url && (
                 <View>
                   <Title>Recent News</Title>
                   <FlatList
@@ -211,7 +231,7 @@ function SingleMemberScreen({ route, navigation, user, updateUser }) {
                   style={styles.TextStyle}
                   onPress={() =>
                     Linking.openURL(
-                      `https://twitter.com/${member1.twitter_account}`
+                      `https://twitter.com/${member.twitter_account}`
                     )
                   }
                 >
@@ -227,7 +247,7 @@ function SingleMemberScreen({ route, navigation, user, updateUser }) {
                   style={styles.TextStyle}
                   onPress={() =>
                     Linking.openURL(
-                      `https://www.facebook.com/${member1.facebook_account}/`
+                      `https://www.facebook.com/${member.facebook_account}/`
                     )
                   }
                 >
@@ -243,7 +263,7 @@ function SingleMemberScreen({ route, navigation, user, updateUser }) {
                   style={styles.TextStyle}
                   onPress={() =>
                     Linking.openURL(
-                      `https://www.youtube.com/user/${member1.youtube_account}`
+                      `https://www.youtube.com/user/${member.youtube_account}`
                     )
                   }
                 >
@@ -257,7 +277,7 @@ function SingleMemberScreen({ route, navigation, user, updateUser }) {
 
                 <Text
                   style={styles.TextStyle}
-                  onPress={() => Linking.openURL(`${member1.url}`)}
+                  onPress={() => Linking.openURL(`${member.url}`)}
                 >
                   <Avatar.Image
                     size={50}
@@ -269,7 +289,7 @@ function SingleMemberScreen({ route, navigation, user, updateUser }) {
 
                 <Text
                   style={styles.TextStyle}
-                  onPress={() => Linking.openURL(`${member1.contact_form}`)}
+                  onPress={() => Linking.openURL(`${member.contact_form}`)}
                 >
                   <Avatar.Image
                     size={50}
@@ -281,9 +301,9 @@ function SingleMemberScreen({ route, navigation, user, updateUser }) {
               </View>
             </View>
           )}
-          {member1 && user.id ? (
+          {member && user.id ? (
             <View>
-              {user.members.includes(member1.id) ? (
+              {user.members.includes(member.id) ? (
                 <Button>Following</Button>
               ) : (
                 <Button onPress={() => onFollowPress()}>Follow</Button>
@@ -340,13 +360,10 @@ const styles = StyleSheet.create({
     justifyContent: 'space-evenly',
   },
   cards: {
-    width: 200,
+    width: 275,
     height: 150,
     margin: 5,
     backgroundColor: '#D3D3D3',
-  },
-  flatlist: {
-    height: 200,
   },
   photoContainer: {
     flex: 1,
