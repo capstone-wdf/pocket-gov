@@ -144,6 +144,7 @@ function SingleMemberScreen({ route, navigation, user, updateUser }) {
     <SafeAreaView style={styles.contentContainer}>
       <ScrollView>
         <View>
+          {!member1 && <Text>No data available</Text>}
           {member1 && (
             <View style={styles.memberContainer}>
               <Avatar.Image
@@ -165,7 +166,7 @@ function SingleMemberScreen({ route, navigation, user, updateUser }) {
                 {/* <Text>
                   {`Committees: ${member1.committees.length}`}
                 </Text> */}
-                <Subheading>{`Stats for the 117th Session of Congress (Jan. 3rd, 2021 - Jan. 3rd, 2023)`}</Subheading>
+                <Text>{`Stats for the 117th Session of Congress (Jan. 3rd, 2021 - Jan. 3rd, 2023):`}</Text>
                 <Text>{`Bills Sponsored: ${member1.bills_sponsored}`}</Text>
                 <Text>{`Bills Cosponsored: ${member1.bills_cosponsored}`}</Text>
                 <Text>{`Total votes: ${member1.total_votes}`}</Text>
