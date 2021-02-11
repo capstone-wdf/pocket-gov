@@ -162,25 +162,26 @@ function SingleMemberScreen({ route, navigation, user, updateUser }) {
                 <Text>{`Party: ${
                   member1.party === 'D' ? 'Democrat' : 'Republican'
                 }`}</Text>
-                <Text>{`Next election: ${member1.next_election}`}</Text>
+                <Text>{`Next Election: ${member1.next_election}`}</Text>
                 {/* <Text>
                   {`Committees: ${member1.committees.length}`}
                 </Text> */}
                 <Text>{`Stats for the 117th Session of Congress (Jan. 3rd, 2021 - Jan. 3rd, 2023):`}</Text>
                 <Text>{`Bills Sponsored: ${member1.bills_sponsored}`}</Text>
                 <Text>{`Bills Cosponsored: ${member1.bills_cosponsored}`}</Text>
-                <Text>{`Total votes: ${member1.total_votes}`}</Text>
-                <Text>{`Missed votes: ${member1.missed_votes}`}</Text>
-                <Text>{`Agrees with party: ${member1.votes_with_party_pct}% `}</Text>
-                <Text>{`Disagrees with party: ${member1.votes_against_party_pct}% `}</Text>
+                <Text>{`Total Votes: ${member1.total_votes}`}</Text>
+                <Text>{`Missed Votes: ${member1.missed_votes}`}</Text>
+                <Text>{`Agrees with Party: ${member1.votes_with_party_pct}% `}</Text>
+                <Text>{`Disagrees with Party: ${member1.votes_against_party_pct}% `}</Text>
                 {member1.phone && (
-                  <Text>{`Phone number: ${member1.phone} `}</Text>
+                  <Text>{`Phone Number: ${member1.phone} `}</Text>
                 )}
 
                 {member1.rss_url && (
                   <SafeAreaView>
                     <Title>Recent News</Title>
                     <FlatList
+                      horizontal
                       style={styles.flatlist}
                       data={newsFeed}
                       renderItem={renderItem}
@@ -314,8 +315,9 @@ const styles = StyleSheet.create({
     justifyContent: 'space-evenly',
   },
   cards: {
-    width: 350,
-    marginBottom: 4,
+    width: 200,
+    height: 150,
+    margin: 5,
     backgroundColor: '#D3D3D3',
   },
   flatlist: {
