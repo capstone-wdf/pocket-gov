@@ -153,8 +153,12 @@ function SingleMemberScreen({ route, navigation, user, updateUser }) {
     return (
       <Card style={styles.cards}>
         <Card.Content>
-          <Text title={item.title}>{item.title} </Text>
-          <Text>{item.links[0].url} </Text>
+          <Text
+            title={item.title}
+            onPress={() => Linking.openURL(item.links[0].url)}
+          >
+            {item.title}
+          </Text>
         </Card.Content>
       </Card>
     );
@@ -180,7 +184,11 @@ function SingleMemberScreen({ route, navigation, user, updateUser }) {
               <Text>{`Party: ${
                 member.party === 'D' ? 'Democrat' : 'Republican'
               }`}</Text>
-              {member.district && <Text>{`District: ${member.state} ${member.at_large ? "at large" : member.district}`}</Text>}
+              {member.district && (
+                <Text>{`District: ${member.state} ${
+                  member.at_large ? 'at large' : member.district
+                }`}</Text>
+              )}
               {/* <Text>{`Committees: ${member.committees.length}`}</Text> */}
               <Text>{`Next Election: ${member.next_election}`}</Text>
               <Text>{`Stats for the 117th Session of Congress (Jan. 3rd, 2021 - Jan. 3rd, 2023):`}</Text>
@@ -366,7 +374,7 @@ const styles = StyleSheet.create({
   },
   cards: {
     width: 275,
-    height: 150,
+    height: 250,
     margin: 5,
     backgroundColor: '#D3D3D3',
   },
@@ -374,7 +382,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'space-evenly',
     alignItems: 'center',
-    marginTop: 20
+    marginTop: 20,
   },
 });
 
