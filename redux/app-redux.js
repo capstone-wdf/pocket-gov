@@ -4,7 +4,8 @@ import { firebase } from "../src/firebase/config";
 
 const SET_USER = "SET_USER";
 const LOG_OUT_USER = "LOG_OUT_USER";
-const UPDATE_USER = "UPDATE_USER";
+const UPDATE_USER_MEM = "UPDATE_USER_MEM";
+const UPDATE_USER_BILL = "UPDATE_USER_BILL";
 
 export const setUser = (user) => {
   return {
@@ -13,10 +14,17 @@ export const setUser = (user) => {
   };
 };
 
-export const updateUser = (memberId) => {
+export const updateUserMem = (memberId) => {
   return {
-    type: UPDATE_USER,
+    type: UPDATE_USER_MEM,
     memberId,
+  };
+};
+
+export const updateUserBill = (billNum) => {
+  return {
+    type: UPDATE_USER_BILL,
+    billNum,
   };
 };
 
@@ -55,7 +63,7 @@ export const fetchUser = (email, password) => {
   };
 };
 
-export const updateUserThunk = (userId, memberId) => {
+export const updateUserMemFollowingThunk = (userId, memberId) => {
   return (dispatch) => {
     firebase
       .firestore()
@@ -64,7 +72,23 @@ export const updateUserThunk = (userId, memberId) => {
       .update({
         members: firebase.firestore.FieldValue.arrayUnion(memberId),
       });
-    dispatch(updateUser(memberId));
+    dispatch(updateUserMem(memberId));
+    // .catch(error => {
+    //   alert(error)
+    // })
+  };
+};
+
+export const updateUserBillFollowingThunk = (userId, billNum) => {
+  return (dispatch) => {
+    firebase
+      .firestore()
+      .collection("users")
+      .doc(userId)
+      .update({
+        bills: firebase.firestore.FieldValue.arrayUnion(billNum),
+      });
+    dispatch(updateUserBill(billNum));
     // .catch(error => {
     //   alert(error)
     // })
@@ -95,8 +119,10 @@ const userReducer = (state = initialState, action) => {
   switch (action.type) {
     case SET_USER:
       return action.user;
-    case UPDATE_USER:
+    case UPDATE_USER_MEM:
       return { ...state, members: [...state.members, action.memberId] };
+    case UPDATE_USER_BILL:
+      return { ...state, bills: [...state.bills, action.billNum] };
     case LOG_OUT_USER:
       return {};
     default:

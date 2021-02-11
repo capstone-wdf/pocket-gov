@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useState, useEffect } from 'react';
-import { FlatList, ScrollView, StyleSheet, View } from 'react-native';
+import { FlatList, ScrollView, StyleSheet, View,  } from 'react-native';
 import {
   Button,
   Menu,
@@ -9,9 +9,14 @@ import {
   Title,
   Subheading,
   Paragraph,
+  Dialog,
+  Portal
 } from 'react-native-paper';
 import axios from 'axios';
 import { config } from '../../secrets';
+import { connect } from "react-redux";
+import { updateUserBillFollowingThunk } from "../../redux/app-redux";
+
 
 async function getSpecificBill(congress, bill_slug) {
   const theUrl = `https://api.propublica.org/congress/v1/${congress}/bills/${bill_slug}.json`;
@@ -24,9 +29,14 @@ async function getSpecificBill(congress, bill_slug) {
   }
 }
 
-export default function SpecificBill({ route }) {
+function SpecificBill({ route, navigation, user, updateUserBill }) {
   const [bill, setBill] = useState(null);
   const { bill_slug } = route.params;
+  const [visible, setVisible] = React.useState(false);
+
+  const showDialog = () => setVisible(true);
+  const hideDialog = () => setVisible(false);
+
   const congress = '117';
 
   const callGetSpecificBill = async () => {
@@ -39,6 +49,25 @@ export default function SpecificBill({ route }) {
       callGetSpecificBill();
     }
   }, [bill]);
+
+  const onFollowPress = async () => {
+    try {
+      await updateUserBill(user.id, bill.number);
+      console.log("user state after update u:", user, user.bills);
+      // navigation.navigate('singelMember')
+    } catch (error) {
+      console.log("Follow Error", error);
+    }
+  };
+
+  const onRedirectToLogin = async () => {
+    try {
+      setVisible(false);
+      navigation.navigate('Login')
+    } catch (error) {
+      console.log("Redirect Error", error);
+    }
+  };
 
   return (
     <ScrollView style={styles.container}>
@@ -63,7 +92,31 @@ export default function SpecificBill({ route }) {
           )}
           {bill.enacted && <Text>{`Enacted on ${bill.enacted}`}</Text>}
           {bill.vetoed && <Text>{`Vetoed on ${bill.vetoed}`}</Text>}
-          <Button>Follow</Button>
+          {bill && user.id ? (
+            <View>
+              {user.bills.includes(bill.number) ? (
+                <Button>Following</Button>
+              ) : (
+                <Button onPress={() => onFollowPress()}>Follow</Button>
+              )}
+            </View>
+          ) : (
+            <View>
+              <Button onPress={showDialog}>Follow</Button>
+              <Portal>
+                <Dialog visible={visible} onDismiss={hideDialog}>
+                  <Dialog.Title>Hi there 👋 </Dialog.Title>
+                  <Dialog.Content>
+                    <Paragraph>Please login to follow members and bills.</Paragraph>
+                  </Dialog.Content>
+                  <Dialog.Actions>
+                    <Button onPress={hideDialog}>Close</Button>
+                    <Button onPress={() => onRedirectToLogin()}>Login</Button>
+                  </Dialog.Actions>
+                </Dialog>
+              </Portal>
+            </View>
+          )}
         </View>
       )}
     </ScrollView>
@@ -76,3 +129,18 @@ const styles = StyleSheet.create({
     height: '100%',
   },
 });
+
+const mapState = (state) => {
+  return {
+    user: state,
+  };
+};
+
+const mapDispatch = (dispatch) => {
+  return {
+    updateUserBill: (userId, billNum) =>
+      dispatch(updateUserBillFollowingThunk(userId, billNum)),
+  };
+};
+
+export default connect(mapState, mapDispatch)(SpecificBill);

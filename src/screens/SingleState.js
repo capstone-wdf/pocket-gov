@@ -18,34 +18,21 @@ export default function SingleState({ route, navigation }) {
   const [loading, setLoading] = useState(true);
   const [senate, setSenate] = useState([]);
   const [house, setHouse] = useState([]);
-  const [pseudoCache, setPseudoCache] = useState({});
 
   const loadReps = async () => {
-    //need higher-level state or real caching for this to work
-    //does a new API call every time
-    if (pseudoCache[route.params.state]) {
-      setSenate(pseudoCache[route.params.state].senate);
-      setHouse(pseudoCache[route.params.state].house);
-    } else {
-      try {
-        const senateData = await axios.get(
-          `https://api.propublica.org/congress/v1/members/senate/${route.params.state}/current.json`,
-          config
-        );
-        setSenate(senateData.data.results);
-        const houseData = await axios.get(
-          `https://api.propublica.org/congress/v1/members/house/${route.params.state}/current.json`,
-          config
-        );
-        setHouse(houseData.data.results);
-
-        // setPseudoCache({
-        //   ...pseudoCache,
-        //   [route.params.state]: { senate, house },
-        // });
-      } catch (e) {
-        console.log(e);
-      }
+    try {
+      const senateData = await axios.get(
+        `https://api.propublica.org/congress/v1/members/senate/${route.params.state}/current.json`,
+        config
+      );
+      setSenate(senateData.data.results);
+      const houseData = await axios.get(
+        `https://api.propublica.org/congress/v1/members/house/${route.params.state}/current.json`,
+        config
+      );
+      setHouse(houseData.data.results);
+    } catch (e) {
+      console.log(e);
     }
   };
 
@@ -55,14 +42,45 @@ export default function SingleState({ route, navigation }) {
   }, []);
 
   const handlePageChange = async (chamber, id) => {
-    // const selectedRep = chamber.filter((reps) => reps.id === id)[0];
-    // console.log(selectedRep);
     const { data } = await axios.get(
       `https://api.propublica.org/congress/v1/members/${id}.json`,
       config
     );
     navigation.navigate("Single Member", { selectedRep: data.results[0] });
   };
+
+  //flatlist
+
+  const defaultPic = async (repId, exists) => {
+    try {
+      await axios.get(
+        `https://theunitedstates.io/images/congress/225x275/${repId}.jpg`
+      );
+      exists = true;
+    } catch (error) {
+      exists = false;
+    }
+    return;
+  };
+
+  const Item = ({ rep }) => {
+    return (
+      <TouchableWithoutFeedback onPress={() => handlePageChange(house, rep.id)}>
+        <View style={{ alignItems: "center", padding: 5 }}>
+          <Avatar.Image
+            size={70}
+            source={{
+              uri: `https://theunitedstates.io/images/congress/225x275/${rep.id}.jpg`,
+            }}
+          />
+
+          <Text>{`${rep.last_name} (${rep.party})`}</Text>
+        </View>
+      </TouchableWithoutFeedback>
+    );
+  };
+
+  const renderItem = ({ item }) => <Item rep={item} />;
 
   return (
     <View style={styles.container}>
@@ -92,19 +110,34 @@ export default function SingleState({ route, navigation }) {
               ))}
           </View>
         </View>
-        <View style={{ alignItems: "center" }}>
+        <View
+          style={{
+            alignItems: "center",
+
+            width: "100%",
+            height: "100%",
+          }}
+        >
           <Title>Representatives</Title>
-          {/**
-          Change from View to something else?
-           */}
-          <ScrollView horizontal contentContainerStyle={styles.reps2}>
+
+          {/* <ScrollView
+            horizontal
+            centerContent
+            contentContainerStyle={styles.reps2}
+          >
             {house &&
               house.map((rep) => (
                 <TouchableWithoutFeedback
                   key={rep.id}
                   onPress={() => handlePageChange(house, rep.id)}
                 >
-                  <View style={{ alignItems: "center", padding: "1%" }}>
+                  <View
+                    style={{
+                      justifyContent: "center",
+                      alignItems: "center",
+                      flex: 1,
+                    }}
+                  >
                     <Avatar.Image
                       size={70}
                       source={{
@@ -115,7 +148,19 @@ export default function SingleState({ route, navigation }) {
                   </View>
                 </TouchableWithoutFeedback>
               ))}
-          </ScrollView>
+          </ScrollView> */}
+
+          <FlatList
+            numColumns="4"
+            // horizontal
+            contentContainerStyle={{
+              paddingBottom: "35%",
+              alignItems: "center",
+            }}
+            data={house}
+            renderItem={renderItem}
+            keyExtractor={(item) => item.id}
+          />
         </View>
       </View>
     </View>
@@ -137,7 +182,6 @@ const styles = StyleSheet.create({
     zIndex: -1,
     justifyContent: "center",
     alignItems: "center",
-    // backgroundColor: "violet",
     padding: "3%",
   },
   reps_container: {
@@ -153,7 +197,10 @@ const styles = StyleSheet.create({
     flexWrap: "wrap",
   },
   reps2: {
-    // flexWrap: "wrap",
-    // alignItems: "center",
+    width: "100%",
+    height: "100%",
+    flexWrap: "wrap",
+    justifyContent: "center",
+    alignItems: "center",
   },
 });

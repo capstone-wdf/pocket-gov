@@ -31,6 +31,7 @@ import { Provider } from 'react-redux';
 import { store, logOutUserThunk } from './redux/app-redux';
 import BottomNav from './src/components/BottomNav';
 
+
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
 

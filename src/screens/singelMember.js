@@ -25,7 +25,8 @@ import { config } from '../../secrets';
 import { VictoryPie, VictoryStack, VictoryBar } from 'victory-native';
 import { firebase } from '../firebase/config';
 import { connect } from 'react-redux';
-import { updateUserThunk } from '../../redux/app-redux';
+import { updateUserMemFollowingThunk } from '../../redux/app-redux';
+
 
 // const rssParser = require("react-native-rss-parser");
 import * as rssParser from 'react-native-rss-parser';
@@ -59,7 +60,8 @@ async function getMembers(congress, chamber) {
   }
 }
 
-function SingleMemberScreen({ route, navigation, user, updateUser }) {
+
+function singleMemberScreen({ route, navigation, user, updateUserMem }) {
   const [members, setMembers] = useState([]);
   const [member, setMember] = useState(null);
   const [newsFeed, setNewsFeed] = useState(null);
@@ -71,7 +73,7 @@ function SingleMemberScreen({ route, navigation, user, updateUser }) {
   const hideDialog = () => setVisible(false);
 
   // console.log("ROUTEPARAMSUER", route.params.user);
-  console.log('USER', user);
+  // console.log("USER", user);
   const openMenu1 = () => setVisible1(true);
   const closeMenu1 = () => setVisible1(false);
   // console.log("Member", member);
@@ -132,8 +134,8 @@ function SingleMemberScreen({ route, navigation, user, updateUser }) {
 
   const onFollowPress = async () => {
     try {
-      await updateUser(user.id, member.id);
-      console.log('user state after update u:', user, member.id);
+      await updateUserMem(user.id, member.id);
+      console.log("user state after update u:", user, member.id);
       // navigation.navigate('singelMember')
     } catch (error) {
       console.log('Follow Error', error);
@@ -396,8 +398,8 @@ const mapState = (state) => {
 
 const mapDispatch = (dispatch) => {
   return {
-    updateUser: (userId, memberId) =>
-      dispatch(updateUserThunk(userId, memberId)),
+    updateUserMem: (userId, memberId) =>
+      dispatch(updateUserMemFollowingThunk(userId, memberId)),
   };
 };
 
