@@ -79,9 +79,9 @@ function LoginScreen({navigation, getUser, user}) {
         navigation.navigate('Registration')
     }
 
-    const onSkipPress = () => {
-      navigation.navigate('Legislative')
-    }
+    // const onSkipPress = () => {
+    //   navigation.navigate('Legislative')
+    // }
 
     const onLoginPress = async () => {
         try {
@@ -129,11 +129,11 @@ function LoginScreen({navigation, getUser, user}) {
                 <View style={styles.footerView}>
                     <Text style={styles.footerText}>Don't have an account? <Text onPress={onFooterLinkPress} style={styles.footerLink}>Sign up</Text></Text>
                 </View>
-                <TouchableOpacity
+                {/* <TouchableOpacity
                     style={styles.skip}
                     onPress={() => onSkipPress()}>
                     <Text style={styles.skip}>Skip</Text>
-                </TouchableOpacity>
+                </TouchableOpacity> */}
             </KeyboardAwareScrollView>
         </View>
     )

@@ -4,6 +4,18 @@ import { Text, Avatar } from "react-native-paper";
 import { StyleSheet } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { connect } from "react-redux";
+import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
+
+const Tab = createMaterialTopTabNavigator();
+
+// function MyTabs() {
+//   return (
+//     <Tab.Navigator>
+//       <Tab.Screen name="Members" component={FollowingMembersScreen} />
+//       <Tab.Screen name="Bills" component={FollowingBillsScreen} />
+//     </Tab.Navigator>
+//   );
+// }
 
 function FollowingScreen({ route, navigation, user }) {
   // console.log("Route Param:", route.params.user.members)

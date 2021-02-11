@@ -88,8 +88,8 @@ function LegislativeHome({ navigation, user, logOutUser }) {
         <USMap navigation={navigation} />
       </ZoomView>
 
-      <View style={styles.branchbar}>
-        {/* <Button icon="gavel" onPress={() => navigation.navigate("Judicial")}>
+      {/* <View style={styles.branchbar}>
+        <Button icon="gavel" onPress={() => navigation.navigate("Judicial")}>
           Judicial
         </Button>
         <Button
@@ -98,19 +98,19 @@ function LegislativeHome({ navigation, user, logOutUser }) {
         >
           Executive
         </Button> */}
-        {/* <Button icon="book-open-variant">Legislative</Button> */}
+        {/* <Button icon="book-open-variant">Legislative</Button>
       </View>
       <View style={styles.buttonContainer}>
         <Button onPress={() => navigation.navigate("Compare")}>
           Go to Compare Members Screen
         </Button>
-        {/* <Button onPress={() => navigation.navigate('Single Member', { user })}>
+        <Button onPress={() => navigation.navigate('Single Member', { user })}>
           Go to Single Member Screen
-        </Button> */}
+        </Button>
         <Button onPress={() => navigation.navigate("Bills")}>
           Go to Bills
-        </Button>
-      </View>
+        </Button> */}
+      {/* </View>  */}
     </View>
   );
 }
