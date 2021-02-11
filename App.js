@@ -30,6 +30,7 @@ import HomeScreen from "./src/screens/HomeScreen";
 import { Provider } from "react-redux";
 import { store, logOutUserThunk } from "./redux/app-redux";
 import BottomNav from "./src/components/BottomNav";
+import { stateNames } from "./src/components/usStates";
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -82,7 +83,13 @@ function Home() {
       <Stack.Screen name="PocketGov" component={HomeScreen} />
       <Stack.Screen name="Registration" component={RegistrationScreen} />
       <Stack.Screen name="Single Member" component={singleMember} />
-      <Stack.Screen name="Single State" component={SingleState} />
+      <Stack.Screen
+        name="Single State"
+        component={SingleState}
+        options={({ route }) => ({
+          title: stateNames[route.params.state.toUpperCase()],
+        })}
+      />
       <Stack.Screen name="Specific Bill" component={SpecificBill} />
       <Stack.Screen name="Login" component={LoginScreen} />
       <Stack.Screen name="Following" component={FollowingScreen} />
