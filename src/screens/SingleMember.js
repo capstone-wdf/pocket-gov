@@ -124,6 +124,7 @@ function SingleMemberScreen({ route, navigation, user, updateUser }) {
       committees: selectedRep.roles[0].committees,
       district: selectedRep.roles[0].district,
       state: selectedRep.roles[0].state,
+      at_large: selectedRep.roles[0].at_large,
     });
   }, []);
 
@@ -178,7 +179,7 @@ function SingleMemberScreen({ route, navigation, user, updateUser }) {
               <Text>{`Party: ${
                 member.party === 'D' ? 'Democrat' : 'Republican'
               }`}</Text>
-              {member.district && <Text>{`District: ${member.state} ${member.district}`}</Text>}
+              {member.district && <Text>{`District: ${member.state} ${member.at_large ? "at large" : member.district}`}</Text>}
               {/* <Text>{`Committees: ${member.committees.length}`}</Text> */}
               <Text>{`Next Election: ${member.next_election}`}</Text>
               <Text>{`Stats for the 117th Session of Congress (Jan. 3rd, 2021 - Jan. 3rd, 2023):`}</Text>
@@ -372,6 +373,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'space-evenly',
     alignItems: 'center',
+    marginTop: 20
   },
 });
 

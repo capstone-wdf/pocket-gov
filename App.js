@@ -86,7 +86,7 @@ function Home() {
       />
       <Stack.Screen name="Registration" component={RegistrationScreen} />
       <Stack.Screen
-        options={({ route }) => ({ title: route.params.selectedRep.last_name })}
+        options={({ route }) => ({ title: `${route.params.selectedRep.first_name} ${route.params.selectedRep.last_name}` })}
         name="Single Member"
         component={singleMember}
       />
