@@ -85,7 +85,6 @@ function Home() {
       <Stack.Screen name="Single State" component={SingleState} />
       <Stack.Screen name="Specific Bill" component={SpecificBill} />
       <Stack.Screen name="Login" component={LoginScreen} />
-      <Stack.Screen name="My Representatives" component={MyReps} />
       <Stack.Screen name="Following" component={FollowingScreen} />
     </Stack.Navigator>
   );
