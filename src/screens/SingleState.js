@@ -10,6 +10,7 @@ import { Text, Title, Avatar } from "react-native-paper";
 import { individualStates } from "../components/IndividualStates2";
 import { config } from "../../secrets";
 import axios from "axios";
+import { stateNames } from "../components/usStates";
 
 export default function SingleState({ route, navigation }) {
   const currentStatePath = individualStates[route.params.state];
@@ -64,6 +65,7 @@ export default function SingleState({ route, navigation }) {
 
   return (
     <View style={styles.container}>
+      <Title>{stateNames[route.params.state.toUpperCase()]}</Title>
       <View style={styles.map}>{currentStatePath}</View>
 
       <View style={styles.reps_container}>
@@ -72,8 +74,6 @@ export default function SingleState({ route, navigation }) {
         ) : (
           <React.Fragment>
             <View style={{ alignItems: "center" }}>
-              <Title>{route.params.state}</Title>
-
               <Title>Senators</Title>
               <View style={styles.reps}>
                 {senate &&
