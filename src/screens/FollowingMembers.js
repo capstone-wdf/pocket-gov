@@ -8,12 +8,6 @@ import { connect } from "react-redux";
 function FollowingMembers({ navigation, user }) {
 
   console.log("State user:", user);
-  
-  // const handlePageChange = (chamber, id) => {
-  //     const selectedRep = chamber.filter((reps) => reps.id === id)[0];
-  //     console.log(selectedRep);
-  //     navigation.navigate("Single Member", { selectedRep });
-  //   };
 
   return (
     <View style={styles.container}>
