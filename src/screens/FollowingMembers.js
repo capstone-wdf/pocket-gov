@@ -17,15 +17,15 @@ function FollowingMembers({ navigation, user }) {
       >
         <Text>Following</Text>
         {user.members &&
-          user.members.map((memberId) => (
+          user.members.map((member) => (
             <TouchableWithoutFeedback
-              key={memberId}
+              key={member.id}
               //   onPress={() => handlePageChange("117", memberId)}
             >
               <Avatar.Image
                 size={70}
                 source={{
-                  uri: `https://theunitedstates.io/images/congress/225x275/${memberId}.jpg`,
+                  uri: `https://theunitedstates.io/images/congress/225x275/${member.id}.jpg`,
                 }}
               />
             </TouchableWithoutFeedback>

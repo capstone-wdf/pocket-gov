@@ -349,6 +349,7 @@ function singleMemberScreen({ route, navigation, user, updateUserMem }) {
       </ScrollView>
     </SafeAreaView>
   );
+
 }
 
 const styles = StyleSheet.create({
