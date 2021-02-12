@@ -18,7 +18,12 @@ import {
 } from "react-native-paper";
 import axios from "axios";
 import { config } from "../../secrets";
-import { VictoryPie, VictoryStack, VictoryBar } from "victory-native";
+import {
+  VictoryPie,
+  VictoryStack,
+  VictoryBar,
+  VictoryLabel,
+} from "victory-native";
 import SingleBill from "../components/SingleBill";
 
 async function getMembers(congress, chamber) {
@@ -304,31 +309,67 @@ export default function CompareMembers() {
               <Text>{`Disagree votes: ${agreeData.disagree_votes}`}</Text> */}
             </View>
             <View>
-              {switchView ? (
-                <VictoryStack
-                  height={100}
-                  horizontal={true}
-                  colorScale={["forestgreen", "firebrick"]}
-                >
-                  <VictoryBar
-                    data={[
-                      {
-                        x: `Agree ${agreeData.agree_percent}%`,
-                        y: agreeData.agree_percent,
-                      },
-                    ]}
-                    barWidth={30}
-                  />
-                  <VictoryBar
-                    data={[
-                      {
-                        x: `Disagree ${agreeData.disagree_percent}%`,
-                        y: agreeData.disagree_percent,
-                      },
-                    ]}
-                    barWidth={30}
-                  />
-                </VictoryStack>
+              {!switchView ? (
+                <>
+                  <View
+                    style={{
+                      backgroundColor: "firebrick",
+                      height: "30%",
+                      width: "74%",
+                      left: "13%",
+                      top: "35%",
+                      position: "absolute",
+                    }}
+                  ></View>
+                  <VictoryStack
+                    height={100}
+                    horizontal={true}
+                    colorScale={["forestgreen", "firebrick"]}
+                  >
+                    <VictoryBar
+                      animate={{
+                        duration: 1000,
+                        onLoad: { duration: 1000 },
+                      }}
+                      labelComponent={
+                        <VictoryLabel
+                          x={50}
+                          capHeight={2}
+                          textAnchor="start"
+                          verticalAnchor="start"
+                          text="Agree"
+                        />
+                      }
+                      height={100}
+                      data={[
+                        {
+                          x: `Agree ${agreeData.agree_percent}%`,
+                          y: agreeData.agree_percent,
+                        },
+                      ]}
+                      barWidth={30}
+                    />
+                    <VictoryBar
+                      labelComponent={
+                        <VictoryLabel
+                          x={277}
+                          capHeight={12}
+                          textAnchor="start"
+                          verticalAnchor="start"
+                          text="Disagree"
+                        />
+                      }
+                      height={100}
+                      data={[
+                        {
+                          x: `Disagree ${agreeData.disagree_percent}%`,
+                          y: agreeData.disagree_percent,
+                        },
+                      ]}
+                      barWidth={30}
+                    />
+                  </VictoryStack>
+                </>
               ) : (
                 <VictoryPie
                   colorScale={["forestgreen", "firebrick"]}
