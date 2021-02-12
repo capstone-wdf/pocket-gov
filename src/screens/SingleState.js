@@ -104,7 +104,7 @@ export default function SingleState({ route, navigation }) {
                         uri: `https://theunitedstates.io/images/congress/225x275/${senator.id}.jpg`,
                       }}
                     />
-                    <Text>{`${senator.first_name} ${senator.last_name} (${senator.party})`}</Text>
+                    <Text>{`${senator.last_name} (${senator.party})`}</Text>
                   </View>
                 </TouchableWithoutFeedback>
               ))}

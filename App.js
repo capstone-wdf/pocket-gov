@@ -1,16 +1,16 @@
-import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { useState, useEffect } from 'react';
-import { Button, StyleSheet, Text, View } from 'react-native';
-import { Provider as PaperProvider, Colors } from 'react-native-paper';
-import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
+import { StatusBar } from "expo-status-bar";
+import React from "react";
+import { useState, useEffect } from "react";
+import { Button, StyleSheet, Text, View } from "react-native";
+import { Provider as PaperProvider, Colors } from "react-native-paper";
+import { NavigationContainer } from "@react-navigation/native";
+import { createStackNavigator } from "@react-navigation/stack";
 import {
   createDrawerNavigator,
   DrawerContentScrollView,
   DrawerItemList,
   DrawerItem,
-} from '@react-navigation/drawer';
+} from "@react-navigation/drawer";
 import {
   LoginScreen,
   RegistrationScreen,
@@ -24,13 +24,12 @@ import {
   ExecutiveHome,
   JudicialHome,
   MyReps,
-} from './src/screens';
-import HomeScreen from './src/screens/HomeScreen';
+} from "./src/screens";
+import HomeScreen from "./src/screens/HomeScreen";
 // import { firebase } from './src/firebase/config';
-import { Provider } from 'react-redux';
-import { store, logOutUserThunk } from './redux/app-redux';
-import BottomNav from './src/components/BottomNav';
-
+import { Provider } from "react-redux";
+import { store, logOutUserThunk } from "./redux/app-redux";
+import BottomNav from "./src/components/BottomNav";
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -45,14 +44,14 @@ function CustomDrawerContent(props) {
           <DrawerItem
             label="Following"
             onPress={() => {
-              props.navigation.navigate('Following');
+              props.navigation.navigate("Following");
             }}
           />
           <DrawerItem
             label="Log Out"
             onPress={() => {
               store.dispatch(logOutUserThunk());
-              props.navigation.navigate('Legislative');
+              props.navigation.navigate("Legislative");
             }}
           />
         </>
@@ -60,7 +59,7 @@ function CustomDrawerContent(props) {
         <>
           <DrawerItem
             label="Log In"
-            onPress={() => props.navigation.navigate('Login')}
+            onPress={() => props.navigation.navigate("Login")}
           />
         </>
       )}
@@ -81,13 +80,15 @@ function Home() {
   return (
     <Stack.Navigator>
       <Stack.Screen
-        options={{ title: 'PocketGov' }}
+        options={{ title: "PocketGov" }}
         name="Home"
         component={HomeScreen}
       />
       <Stack.Screen name="Registration" component={RegistrationScreen} />
       <Stack.Screen
-        options={({ route }) => ({ title: `${route.params.selectedRep.first_name} ${route.params.selectedRep.last_name}` })}
+        options={({ route }) => ({
+          title: `${route.params.selectedRep.first_name} ${route.params.selectedRep.last_name}`,
+        })}
         name="Single Member"
         component={singleMember}
       />
@@ -97,7 +98,7 @@ function Home() {
         component={SingleState}
       />
       <Stack.Screen
-        options={{ title: 'Bill' }}
+        options={{ title: "Bill" }}
         name="Specific Bill"
         component={SpecificBill}
       />
@@ -130,7 +131,11 @@ export default function App() {
           >
             <Drawer.Screen name="Home" component={Home} />
             <Drawer.Screen name="My Representatives" component={MyReps} />
-            <Drawer.Screen name="Compare Members" component={CompareMembers} />
+            <Drawer.Screen
+              name="Compare Members"
+              headerShown
+              component={CompareMembers}
+            />
             <Drawer.Screen name="Search Bills" component={Bills} />
           </Drawer.Navigator>
         </NavigationContainer>
@@ -142,8 +147,8 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: "#fff",
+    alignItems: "center",
+    justifyContent: "center",
   },
 });
