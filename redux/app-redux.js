@@ -126,6 +126,19 @@ export const unfollowMemThunk = (userId, memberId) => {
   };
 };
 
+export const unfollowBillThunk = (userId, billNum) => {
+  return (dispatch) => {
+    firebase
+      .firestore()
+      .collection("users")
+      .doc(userId)
+      .update({
+        bills: firebase.firestore.FieldValue.arrayRemove(billNum),
+      });
+    dispatch(unfollowBill(billNum));
+  };
+};
+
 export const logOutUserThunk = () => {
   return (dispatch) => {
     firebase
@@ -158,6 +171,8 @@ const userReducer = (state = initialState, action) => {
       return { ...state, bills: [...state.bills, action.billNum] };
     case UNFOLLOW_MEM:
         return { ...state, members: state.members.filter(id => id !== action.memberId)};
+    case UNFOLLOW_BILL:
+        return { ...state, bills: state.bills.filter(billNum => billNum !== action.billNum)};
     case LOG_OUT_USER:
       return {};
     default:
