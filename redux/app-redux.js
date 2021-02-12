@@ -6,6 +6,8 @@ const SET_USER = "SET_USER";
 const LOG_OUT_USER = "LOG_OUT_USER";
 const UPDATE_USER_MEM = "UPDATE_USER_MEM";
 const UPDATE_USER_BILL = "UPDATE_USER_BILL";
+const UNFOLLOW_MEM = "UNFOLLOW_MEM";
+const UNFOLLOW_BILL = "UNFOLLOW_BILL";
 
 export const setUser = (user) => {
   return {
@@ -31,6 +33,22 @@ export const updateUserBill = (billNum) => {
 export const logOutUser = () => {
   return {
     type: LOG_OUT_USER,
+  };
+};
+
+
+export const unfollowMem = (memberId) => {
+  return {
+    type: UNFOLLOW_MEM,
+    memberId
+  };
+};
+
+
+export const unfollowBill = (billNum) => {
+  return {
+    type: UNFOLLOW_BILL,
+    billNum
   };
 };
 
@@ -95,6 +113,19 @@ export const updateUserBillFollowingThunk = (userId, billNum) => {
   };
 };
 
+export const unfollowMemThunk = (userId, memberId) => {
+  return (dispatch) => {
+    firebase
+      .firestore()
+      .collection("users")
+      .doc(userId)
+      .update({
+        members: firebase.firestore.FieldValue.arrayRemove(memberId),
+      });
+    dispatch(unfollowMem(memberId));
+  };
+};
+
 export const logOutUserThunk = () => {
   return (dispatch) => {
     firebase
@@ -111,6 +142,8 @@ export const logOutUserThunk = () => {
   };
 };
 
+
+
 // initial state
 const initialState = {};
 
@@ -123,6 +156,8 @@ const userReducer = (state = initialState, action) => {
       return { ...state, members: [...state.members, action.memberId] };
     case UPDATE_USER_BILL:
       return { ...state, bills: [...state.bills, action.billNum] };
+    case UNFOLLOW_MEM:
+        return { ...state, members: state.members.filter(id => id !== action.memberId)};
     case LOG_OUT_USER:
       return {};
     default:

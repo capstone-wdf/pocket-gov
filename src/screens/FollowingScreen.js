@@ -6,10 +6,13 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 import { connect } from "react-redux";
 import axios from "axios";
 import { config } from "../../secrets";
+import { useIsFocused } from "@react-navigation/native";
 
 function FollowingScreen({ navigation, user }) {
-  
+
   const [following, setFollowing] = useState(null);
+  const isFocused = useIsFocused();
+
 
   useEffect(() => {
     let getData = async (memberId) => {
@@ -27,7 +30,7 @@ function FollowingScreen({ navigation, user }) {
       .then(followingData => {
         setFollowing(followingData)
       })
-  }, []);
+  }, [isFocused]);
 
   const handlePageChange = async (id) => {
     const { data } = await axios.get(

@@ -25,7 +25,7 @@ import { config } from '../../secrets';
 import { VictoryPie, VictoryStack, VictoryBar } from 'victory-native';
 import { firebase } from '../firebase/config';
 import { connect } from 'react-redux';
-import { updateUserMemFollowingThunk } from '../../redux/app-redux';
+import { updateUserMemFollowingThunk, unfollowMemThunk } from '../../redux/app-redux';
 
 
 // const rssParser = require("react-native-rss-parser");
@@ -61,13 +61,13 @@ async function getMembers(congress, chamber) {
 }
 
 
-function singleMemberScreen({ route, navigation, user, updateUserMem }) {
+function singleMemberScreen({ route, navigation, user, updateUserMem, unfollowMem }) {
   const [members, setMembers] = useState([]);
   const [member, setMember] = useState(null);
   const [newsFeed, setNewsFeed] = useState(null);
   const [visible1, setVisible1] = useState(false);
-
   const [visible, setVisible] = React.useState(false);
+
 
   const showDialog = () => setVisible(true);
   const hideDialog = () => setVisible(false);
@@ -139,6 +139,14 @@ function singleMemberScreen({ route, navigation, user, updateUserMem }) {
       // navigation.navigate('singelMember')
     } catch (error) {
       console.log('Follow Error', error);
+    }
+  };
+
+  const onUnfollowPress = async () => {
+    try {
+      await unfollowMem(user.id, member.id);
+    } catch (error) {
+      console.log('Unfollow Error', error);
     }
   };
 
@@ -321,7 +329,7 @@ function singleMemberScreen({ route, navigation, user, updateUserMem }) {
           {member && user.id ? (
             <View>
               {user.members.includes(member.id) ? (
-                <Button>Following</Button>
+                <Button onPress={() => onUnfollowPress()}>Following</Button>
               ) : (
                 <Button onPress={() => onFollowPress()}>Follow</Button>
               )}
@@ -401,6 +409,8 @@ const mapDispatch = (dispatch) => {
   return {
     updateUserMem: (userId, memberId) =>
       dispatch(updateUserMemFollowingThunk(userId, memberId)),
+    unfollowMem: (userId, memberId) =>
+      dispatch(unfollowMemThunk(userId, memberId))
   };
 };
 
