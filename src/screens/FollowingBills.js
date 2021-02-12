@@ -10,35 +10,29 @@ import { useIsFocused } from "@react-navigation/native";
 
 function FollowingBills({ navigation, user }) {
 
-  // const [following, setFollowing] = useState(null);
-  // const isFocused = useIsFocused();
+  const [following, setFollowing] = useState(null);
+  const isFocused = useIsFocused();
+  const congress = '117'
+
+  useEffect(() => {
+    let getData = async (billSlug) => {
+      const { data } = await axios.get(
+        `https://api.propublica.org/congress/v1/${congress}/bills/${billSlug}.json`, config
+      );
+      const { bill_slug, bill, short_title } = await data.results[0]
+      return { bill_slug, bill, short_title }
+    }
+    Promise.all(user.bills.map(billSlug => getData(billSlug)))
+      .then(followingData => {
+        setFollowing(followingData)
+
+      })
+  }, [isFocused]);
 
 
-  // useEffect(() => {
-  //   let getData = async (memberId) => {
-  //     const { data } = await axios.get(
-  //       `https://api.propublica.org/congress/v1/members/${memberId}.json`,
-  //       config
-  //     );
-  //     const { id, first_name, last_name, current_party, roles } = await data.results[0]
-  //     const { short_title, title, state } = roles[0]
-  //     const fullname = short_title + " " + first_name + " " + last_name
-  //     const desc = state + " " + "(" + current_party + ")"
-  //     return { id, fullname, current_party, title, state, desc }
-  //   }
-  //   Promise.all(user.members.map(memberId => getData(memberId)))
-  //     .then(followingData => {
-  //       setFollowing(followingData)
-  //     })
-  // }, [isFocused]);
-
-  // const handlePageChange = async (id) => {
-  //   const { data } = await axios.get(
-  //     `https://api.propublica.org/congress/v1/members/${id}.json`,
-  //     config
-  //   );
-  //   navigation.navigate("Single Member", { selectedRep: data.results[0] });
-  // };
+  const handlePageChange = async (id) => {
+    navigation.navigate('Specific Bill', { bill_slug: id });
+  };
 
   return (
     <View style={styles.container}>
@@ -46,13 +40,13 @@ function FollowingBills({ navigation, user }) {
         style={{ flex: 1, width: "100%" }}
         keyboardShouldPersistTaps="always"
       >
-        {user.bills &&
-          user.bills.map((billNum) => (
+        {user.bills && following &&
+          following.map((billObj) => (
             <List.Item
-            key={billNum}
-            title={billNum}
-            description="TESTING"
-            // onPress={() => handlePageChange(memberObj.id)}
+            key={billObj.bill_slug}
+            title={billObj.bill}
+            description={billObj.short_title}
+            onPress={() => handlePageChange(billObj.bill_slug)}
             // left={(props) => (
             //   <Avatar.Image
             //     {...props}
