@@ -164,53 +164,25 @@ export default function CompareMembers() {
         >
           switch chamber
         </Button>
+
         <View style={styles.menuContainer}>
-          <Menu
-            visible={visible1}
-            onDismiss={closeMenu1}
-            anchor={
-              <Button onPress={openMenu1}>
-                {chamber === "senate" ? "1st senator" : "1st representative"}
-              </Button>
-            }
-          >
-            {members.map((member) => {
-              return (
-                <Menu.Item
-                  title={`${member.first_name} ${member.last_name} (${member.party})`}
-                  key={member.id}
-                  onPress={() => {
-                    setMember1({
-                      first_name: member.first_name,
-                      last_name: member.last_name,
-                      id: member.id,
-                      party: member.party,
-                      state: member.state,
-                      short_title: member.short_title,
-                    });
-                    closeMenu1();
-                  }}
-                />
-              );
-            })}
-          </Menu>
-          <Menu
-            visible={visible2}
-            onDismiss={closeMenu2}
-            anchor={
-              <Button onPress={openMenu2}>
-                {chamber === "senate" ? "2nd senator" : "2nd representative"}
-              </Button>
-            }
-          >
-            {members &&
-              members.map((member) => {
+          <View>
+            <Menu
+              visible={visible1}
+              onDismiss={closeMenu1}
+              anchor={
+                <Button onPress={openMenu1}>
+                  {chamber === "senate" ? "1st senator" : "1st representative"}
+                </Button>
+              }
+            >
+              {members.map((member) => {
                 return (
                   <Menu.Item
                     title={`${member.first_name} ${member.last_name} (${member.party})`}
                     key={member.id}
                     onPress={() => {
-                      setMember2({
+                      setMember1({
                         first_name: member.first_name,
                         last_name: member.last_name,
                         id: member.id,
@@ -218,14 +190,78 @@ export default function CompareMembers() {
                         state: member.state,
                         short_title: member.short_title,
                       });
-                      closeMenu2();
+                      closeMenu1();
                     }}
                   />
                 );
               })}
-          </Menu>
+            </Menu>
+            <View style={styles.member}>
+              {member1 && member1.first_name && (
+                <Avatar.Image
+                  size={70}
+                  source={{
+                    uri: `https://theunitedstates.io/images/congress/225x275/${member1.id}.jpg`,
+                  }}
+                />
+              )}
+              {member1 && (
+                <Text
+                  style={styles.text}
+                >{`${member1.first_name} ${member1.last_name} (${member1.party}), ${member1.state}`}</Text>
+              )}
+            </View>
+          </View>
+
+          <View>
+            <Menu
+              visible={visible2}
+              onDismiss={closeMenu2}
+              anchor={
+                <Button onPress={openMenu2}>
+                  {chamber === "senate" ? "2nd senator" : "2nd representative"}
+                </Button>
+              }
+            >
+              {members &&
+                members.map((member) => {
+                  return (
+                    <Menu.Item
+                      title={`${member.first_name} ${member.last_name} (${member.party})`}
+                      key={member.id}
+                      onPress={() => {
+                        setMember2({
+                          first_name: member.first_name,
+                          last_name: member.last_name,
+                          id: member.id,
+                          party: member.party,
+                          state: member.state,
+                          short_title: member.short_title,
+                        });
+                        closeMenu2();
+                      }}
+                    />
+                  );
+                })}
+            </Menu>
+            <View style={styles.member}>
+              {member2 && (
+                <Avatar.Image
+                  size={70}
+                  source={{
+                    uri: `https://theunitedstates.io/images/congress/225x275/${member2.id}.jpg`,
+                  }}
+                />
+              )}
+              {member2 && (
+                <Text
+                  style={styles.text}
+                >{`${member2.first_name} ${member2.last_name} (${member2.party}), ${member2.state}`}</Text>
+              )}
+            </View>
+          </View>
         </View>
-        <View style={styles.memberContainer}>
+        {/* <View style={styles.memberContainer}>
           <View style={styles.member}>
             {member1 && member1.first_name && (
               <Avatar.Image
@@ -256,9 +292,9 @@ export default function CompareMembers() {
               >{`${member2.first_name} ${member2.last_name} (${member2.party}), ${member2.state}`}</Text>
             )}
           </View>
-        </View>
+        </View> */}
         {agreeData && member1 && member2 && (
-          <View>
+          <View style={styles.dataContainer}>
             <Subheading>Voting Records</Subheading>
             <View style={styles.textContainer}>
               <Text>{`${member1.short_title} ${member1.last_name} and ${member2.short_title} ${member2.last_name} agree ${agreeData.agree_percent}% of the time and have ${agreeData.common_votes} votes in common`}</Text>
@@ -267,9 +303,10 @@ export default function CompareMembers() {
               <Text>{`Disagree percent: ${agreeData.disagree_percent}`}</Text>
               <Text>{`Disagree votes: ${agreeData.disagree_votes}`}</Text> */}
             </View>
-            <View style={styles.graphContainer}>
+            <View>
               {switchView ? (
                 <VictoryStack
+                  height={100}
                   horizontal={true}
                   colorScale={["forestgreen", "firebrick"]}
                 >
@@ -372,6 +409,10 @@ const styles = StyleSheet.create({
   textContainer: {
     alignItems: "center",
     margin: 10,
+  },
+  dataContainer: {
+    justifyContent: "center",
+    alignItems: "center",
   },
   bills: {},
 });
