@@ -15,7 +15,7 @@ import {
 import axios from 'axios';
 import { config } from '../../secrets';
 import { connect } from "react-redux";
-import { updateUserBillFollowingThunk } from "../../redux/app-redux";
+import { updateUserBillFollowingThunk, unfollowBillThunk } from "../../redux/app-redux";
 
 
 async function getSpecificBill(congress, bill_slug) {
@@ -29,7 +29,7 @@ async function getSpecificBill(congress, bill_slug) {
   }
 }
 
-function SpecificBill({ route, navigation, user, updateUserBill }) {
+function SpecificBill({ route, navigation, user, updateUserBill, unfollowBill }) {
   const [bill, setBill] = useState(null);
   const { bill_slug } = route.params;
   const [visible, setVisible] = React.useState(false);
@@ -52,11 +52,19 @@ function SpecificBill({ route, navigation, user, updateUserBill }) {
 
   const onFollowPress = async () => {
     try {
-      await updateUserBill(user.id, bill.number);
+      await updateUserBill(user.id, bill_slug);
       console.log("user state after update u:", user, user.bills);
       // navigation.navigate('singelMember')
     } catch (error) {
       console.log("Follow Error", error);
+    }
+  };
+
+  const onUnfollowPress = async () => {
+    try {
+      await unfollowBill(user.id, bill_slug);
+    } catch (error) {
+      console.log("Unfollow Error", error);
     }
   };
 
@@ -94,8 +102,8 @@ function SpecificBill({ route, navigation, user, updateUserBill }) {
           {bill.vetoed && <Text>{`Vetoed on ${bill.vetoed}`}</Text>}
           {bill && user.id ? (
             <View>
-              {user.bills.includes(bill.number) ? (
-                <Button>Following</Button>
+              {user.bills.includes(bill_slug) ? (
+                <Button onPress={() => onUnfollowPress()}>Following</Button>
               ) : (
                 <Button onPress={() => onFollowPress()}>Follow</Button>
               )}
@@ -140,6 +148,8 @@ const mapDispatch = (dispatch) => {
   return {
     updateUserBill: (userId, billNum) =>
       dispatch(updateUserBillFollowingThunk(userId, billNum)),
+    unfollowBill: (userId, billSlug) =>
+      dispatch(unfollowBillThunk(userId, billSlug))
   };
 };
 

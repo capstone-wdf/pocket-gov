@@ -1,72 +1,37 @@
-import React, { useState, useEffect } from "react";
-import { TouchableOpacity, View, TouchableWithoutFeedback } from "react-native";
-import { Text, Avatar, List, Title } from "react-native-paper";
-import { StyleSheet } from "react-native";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { connect } from "react-redux";
-import axios from "axios";
-import { config } from "../../secrets";
-import { useIsFocused } from "@react-navigation/native";
+import React, { useState } from 'react';
+import { StyleSheet, View } from 'react-native';
+import { Colors} from 'react-native-paper';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { FollowingMembers, FollowingBills } from './index';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 
-function FollowingScreen({ navigation, user }) {
+const Tab = createBottomTabNavigator();
 
-  const [following, setFollowing] = useState(null);
-  const isFocused = useIsFocused();
-
-
-  useEffect(() => {
-    let getData = async (memberId) => {
-      const { data } = await axios.get(
-        `https://api.propublica.org/congress/v1/members/${memberId}.json`,
-        config
-      );
-      const { id, first_name, last_name, current_party, roles } = await data.results[0]
-      const { short_title, title, state } = roles[0]
-      const fullname = short_title + " " + first_name + " " + last_name
-      const desc = state + " " + "(" + current_party + ")"
-      return { id, fullname, current_party, title, state, desc }
-    }
-    Promise.all(user.members.map(memberId => getData(memberId)))
-      .then(followingData => {
-        setFollowing(followingData)
-      })
-  }, [isFocused]);
-
-  const handlePageChange = async (id) => {
-    const { data } = await axios.get(
-      `https://api.propublica.org/congress/v1/members/${id}.json`,
-      config
-    );
-    navigation.navigate("Single Member", { selectedRep: data.results[0] });
-  };
-
+export default function FollowingScreen({ navigation }) {
   return (
     <View style={styles.container}>
-      <KeyboardAwareScrollView
-        style={{ flex: 1, width: "100%" }}
-        keyboardShouldPersistTaps="always"
+      <Tab.Navigator
+        screenOptions={({ route }) => ({
+          tabBarIcon: () => {
+            let iconName;
+            if (route.name === 'FollowingMembers') {
+              iconName = 'person';
+            } else if (route.name === 'FollowingBills') {
+              iconName = 'fountain-pen';
+            }
+            return (
+              <MaterialCommunityIcons name={iconName} size={24} color={Colors.cyan700}/>
+            );
+          },
+        })}
+        tabBarOptions={{
+          activeTintColor: Colors.cyan700,
+          inactiveTintColor: Colors.gray900,
+        }}
       >
-        {user.members && following &&
-          following.map((memberObj) => (
-            <List.Item
-            key={memberObj.id}
-            title={memberObj.fullname}
-            description={memberObj.desc}
-            onPress={() => handlePageChange(memberObj.id)}
-            left={(props) => (
-              <Avatar.Image
-                {...props}
-                size={70}
-                source={{
-                  uri:
-                    `https://theunitedstates.io/images/congress/225x275/${memberObj.id}.jpg`,
-                }}
-              />
-            )}
-           />
-          ))
-        }
-      </KeyboardAwareScrollView>
+        <Tab.Screen name="Members" component={FollowingMembers} />
+        <Tab.Screen name="Bills" component={FollowingBills} />
+      </Tab.Navigator>
     </View>
   );
 }
@@ -74,14 +39,6 @@ function FollowingScreen({ navigation, user }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: '#fff',
   },
 });
-
-const mapState = (state) => {
-  return {
-    user: state,
-  };
-};
-
-export default connect(mapState)(FollowingScreen);
