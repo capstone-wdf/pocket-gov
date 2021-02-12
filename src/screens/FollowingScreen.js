@@ -6,27 +6,31 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 import { connect } from "react-redux";
 import axios from "axios";
 import { config } from "../../secrets";
+import { useIsFocused } from "@react-navigation/native";
 
 function FollowingScreen({ navigation, user }) {
-  // console.log("Route Param:", route.params.user.members)
-  const [followingdata, setFollowingData] = useState([]);
 
-  // console.log("State user:", user);
+  const [following, setFollowing] = useState(null);
+  const isFocused = useIsFocused();
 
-  // useEffect(() => {
-  //   const followingData = []
-  //   user.members.forEach(async (memberId) => {
-  //     const { data } = await axios.get(
-  //       `https://api.propublica.org/congress/v1/members/${memberId}.json`,
-  //       config
-  //     );
-  //     const memberData = await data.results[0]
-  //     followingData.push(memberData)
-  //   })
 
-  //   setFollowingData(followingData)
-  //   // console.log("FD:", followingData)
-  // }, []);
+  useEffect(() => {
+    let getData = async (memberId) => {
+      const { data } = await axios.get(
+        `https://api.propublica.org/congress/v1/members/${memberId}.json`,
+        config
+      );
+      const { id, first_name, last_name, current_party, roles } = await data.results[0]
+      const { short_title, title, state } = roles[0]
+      const fullname = short_title + " " + first_name + " " + last_name
+      const desc = state + " " + "(" + current_party + ")"
+      return { id, fullname, current_party, title, state, desc }
+    }
+    Promise.all(user.members.map(memberId => getData(memberId)))
+      .then(followingData => {
+        setFollowing(followingData)
+      })
+  }, [isFocused]);
 
   const handlePageChange = async (id) => {
     const { data } = await axios.get(
@@ -42,36 +46,26 @@ function FollowingScreen({ navigation, user }) {
         style={{ flex: 1, width: "100%" }}
         keyboardShouldPersistTaps="always"
       >
-        {user.members &&
-          user.members.map((memberId) => (
+        {user.members && following &&
+          following.map((memberObj) => (
             <List.Item
-            key={memberId}
-            title="Kamala Harris"
-            description="Vice President"
-            onPress={() => handlePageChange(memberId)}
+            key={memberObj.id}
+            title={memberObj.fullname}
+            description={memberObj.desc}
+            onPress={() => handlePageChange(memberObj.id)}
             left={(props) => (
               <Avatar.Image
                 {...props}
                 size={70}
                 source={{
                   uri:
-                    `https://theunitedstates.io/images/congress/225x275/${memberId}.jpg`,
+                    `https://theunitedstates.io/images/congress/225x275/${memberObj.id}.jpg`,
                 }}
               />
             )}
            />
-          //   <TouchableWithoutFeedback
-          //     key={memberId}
-          //     onPress={() => handlePageChange(memberId)}
-          //   >
-          //     <Avatar.Image
-          //       size={70}
-          //       source={{
-          //         uri: `https://theunitedstates.io/images/congress/225x275/${memberId}.jpg`,
-          //       }}
-          //     />
-          //   </TouchableWithoutFeedback>
-          ))}
+          ))
+        }
       </KeyboardAwareScrollView>
     </View>
   );
