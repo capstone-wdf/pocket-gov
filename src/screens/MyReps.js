@@ -12,10 +12,7 @@ export default function MyReps() {
         key: gCloudKey,
         address: search,
       };
-      // console.log("QUERY", query);
-      // "https://www.googleapis.com/civicinfo/v2/elections?key=<AIzaSyADf6v1kNJOwDf1vFwj9hQuIgY2rHb0Ghs>"
-      // "https://maps.googleapis.com/maps/api/place/findplacefromtext/json"
-      //"https://www.googleapis.com/civicinfo/v2/representatives"
+
       const {
         data,
       } = await axios.get(
