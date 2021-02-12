@@ -14,7 +14,6 @@ import {
 import {
   LoginScreen,
   RegistrationScreen,
-  FollowingScreen,
   LegislativeHome,
   CompareMembers,
   singleMember,
@@ -26,6 +25,8 @@ import {
   MyReps,
 } from './src/screens';
 import HomeScreen from './src/screens/HomeScreen';
+import FollowingScreen from './src/screens/FollowingScreen';
+
 // import { firebase } from './src/firebase/config';
 import { Provider } from 'react-redux';
 import { store, logOutUserThunk } from './redux/app-redux';

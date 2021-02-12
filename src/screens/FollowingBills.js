@@ -50,7 +50,7 @@ function FollowingBills({ navigation, user }) {
           user.bills.map((billNum) => (
             <List.Item
             key={billNum}
-            title="Testing"
+            title={billNum}
             description="TESTING"
             // onPress={() => handlePageChange(memberObj.id)}
             // left={(props) => (

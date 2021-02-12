@@ -1,7 +1,7 @@
 export { default as LoginScreen } from './LoginScreen';
 // export { default as HomeScreen } from './HomeScreen'
 export { default as RegistrationScreen } from './RegistrationScreen';
-export { default as FollowingScreen } from './FollowingScreen';
+// export { default as FollowingScreen } from './FollowingScreen';
 export { default as FollowingMembers } from './FollowingMembers';
 export { default as FollowingBills } from './FollowingBills';
 export { default as LegislativeHome } from './LegislativeHome';
