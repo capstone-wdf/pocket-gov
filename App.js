@@ -98,6 +98,10 @@ function Home() {
         component={SingleState}
       />
       <Stack.Screen
+        name="Search Bills"
+        component={Bills}
+      />
+      <Stack.Screen
         options={{ title: 'Bill' }}
         name="Specific Bill"
         component={SpecificBill}

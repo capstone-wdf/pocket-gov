@@ -14,9 +14,9 @@ export default function FollowingScreen({ navigation }) {
         screenOptions={({ route }) => ({
           tabBarIcon: () => {
             let iconName;
-            if (route.name === 'FollowingMembers') {
-              iconName = 'person';
-            } else if (route.name === 'FollowingBills') {
+            if (route.name === 'Members') {
+              iconName = 'account-group';
+            } else if (route.name === 'Bills') {
               iconName = 'fountain-pen';
             }
             return (

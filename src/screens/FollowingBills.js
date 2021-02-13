@@ -30,7 +30,7 @@ function FollowingBills({ navigation, user }) {
   }, [isFocused]);
 
 
-  const handlePageChange = async (id) => {
+  const handlePageChange = (id) => {
     navigation.navigate('Specific Bill', { bill_slug: id });
   };
 
