@@ -1,12 +1,12 @@
-import { StatusBar } from "expo-status-bar";
-import React, { useState, useEffect } from "react";
+import { StatusBar } from 'expo-status-bar';
+import React, { useState, useEffect } from 'react';
 import {
   FlatList,
   ScrollView,
   StyleSheet,
   TouchableOpacity,
   View,
-} from "react-native";
+} from 'react-native';
 import {
   Appbar,
   Button,
@@ -15,11 +15,11 @@ import {
   Text,
   Title,
   Subheading,
-} from "react-native-paper";
-import axios from "axios";
-import { config } from "../../secrets";
-import SingleBill from "../components/SingleBill";
-import UpcomingBill from "../components/UpcomingBill";
+} from 'react-native-paper';
+import axios from 'axios';
+import { config } from '../../secrets';
+import SingleBill from '../components/SingleBill';
+import UpcomingBill from '../components/UpcomingBill';
 
 //type = introduced, updated, active, passed, enacted or vetoed
 async function getRecentBills(congress, chamber, type) {
@@ -59,50 +59,48 @@ export default function Bills({ navigation }) {
   const [senateRecentBills, setSenateRecentBills] = useState(null);
   const [houseRecentBills, setHouseRecentBills] = useState(null);
   const [upcomingBills, setUpcomingBills] = useState(null);
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState(null);
   const [visible, setVisible] = useState(false);
-  const [type, setType] = useState("introduced");
+  const [type, setType] = useState('introduced');
 
   const onChangeSearch = (query) => setSearchQuery(query);
 
   const openMenu = () => setVisible(true);
   const closeMenu = () => setVisible(false);
 
-  const congress = "117";
+  const congress = '117';
   const callGetRecentBills = async (chamber) => {
-    if (chamber === "house") {
+    if (chamber === 'house') {
       let houseBills = await getRecentBills(congress, chamber, type);
       setHouseRecentBills(houseBills);
-      console.log("house", type);
+      console.log('house', type);
     }
-    if (chamber === "senate") {
+    if (chamber === 'senate') {
       let senateBills = await getRecentBills(congress, chamber, type);
       setSenateRecentBills(senateBills);
-      console.log("senate", type);
+      console.log('senate', type);
     }
   };
 
-  // effect hook for changing type of recent bill
-  //TO DO:
   useEffect(() => {
-    let chamber = "house";
+    let chamber = 'house';
     getRecentBills(congress, chamber, type);
   }, [type]);
 
   const callGetUpcomingBills = async () => {
-    let houseBills = await getUpcomingBills("house");
-    let senateBills = await getUpcomingBills("senate");
+    let houseBills = await getUpcomingBills('house');
+    let senateBills = await getUpcomingBills('senate');
     let upcomingBothChambers = [...senateBills, ...houseBills];
     setUpcomingBills(upcomingBothChambers);
   };
 
   if (!senateRecentBills) {
-    callGetRecentBills("senate");
+    callGetRecentBills('senate');
   }
 
   if (!houseRecentBills) {
-    callGetRecentBills("house");
+    callGetRecentBills('house');
   }
 
   if (!upcomingBills) {
@@ -117,15 +115,15 @@ export default function Bills({ navigation }) {
     }
   };
 
-  useEffect(() => {
-    callSearchBills();
-  }, [searchQuery]);
+  // useEffect(() => {
+  //   callSearchBills();
+  // }, [searchQuery]);
 
   const renderSingleBill = ({ item }) => (
     <TouchableOpacity
       onPress={() => {
         console.log(item);
-        navigation.navigate("Specific Bill", {
+        navigation.navigate('Specific Bill', {
           bill_slug: item.bill_slug,
         });
       }}
@@ -137,7 +135,7 @@ export default function Bills({ navigation }) {
   const renderUpcomingBill = ({ item }) => (
     <TouchableOpacity
       onPress={() => {
-        navigation.navigate("Specific Bill", {
+        navigation.navigate('Specific Bill', {
           bill_slug: item.bill_slug,
         });
       }}
@@ -154,13 +152,14 @@ export default function Bills({ navigation }) {
 
   return (
     <ScrollView style={styles.container}>
-      <Appbar.Header style={{backgroundColor: "#177388"}}>
+      <Appbar.Header style={{ backgroundColor: '#177388' }}>
         <Appbar.Content title="Bills" />
         <Appbar.Action icon="menu" onPress={() => navigation.openDrawer()} />
       </Appbar.Header>
       <Searchbar
         placeholder="Search Bills"
         onChangeText={onChangeSearch}
+        onSubmitEditing={() => callSearchBills()}
         value={searchQuery}
       />
       {searchResults && searchResults.length > 0 && (
@@ -255,8 +254,8 @@ export default function Bills({ navigation }) {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "#fff",
-    height: "100%",
+    backgroundColor: '#fff',
+    height: '100%',
   },
   billsContainer: {
     margin: 10,
