@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useState, useEffect } from 'react';
-import { FlatList, ScrollView, StyleSheet, View,  } from 'react-native';
+import { FlatList, ScrollView, StyleSheet, View } from 'react-native';
 import {
   Button,
   Menu,
@@ -10,13 +10,15 @@ import {
   Subheading,
   Paragraph,
   Dialog,
-  Portal
+  Portal,
 } from 'react-native-paper';
 import axios from 'axios';
 import { config } from '../../secrets';
-import { connect } from "react-redux";
-import { updateUserBillFollowingThunk, unfollowBillThunk } from "../../redux/app-redux";
-
+import { connect } from 'react-redux';
+import {
+  updateUserBillFollowingThunk,
+  unfollowBillThunk,
+} from '../../redux/app-redux';
 
 async function getSpecificBill(congress, bill_slug) {
   const theUrl = `https://api.propublica.org/congress/v1/${congress}/bills/${bill_slug}.json`;
@@ -29,7 +31,13 @@ async function getSpecificBill(congress, bill_slug) {
   }
 }
 
-function SpecificBill({ route, navigation, user, updateUserBill, unfollowBill }) {
+function SpecificBill({
+  route,
+  navigation,
+  user,
+  updateUserBill,
+  unfollowBill,
+}) {
   const [bill, setBill] = useState(null);
   const { bill_slug } = route.params;
   const [visible, setVisible] = React.useState(false);
@@ -53,10 +61,10 @@ function SpecificBill({ route, navigation, user, updateUserBill, unfollowBill })
   const onFollowPress = async () => {
     try {
       await updateUserBill(user.id, bill_slug);
-      console.log("user state after update u:", user, user.bills);
+      console.log('user state after update u:', user, user.bills);
       // navigation.navigate('singelMember')
     } catch (error) {
-      console.log("Follow Error", error);
+      console.log('Follow Error', error);
     }
   };
 
@@ -64,23 +72,23 @@ function SpecificBill({ route, navigation, user, updateUserBill, unfollowBill })
     try {
       await unfollowBill(user.id, bill_slug);
     } catch (error) {
-      console.log("Unfollow Error", error);
+      console.log('Unfollow Error', error);
     }
   };
 
   const onRedirectToLogin = async () => {
     try {
       setVisible(false);
-      navigation.navigate('Login')
+      navigation.navigate('Login');
     } catch (error) {
-      console.log("Redirect Error", error);
+      console.log('Redirect Error', error);
     }
   };
 
   return (
     <ScrollView style={styles.container}>
       {bill && (
-        <View>
+        <View style={styles.billContainer}>
           <Title>{`${bill.number}`}</Title>
           <Subheading>{bill.title}</Subheading>
           <Text>{`Sponsored by ${bill.sponsor_title} ${bill.sponsor} (${bill.sponsor_party}) ${bill.sponsor_state} and ${bill.cosponsors} cosponsor(s)`}</Text>
@@ -115,7 +123,9 @@ function SpecificBill({ route, navigation, user, updateUserBill, unfollowBill })
                 <Dialog visible={visible} onDismiss={hideDialog}>
                   <Dialog.Title>Hi there 👋 </Dialog.Title>
                   <Dialog.Content>
-                    <Paragraph>Please login to follow members and bills.</Paragraph>
+                    <Paragraph>
+                      Please login to follow members and bills.
+                    </Paragraph>
                   </Dialog.Content>
                   <Dialog.Actions>
                     <Button onPress={hideDialog}>Close</Button>
@@ -136,6 +146,9 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     height: '100%',
   },
+  billContainer: {
+    margin: 15,
+  },
 });
 
 const mapState = (state) => {
@@ -149,7 +162,7 @@ const mapDispatch = (dispatch) => {
     updateUserBill: (userId, billNum) =>
       dispatch(updateUserBillFollowingThunk(userId, billNum)),
     unfollowBill: (userId, billSlug) =>
-      dispatch(unfollowBillThunk(userId, billSlug))
+      dispatch(unfollowBillThunk(userId, billSlug)),
   };
 };
 

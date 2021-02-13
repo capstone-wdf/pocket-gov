@@ -12,11 +12,6 @@ import {
 export default function ExecuitveHome({ navigation }) {
   return (
     <ScrollView style={styles.container}>
-      <IconButton
-        icon="menu"
-        color={Colors.cyan700}
-        onPress={() => navigation.openDrawer()}
-      />
       <View style={styles.title}>
         <Title>Executive Branch</Title>
       </View>

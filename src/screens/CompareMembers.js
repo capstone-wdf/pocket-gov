@@ -1,13 +1,14 @@
-import { StatusBar } from "expo-status-bar";
-import React, { useState, useEffect } from "react";
+import { StatusBar } from 'expo-status-bar';
+import React, { useState, useEffect } from 'react';
 import {
   ScrollView,
   FlatList,
   SafeAreaView,
   StyleSheet,
   View,
-} from "react-native";
+} from 'react-native';
 import {
+  Appbar,
   Avatar,
   Button,
   List,
@@ -15,16 +16,16 @@ import {
   Text,
   Title,
   Subheading,
-} from "react-native-paper";
-import axios from "axios";
-import { config } from "../../secrets";
+} from 'react-native-paper';
+import axios from 'axios';
+import { config } from '../../secrets';
 import {
   VictoryPie,
   VictoryStack,
   VictoryBar,
   VictoryLabel,
-} from "victory-native";
-import SingleBill from "../components/SingleBill";
+} from 'victory-native';
+import SingleBill from '../components/SingleBill';
 
 async function getMembers(congress, chamber) {
   const theUrl = `https://api.propublica.org/congress/v1/${congress}/${chamber}/members.json`;
@@ -67,7 +68,7 @@ async function compareBillSponsorships(
   }
 }
 
-export default function CompareMembers() {
+export default function CompareMembers({navigation}) {
   const [members, setMembers] = useState([]);
   const [member1, setMember1] = useState(null);
   const [member2, setMember2] = useState(null);
@@ -75,10 +76,10 @@ export default function CompareMembers() {
   const [visible2, setVisible2] = useState(false);
   const [agreeData, setAgreeData] = useState(null);
   const [switchView, setSwitchView] = useState(false);
-  const [chamber, setChamber] = useState("senate");
+  const [chamber, setChamber] = useState('senate');
   const [sponsorships, setSponsorships] = useState(null);
 
-  console.log("MEMBER1 PROPUBLICA PROPER", member1);
+  console.log('MEMBER1 PROPUBLICA PROPER', member1);
   const openMenu1 = () => setVisible1(true);
   const closeMenu1 = () => setVisible1(false);
   const openMenu2 = () => setVisible2(true);
@@ -99,7 +100,7 @@ export default function CompareMembers() {
   }, [member1, member2]);
 
   //other stuff
-  let congress = "117";
+  let congress = '117';
 
   const apiCall = async () => {
     let response = await getMembers(congress, chamber);
@@ -112,7 +113,7 @@ export default function CompareMembers() {
   }
 
   //switch from senate to house
-  if (members.length < 105 && members.length > 0 && chamber === "house") {
+  if (members.length < 105 && members.length > 0 && chamber === 'house') {
     setMember1(null);
     setMember2(null);
     setMembers([]);
@@ -121,7 +122,7 @@ export default function CompareMembers() {
   }
 
   //switch from house to senate
-  if (members.length > 105 && members.length > 0 && chamber === "senate") {
+  if (members.length > 105 && members.length > 0 && chamber === 'senate') {
     setMember1(null);
     setMember2(null);
     setMembers([]);
@@ -157,15 +158,19 @@ export default function CompareMembers() {
   );
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
+      <Appbar.Header style={{ backgroundColor: '#177388' }}>
+        <Appbar.Content title="Bills" />
+        <Appbar.Action icon="menu" onPress={() => navigation.openDrawer()} />
+      </Appbar.Header>
       <ScrollView contentContainerStyle={styles.contentContainer}>
         <Title>
-          {chamber === "senate"
+          {chamber === 'senate'
             ? `Compare Two Senators`
             : `Compare Two Representatives`}
         </Title>
         <Button
-          onPress={() => setChamber(chamber === "senate" ? "house" : "senate")}
+          onPress={() => setChamber(chamber === 'senate' ? 'house' : 'senate')}
         >
           switch chamber
         </Button>
@@ -177,7 +182,7 @@ export default function CompareMembers() {
               onDismiss={closeMenu1}
               anchor={
                 <Button onPress={openMenu1}>
-                  {chamber === "senate" ? "1st senator" : "1st representative"}
+                  {chamber === 'senate' ? '1st senator' : '1st representative'}
                 </Button>
               }
             >
@@ -224,7 +229,7 @@ export default function CompareMembers() {
               onDismiss={closeMenu2}
               anchor={
                 <Button onPress={openMenu2}>
-                  {chamber === "senate" ? "2nd senator" : "2nd representative"}
+                  {chamber === 'senate' ? '2nd senator' : '2nd representative'}
                 </Button>
               }
             >
@@ -313,18 +318,18 @@ export default function CompareMembers() {
                 <>
                   <View
                     style={{
-                      backgroundColor: "firebrick",
-                      height: "30%",
-                      width: "74%",
-                      left: "13%",
-                      top: "35%",
-                      position: "absolute",
+                      backgroundColor: 'firebrick',
+                      height: '30%',
+                      width: '74%',
+                      left: '13%',
+                      top: '35%',
+                      position: 'absolute',
                     }}
                   ></View>
                   <VictoryStack
                     height={100}
                     horizontal={true}
-                    colorScale={["forestgreen", "firebrick"]}
+                    colorScale={['forestgreen', 'firebrick']}
                   >
                     <VictoryBar
                       animate={{
@@ -372,7 +377,7 @@ export default function CompareMembers() {
                 </>
               ) : (
                 <VictoryPie
-                  colorScale={["forestgreen", "firebrick"]}
+                  colorScale={['forestgreen', 'firebrick']}
                   data={[
                     {
                       x: `${agreeData.agree_percent}%`,
@@ -410,7 +415,7 @@ export default function CompareMembers() {
           />
         )}
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 }
 
@@ -420,40 +425,40 @@ export default function CompareMembers() {
 //   ))}
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "#fff",
-    height: "100%",
+    backgroundColor: '#fff',
+    height: '100%',
   },
   contentContainer: {
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   menuContainer: {
-    flexDirection: "row",
-    justifyContent: "space-around",
-    width: "90%",
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    width: '90%',
   },
   member: {
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   memberContainer: {
     flex: 1,
-    flexDirection: "row",
-    justifyContent: "space-around",
-    width: "90%",
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    width: '90%',
   },
   text: {
-    alignItems: "center",
+    alignItems: 'center',
     margin: 10,
   },
   textContainer: {
-    alignItems: "center",
+    alignItems: 'center',
     margin: 10,
   },
   dataContainer: {
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   bills: {},
 });

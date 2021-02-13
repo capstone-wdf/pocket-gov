@@ -14,18 +14,18 @@ export default function FollowingScreen({ navigation }) {
         screenOptions={({ route }) => ({
           tabBarIcon: () => {
             let iconName;
-            if (route.name === 'FollowingMembers') {
-              iconName = 'person';
-            } else if (route.name === 'FollowingBills') {
-              iconName = 'fountain-pen';
+            if (route.name === 'Members') {
+              iconName = 'account-group';
+            } else if (route.name === 'Bills') {
+              iconName = 'file-document-outline';
             }
             return (
-              <MaterialCommunityIcons name={iconName} size={24} color={Colors.cyan700}/>
+              <MaterialCommunityIcons name={iconName} size={24} color="#177388"/>
             );
           },
         })}
         tabBarOptions={{
-          activeTintColor: Colors.cyan700,
+          activeTintColor: "#177388",
           inactiveTintColor: Colors.gray900,
         }}
       >
