@@ -6,7 +6,10 @@ import {
   SafeAreaView,
   StyleSheet,
   View,
-} from 'react-native';
+
+  Pressable,
+} from "react-native";
+
 import {
   Appbar,
   Avatar,
@@ -68,7 +71,9 @@ async function compareBillSponsorships(
   }
 }
 
-export default function CompareMembers({navigation}) {
+
+export default function CompareMembers({ navigation }) {
+
   const [members, setMembers] = useState([]);
   const [member1, setMember1] = useState(null);
   const [member2, setMember2] = useState(null);
@@ -78,9 +83,13 @@ export default function CompareMembers({navigation}) {
   const [switchView, setSwitchView] = useState(false);
   const [chamber, setChamber] = useState('senate');
   const [sponsorships, setSponsorships] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  console.log('MEMBER1 PROPUBLICA PROPER', member1);
+
+  // console.log("MEMBER1 PROPUBLICA PROPER", member1);
+
   const openMenu1 = () => setVisible1(true);
+
   const closeMenu1 = () => setVisible1(false);
   const openMenu2 = () => setVisible2(true);
   const closeMenu2 = () => setVisible2(false);
@@ -130,6 +139,59 @@ export default function CompareMembers({navigation}) {
     apiCall();
   }
 
+  //render members dropdown
+  const renderMembers = (memberState, num) => {
+    let filteredMembers = members;
+    if (member1) {
+      filteredMembers = filteredMembers.filter((rep) => rep.id !== member1.id);
+    }
+    if (member2) {
+      filteredMembers = filteredMembers.filter((rep) => rep.id !== member2.id);
+    }
+
+    if (num === 1) {
+      return filteredMembers.map((member) => {
+        return (
+          <Menu.Item
+            title={`${member.last_name}, ${member.first_name} (${member.party})`}
+            key={member.id}
+            onPress={() => {
+              setMember1({
+                first_name: member.first_name,
+                last_name: member.last_name,
+                id: member.id,
+                party: member.party,
+                state: member.state,
+                short_title: member.short_title,
+              });
+
+              closeMenu1();
+            }}
+          />
+        );
+      });
+    }
+    return filteredMembers.map((member) => {
+      return (
+        <Menu.Item
+          title={`${member.last_name}, ${member.first_name} (${member.party})`}
+          key={member.id}
+          onPress={() => {
+            setMember2({
+              first_name: member.first_name,
+              last_name: member.last_name,
+              id: member.id,
+              party: member.party,
+              state: member.state,
+              short_title: member.short_title,
+            });
+            closeMenu2();
+          }}
+        />
+      );
+    });
+  };
+
   //compare voting records
   const getComparison = async (firstMemberId, secondMemberId) => {
     let compareTwoMemsData = await compareTwoMembers(
@@ -153,9 +215,19 @@ export default function CompareMembers({navigation}) {
   };
 
   //Render SingleBill component
-  const renderItem = ({ item }) => (
-    <SingleBill title={item.title} number={item.number} />
-  );
+  const renderItem = ({ item }) => {
+    const billSlug = item.number.split(".").join("");
+
+    return (
+      <Pressable
+        onPress={() => {
+          navigation.navigate("Specific Bill", { bill_slug: billSlug });
+        }}
+      >
+        <SingleBill title={item.title} number={item.number} />
+      </Pressable>
+    );
+  };
 
   return (
     <View style={styles.container}>
@@ -186,7 +258,7 @@ export default function CompareMembers({navigation}) {
                 </Button>
               }
             >
-              {members.map((member) => {
+              {/* {members.map((member) => {
                 return (
                   <Menu.Item
                     title={`${member.first_name} ${member.last_name} (${member.party})`}
@@ -204,7 +276,9 @@ export default function CompareMembers({navigation}) {
                     }}
                   />
                 );
-              })}
+              })} */}
+
+              {renderMembers(member2, 1)}
             </Menu>
             <View style={styles.member}>
               {member1 && member1.first_name && (
@@ -233,7 +307,7 @@ export default function CompareMembers({navigation}) {
                 </Button>
               }
             >
-              {members &&
+              {/* {members &&
                 members.map((member) => {
                   return (
                     <Menu.Item
@@ -252,7 +326,9 @@ export default function CompareMembers({navigation}) {
                       }}
                     />
                   );
-                })}
+                })} */}
+
+              {renderMembers(member1, 2)}
             </Menu>
             <View style={styles.member}>
               {member2 && (
@@ -333,7 +409,7 @@ export default function CompareMembers({navigation}) {
                   >
                     <VictoryBar
                       animate={{
-                        duration: 1000,
+                        duration: 2000,
                         onLoad: { duration: 1000 },
                       }}
                       labelComponent={

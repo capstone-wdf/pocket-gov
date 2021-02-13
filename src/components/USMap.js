@@ -6,6 +6,7 @@ import { Colors } from "react-native-paper";
 /* SVGR has dropped some elements not supported by react-native-svg: title, style */
 
 function SvgComponent(props) {
+  const defaultColor = "#119da4";
   const usaMaker = (statesArr) => {
     return statesArr.map((usState) => (
       <Path
@@ -17,10 +18,10 @@ function SvgComponent(props) {
           })
         }
         onPressIn={() => {
-          setPathColor({ ...pathColor, [usState.id]: Colors.cyan700 });
+          setPathColor({ ...pathColor, [usState.id]: "#177388" });
         }}
         onPressOut={() =>
-          setPathColor({ ...pathColor, [usState.id]: "#D0D0D0" })
+          setPathColor({ ...pathColor, [usState.id]: defaultColor })
         }
         d={usState.path}
       ></Path>
@@ -37,7 +38,7 @@ function SvgComponent(props) {
       {...props}
     >
       <Defs></Defs>
-      <G className="prefix__state" fill="#D0D0D0">
+      <G className="prefix__state" fill={defaultColor}>
         {usaMaker(usStates)}
       </G>
 
@@ -48,7 +49,7 @@ function SvgComponent(props) {
         className="prefix__borders"
         fill="none"
         strokeWidth={1}
-        stroke="#FFFFFF"
+        stroke="#FBF5F3"
       >
         <Path
           className="prefix__al-fl"
