@@ -180,7 +180,7 @@ export default function SingleState({ route, navigation }) {
               numColumns="4"
               // horizontal
               contentContainerStyle={{
-                paddingBottom: "35%",
+                paddingBottom: "50%",
                 alignItems: "center",
               }}
               data={house}
