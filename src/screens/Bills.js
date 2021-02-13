@@ -154,7 +154,7 @@ export default function Bills({ navigation }) {
 
   return (
     <ScrollView style={styles.container}>
-      <Appbar.Header>
+      <Appbar.Header style={{backgroundColor: "#177388"}}>
         <Appbar.Content title="Bills" />
         <Appbar.Action icon="menu" onPress={() => navigation.openDrawer()} />
       </Appbar.Header>
