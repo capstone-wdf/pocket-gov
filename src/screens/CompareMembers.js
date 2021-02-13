@@ -6,6 +6,7 @@ import {
   SafeAreaView,
   StyleSheet,
   View,
+  Pressable,
 } from "react-native";
 import {
   Avatar,
@@ -67,7 +68,7 @@ async function compareBillSponsorships(
   }
 }
 
-export default function CompareMembers() {
+export default function CompareMembers({ navigation }) {
   const [members, setMembers] = useState([]);
   const [member1, setMember1] = useState(null);
   const [member2, setMember2] = useState(null);
@@ -78,7 +79,7 @@ export default function CompareMembers() {
   const [chamber, setChamber] = useState("senate");
   const [sponsorships, setSponsorships] = useState(null);
 
-  console.log("MEMBER1 PROPUBLICA PROPER", member1);
+  // console.log("MEMBER1 PROPUBLICA PROPER", member1);
   const openMenu1 = () => setVisible1(true);
   const closeMenu1 = () => setVisible1(false);
   const openMenu2 = () => setVisible2(true);
@@ -152,9 +153,19 @@ export default function CompareMembers() {
   };
 
   //Render SingleBill component
-  const renderItem = ({ item }) => (
-    <SingleBill title={item.title} number={item.number} />
-  );
+  const renderItem = ({ item }) => {
+    const billSlug = item.number.split(".").join("");
+
+    return (
+      <Pressable
+        onPress={() => {
+          navigation.navigate("Specific Bill", { bill_slug: billSlug });
+        }}
+      >
+        <SingleBill title={item.title} number={item.number} />
+      </Pressable>
+    );
+  };
 
   return (
     <SafeAreaView style={styles.container}>
