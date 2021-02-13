@@ -133,8 +133,11 @@ export default function CompareMembers({ navigation }) {
   //render members dropdown
   const renderMembers = (memberState, num) => {
     let filteredMembers = members;
-    if (memberState) {
-      filteredMembers = members.filter((rep) => rep.id !== memberState.id);
+    if (member1) {
+      filteredMembers = filteredMembers.filter((rep) => rep.id !== member1.id);
+    }
+    if (member2) {
+      filteredMembers = filteredMembers.filter((rep) => rep.id !== member2.id);
     }
 
     if (num === 1) {
@@ -390,7 +393,7 @@ export default function CompareMembers({ navigation }) {
                   >
                     <VictoryBar
                       animate={{
-                        duration: 1000,
+                        duration: 2000,
                         onLoad: { duration: 1000 },
                       }}
                       labelComponent={
