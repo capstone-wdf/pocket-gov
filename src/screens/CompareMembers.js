@@ -130,6 +130,55 @@ export default function CompareMembers({ navigation }) {
     apiCall();
   }
 
+  //render members dropdown
+  const renderMembers = (memberState, num) => {
+    let filteredMembers = members;
+    if (memberState) {
+      filteredMembers = members.filter((rep) => rep.id !== memberState.id);
+    }
+
+    if (num === 1) {
+      return filteredMembers.map((member) => {
+        return (
+          <Menu.Item
+            title={`${member.first_name} ${member.last_name} (${member.party})`}
+            key={member.id}
+            onPress={() => {
+              setMember1({
+                first_name: member.first_name,
+                last_name: member.last_name,
+                id: member.id,
+                party: member.party,
+                state: member.state,
+                short_title: member.short_title,
+              });
+              closeMenu1();
+            }}
+          />
+        );
+      });
+    }
+    return filteredMembers.map((member) => {
+      return (
+        <Menu.Item
+          title={`${member.first_name} ${member.last_name} (${member.party})`}
+          key={member.id}
+          onPress={() => {
+            setMember2({
+              first_name: member.first_name,
+              last_name: member.last_name,
+              id: member.id,
+              party: member.party,
+              state: member.state,
+              short_title: member.short_title,
+            });
+            closeMenu2();
+          }}
+        />
+      );
+    });
+  };
+
   //compare voting records
   const getComparison = async (firstMemberId, secondMemberId) => {
     let compareTwoMemsData = await compareTwoMembers(
@@ -192,7 +241,7 @@ export default function CompareMembers({ navigation }) {
                 </Button>
               }
             >
-              {members.map((member) => {
+              {/* {members.map((member) => {
                 return (
                   <Menu.Item
                     title={`${member.first_name} ${member.last_name} (${member.party})`}
@@ -210,7 +259,8 @@ export default function CompareMembers({ navigation }) {
                     }}
                   />
                 );
-              })}
+              })} */}
+              {renderMembers(member2, 1)}
             </Menu>
             <View style={styles.member}>
               {member1 && member1.first_name && (
@@ -239,7 +289,7 @@ export default function CompareMembers({ navigation }) {
                 </Button>
               }
             >
-              {members &&
+              {/* {members &&
                 members.map((member) => {
                   return (
                     <Menu.Item
@@ -258,7 +308,8 @@ export default function CompareMembers({ navigation }) {
                       }}
                     />
                   );
-                })}
+                })} */}
+              {renderMembers(member1, 2)}
             </Menu>
             <View style={styles.member}>
               {member2 && (
