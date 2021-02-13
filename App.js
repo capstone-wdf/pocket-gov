@@ -1,8 +1,8 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { useState, useEffect } from 'react';
-import { Button, StyleSheet, Text, View } from 'react-native';
-import { Provider as PaperProvider, Colors } from 'react-native-paper';
+import { StyleSheet, Text, View } from 'react-native';
+import { Provider as PaperProvider, IconButton } from 'react-native-paper';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import {
@@ -77,7 +77,7 @@ function CustomDrawerContent(props) {
 //   );
 // }
 
-function Home() {
+function Home({ navigation }) {
   return (
     <Stack.Navigator
       screenOptions={{
@@ -88,6 +88,13 @@ function Home() {
       <Stack.Screen
         options={{
           title: 'PocketGov',
+          headerRight: () => (
+            <IconButton
+              icon="menu"
+              color="white"
+              onPress={() => navigation.openDrawer()}
+            />
+          ),
         }}
         name="Home"
         component={HomeScreen}
@@ -112,8 +119,32 @@ function Home() {
         name="Specific Bill"
         component={SpecificBill}
       />
-      <Stack.Screen name="Login" component={LoginScreen} />
-      <Stack.Screen name="Following" component={FollowingScreen} />
+      <Stack.Screen
+        options={{
+          headerRight: () => (
+            <IconButton
+              icon="menu"
+              color="white"
+              onPress={() => navigation.openDrawer()}
+            />
+          ),
+        }}
+        name="Login"
+        component={LoginScreen}
+      />
+      <Stack.Screen
+        options={{
+          headerRight: () => (
+            <IconButton
+              icon="menu"
+              color="white"
+              onPress={() => navigation.openDrawer()}
+            />
+          ),
+        }}
+        name="Following"
+        component={FollowingScreen}
+      />
     </Stack.Navigator>
   );
 }
