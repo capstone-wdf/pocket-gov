@@ -43,11 +43,10 @@ export default function SingleState({ route, navigation }) {
     }
   };
 
+  //API call for reps, hard-code loading for DOM
   useEffect(() => {
     loadReps();
-
     const repTimer = setTimeout(() => setLoading(false), 500);
-
     return () => clearTimeout(repTimer);
   }, []);
 
@@ -103,11 +102,7 @@ export default function SingleState({ route, navigation }) {
         <View style={{ alignItems: "center" }}>
           <Title>Senators</Title>
           <View style={{ display: loading ? "flex" : "none" }}>
-            <ActivityIndicator
-              animating={true}
-              color={Colors.red800}
-              size="large"
-            />
+            <ActivityIndicator animating={true} color="#119da4" size="large" />
           </View>
           <View style={[styles.reps, { display: loading ? "none" : "flex" }]}>
             {senate &&
@@ -132,7 +127,6 @@ export default function SingleState({ route, navigation }) {
         <View
           style={{
             alignItems: "center",
-
             width: "100%",
             height: "100%",
           }}
@@ -169,11 +163,7 @@ export default function SingleState({ route, navigation }) {
               ))}
           </ScrollView> */}
           <View style={{ display: loading ? "flex" : "none" }}>
-            <ActivityIndicator
-              animating={true}
-              color={Colors.red800}
-              size="large"
-            />
+            <ActivityIndicator animating={true} color="#119da4" size="large" />
           </View>
           <View style={{ display: loading ? "none" : "flex" }}>
             <FlatList

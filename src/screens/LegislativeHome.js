@@ -16,6 +16,7 @@ function LegislativeHome({ navigation }) {
       const fullName = stateNames[usState.id];
       return (
         <Menu.Item
+          theme={{ colors: { text: "#119da4" } }}
           key={usState.id}
           title={fullName}
           onPress={() => {
@@ -34,15 +35,25 @@ function LegislativeHome({ navigation }) {
       <View style={styles.menu}>
         <Title>Legislative Branch</Title>
         <View style={{ alignItems: "center" }}>
-          <Text style={{ textAlign: "center" }}>
+          <Text style={{ textAlign: "center", fontSize: 16, margin: 3 }}>
             Find your state's federal representatives from the drop-down or
             interacting with the map!
           </Text>
           <Menu
+            contentStyle={{ backgroundColor: "#fbf5f3" }}
             visible={menuVisible}
             onDismiss={closeMenu}
             anchor={
-              <Button dark={true} mode="outlined" onPress={openMenu}>
+              <Button
+                style={{
+                  margin: 10,
+                  backgroundColor: "#4b3f72",
+                  borderRadius: 5,
+                }}
+                dark={true}
+                mode="contained"
+                onPress={openMenu}
+              >
                 Select a state
               </Button>
             }
@@ -57,7 +68,7 @@ function LegislativeHome({ navigation }) {
       </ZoomView>
 
       <View style={styles.bottom}>
-        <Text style={{ textAlign: "center", color: "#e4572e" }}>
+        <Text style={{ textAlign: "center", color: "#e4572e", margin: 5 }}>
           * iOS devices might have trouble interacting with the map
         </Text>
       </View>
@@ -95,7 +106,7 @@ const styles = StyleSheet.create({
     width: "100%",
     backgroundColor: "#fbf5f3",
     zIndex: 1,
-    justifyContent: "flex-start",
+    justifyContent: "space-between",
   },
   //not currently used
   button: {
