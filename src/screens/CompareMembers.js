@@ -16,6 +16,7 @@ import {
   Text,
   Title,
   Subheading,
+  ActivityIndicator,
 } from "react-native-paper";
 import axios from "axios";
 import { config } from "../../secrets";
@@ -78,9 +79,11 @@ export default function CompareMembers({ navigation }) {
   const [switchView, setSwitchView] = useState(false);
   const [chamber, setChamber] = useState("senate");
   const [sponsorships, setSponsorships] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   // console.log("MEMBER1 PROPUBLICA PROPER", member1);
   const openMenu1 = () => setVisible1(true);
+
   const closeMenu1 = () => setVisible1(false);
   const openMenu2 = () => setVisible2(true);
   const closeMenu2 = () => setVisible2(false);
@@ -98,6 +101,13 @@ export default function CompareMembers({ navigation }) {
       getSponsorships(member1.id, member2.id);
     }
   }, [member1, member2]);
+
+  //useEffect for loading dropdown
+  // useEffect(() => {
+  //   setLoading(true);
+  //   const dropdownTimer = setTimeout(() => setLoading(false), 3000);
+  //   return () => clearTimeout(dropdownTimer);
+  // }, [member1]);
 
   //other stuff
   let congress = "117";
@@ -144,6 +154,7 @@ export default function CompareMembers({ navigation }) {
       return filteredMembers.map((member) => {
         return (
           <Menu.Item
+            style={{ display: loading ? "none" : "flex" }}
             title={`${member.first_name} ${member.last_name} (${member.party})`}
             key={member.id}
             onPress={() => {
@@ -155,6 +166,7 @@ export default function CompareMembers({ navigation }) {
                 state: member.state,
                 short_title: member.short_title,
               });
+
               closeMenu1();
             }}
           />
@@ -239,7 +251,7 @@ export default function CompareMembers({ navigation }) {
               visible={visible1}
               onDismiss={closeMenu1}
               anchor={
-                <Button onPress={openMenu1}>
+                <Button onPress={() => openMenu1()}>
                   {chamber === "senate" ? "1st senator" : "1st representative"}
                 </Button>
               }
@@ -263,6 +275,7 @@ export default function CompareMembers({ navigation }) {
                   />
                 );
               })} */}
+
               {renderMembers(member2, 1)}
             </Menu>
             <View style={styles.member}>
@@ -312,6 +325,10 @@ export default function CompareMembers({ navigation }) {
                     />
                   );
                 })} */}
+              <Menu.Item
+                title="loading"
+                style={{ display: loading ? "flex" : "none" }}
+              />
               {renderMembers(member1, 2)}
             </Menu>
             <View style={styles.member}>

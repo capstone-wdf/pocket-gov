@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   View,
   StyleSheet,
@@ -7,7 +7,13 @@ import {
   ScrollView,
   FlatList,
 } from "react-native";
-import { Text, Title, Avatar } from "react-native-paper";
+import {
+  Text,
+  Title,
+  Avatar,
+  ActivityIndicator,
+  Colors,
+} from "react-native-paper";
 import { individualStates } from "../components/IndividualStates2";
 import { config } from "../../secrets";
 import axios from "axios";
@@ -18,6 +24,7 @@ export default function SingleState({ route, navigation }) {
   const [loading, setLoading] = useState(true);
   const [senate, setSenate] = useState([]);
   const [house, setHouse] = useState([]);
+  const repCounter = useRef(0);
 
   const loadReps = async () => {
     try {
@@ -38,7 +45,10 @@ export default function SingleState({ route, navigation }) {
 
   useEffect(() => {
     loadReps();
-    setLoading(false);
+
+    const repTimer = setTimeout(() => setLoading(false), 500);
+
+    return () => clearTimeout(repTimer);
   }, []);
 
   const handlePageChange = async (chamber, id) => {
@@ -80,7 +90,9 @@ export default function SingleState({ route, navigation }) {
     );
   };
 
-  const renderItem = ({ item }) => <Item rep={item} />;
+  const renderItem = ({ item }) => {
+    return <Item rep={item} />;
+  };
 
   return (
     <View style={styles.container}>
@@ -90,7 +102,14 @@ export default function SingleState({ route, navigation }) {
       <View style={styles.reps_container}>
         <View style={{ alignItems: "center" }}>
           <Title>Senators</Title>
-          <View style={styles.reps}>
+          <View style={{ display: loading ? "flex" : "none" }}>
+            <ActivityIndicator
+              animating={true}
+              color={Colors.red800}
+              size="large"
+            />
+          </View>
+          <View style={[styles.reps, { display: loading ? "none" : "flex" }]}>
             {senate &&
               senate.map((senator) => (
                 <TouchableWithoutFeedback
@@ -149,18 +168,26 @@ export default function SingleState({ route, navigation }) {
                 </TouchableWithoutFeedback>
               ))}
           </ScrollView> */}
-
-          <FlatList
-            numColumns="4"
-            // horizontal
-            contentContainerStyle={{
-              paddingBottom: "35%",
-              alignItems: "center",
-            }}
-            data={house}
-            renderItem={renderItem}
-            keyExtractor={(item) => item.id}
-          />
+          <View style={{ display: loading ? "flex" : "none" }}>
+            <ActivityIndicator
+              animating={true}
+              color={Colors.red800}
+              size="large"
+            />
+          </View>
+          <View style={{ display: loading ? "none" : "flex" }}>
+            <FlatList
+              numColumns="4"
+              // horizontal
+              contentContainerStyle={{
+                paddingBottom: "35%",
+                alignItems: "center",
+              }}
+              data={house}
+              renderItem={renderItem}
+              keyExtractor={(item) => item.id}
+            />
+          </View>
         </View>
       </View>
     </View>
