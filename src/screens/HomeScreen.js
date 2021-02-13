@@ -23,12 +23,12 @@ export default function HomeScreen({ navigation }) {
               iconName = 'book-open-variant';
             }
             return (
-              <MaterialCommunityIcons name={iconName} size={24} color={Colors.cyan700}/>
+              <MaterialCommunityIcons name={iconName} size={24} color={"#177388"}/>
             );
           },
         })}
         tabBarOptions={{
-          activeTintColor: Colors.cyan700,
+          activeTintColor: "#177388",
           inactiveTintColor: Colors.gray900,
         }}
       >
