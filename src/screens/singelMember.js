@@ -174,17 +174,20 @@ function singleMemberScreen({
   const renderItem = ({ item }) => {
     return (
       <Card style={styles.cards}>
-        <Card.Title title={item.title} subtitle={`${item.published.slice(0, -13)}`} titleNumberOfLines={5} titleStyle={styles.titleText} subtitleStyle={styles.subtitleText}/>
+        <Card.Title
+          title={item.title}
+          subtitle={`${item.published.slice(0, -13)}`}
+          titleNumberOfLines={5}
+          titleStyle={styles.titleText}
+          subtitleStyle={styles.subtitleText}
+        />
       </Card>
     );
   };
 
   return (
     <SafeAreaView style={styles.contentContainer}>
-      <ScrollView
-      directionalLockEnabled
-      showsHorizontalScrollIndicator={false}
-      >
+      <ScrollView directionalLockEnabled showsHorizontalScrollIndicator={false}>
         {member && (
           <View style={styles.photoContainer}>
             <Avatar.Image
@@ -253,7 +256,7 @@ function singleMemberScreen({
                     labelComponent={
                       <VictoryLabel
                         x={259}
-                        capHeight={2}
+                        capHeight={10}
                         textAnchor="start"
                         verticalAnchor="start"
                         text="Votes Against Party"
@@ -399,7 +402,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     height: '100%',
-    width: "100%"
+    width: '100%',
   },
   memberContainer: {
     margin: 10,
@@ -419,7 +422,7 @@ const styles = StyleSheet.create({
   titleText: {
     fontSize: 16,
     fontWeight: 'bold',
-    paddingVertical: 5
+    paddingVertical: 5,
   },
   subtitleText: {
     fontSize: 14,
@@ -431,8 +434,8 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   graphContainer: {
-    width: "90%"
-  }
+    width: '90%',
+  },
   // flatlist: {
   //   backgroundColor: '#177388',
   // },
