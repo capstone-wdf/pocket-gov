@@ -7,7 +7,7 @@ import axios from 'axios';
 export default function MyReps({ navigation }) {
   const [search, setSearch] = useState('');
   const [localFeed, setLocalFeed] = useState(null);
-  const handleSearch = async () => {
+  const getMyReps = async () => {
     try {
       const query = {
         key: gCloudKey,
@@ -29,22 +29,11 @@ export default function MyReps({ navigation }) {
   // function localRepScreen({ route, local }) {
   //   console.log("LOCAL", local);
   const getLocalFeed = async () => {
-    let response = await handleSearch();
+    let response = await getMyReps();
     // console.log("RESPONSE", response);
     setLocalFeed(response);
-    // if (!search) {
-    //   setLocalFeed([]);
-    // }
   };
-  // }
-  if (!localFeed && search) {
-    getLocalFeed();
-  }
-  useEffect(() => {
-    getLocalFeed();
-  }, [search]);
-  // console.log("SEARCH", search);
-  // console.log("LOCAL FEED", localFeed);
+
   let infoObj = {};
   let myRepsInfo = [];
   if (localFeed) {
@@ -77,14 +66,14 @@ export default function MyReps({ navigation }) {
   return (
     <View style={styles.container}>
       <Appbar.Header style={{ backgroundColor: '#177388' }}>
-        <Appbar.Content title="Bills" />
+        <Appbar.Content title="Search Elected Officials" />
         <Appbar.Action icon="menu" onPress={() => navigation.openDrawer()} />
       </Appbar.Header>
       <Searchbar
         placeholder="Enter location"
         value={search}
         onChangeText={(query) => setSearch(query)}
-        onSubmitEditing={handleSearch}
+        onSubmitEditing={getLocalFeed}
       />
       <View style={styles.myRepsContainer}>
         <FlatList

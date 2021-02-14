@@ -112,13 +112,7 @@ function Home({ navigation }) {
         name="Single State"
         component={SingleState}
       />
-      <Stack.Screen
-        options={{
-          title: 'Bill',
-        }}
-        name="Specific Bill"
-        component={SpecificBill}
-      />
+      <Stack.Screen name="Specific Bill" component={SpecificBill} />
       <Stack.Screen
         options={{
           headerRight: () => (
@@ -144,6 +138,19 @@ function Home({ navigation }) {
         }}
         name="Following"
         component={FollowingScreen}
+      />
+      <Stack.Screen
+        options={{
+          headerRight: () => (
+            <IconButton
+              icon="menu"
+              color="white"
+              onPress={() => navigation.openDrawer()}
+            />
+          ),
+        }}
+        name="My Representatives"
+        component={MyReps}
       />
     </Stack.Navigator>
   );
@@ -171,9 +178,9 @@ export default function App() {
             drawerContent={(props) => <CustomDrawerContent {...props} />}
           >
             <Drawer.Screen name="Home" component={Home} />
-            <Drawer.Screen name="My Representatives" component={MyReps} />
+            <Drawer.Screen name="Search Elected Officials" component={MyReps} />
             <Drawer.Screen
-              name="Compare Members"
+              name="Compare Members of Congress"
               headerShown
               component={CompareMembers}
             />

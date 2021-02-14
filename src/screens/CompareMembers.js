@@ -6,9 +6,8 @@ import {
   SafeAreaView,
   StyleSheet,
   View,
-
   Pressable,
-} from "react-native";
+} from 'react-native';
 
 import {
   Appbar,
@@ -71,9 +70,7 @@ async function compareBillSponsorships(
   }
 }
 
-
 export default function CompareMembers({ navigation }) {
-
   const [members, setMembers] = useState([]);
   const [member1, setMember1] = useState(null);
   const [member2, setMember2] = useState(null);
@@ -84,7 +81,6 @@ export default function CompareMembers({ navigation }) {
   const [chamber, setChamber] = useState('senate');
   const [sponsorships, setSponsorships] = useState(null);
   const [loading, setLoading] = useState(true);
-
 
   // console.log("MEMBER1 PROPUBLICA PROPER", member1);
 
@@ -216,12 +212,12 @@ export default function CompareMembers({ navigation }) {
 
   //Render SingleBill component
   const renderItem = ({ item }) => {
-    const billSlug = item.number.split(".").join("");
+    const billSlug = item.number.split('.').join('');
 
     return (
       <Pressable
         onPress={() => {
-          navigation.navigate("Specific Bill", { bill_slug: billSlug });
+          navigation.navigate('Specific Bill', { bill_slug: billSlug });
         }}
       >
         <SingleBill title={item.title} number={item.number} />
@@ -232,7 +228,7 @@ export default function CompareMembers({ navigation }) {
   return (
     <View style={styles.container}>
       <Appbar.Header style={{ backgroundColor: '#177388' }}>
-        <Appbar.Content title="Bills" />
+        <Appbar.Content title="Compare Members of Congress" />
         <Appbar.Action icon="menu" onPress={() => navigation.openDrawer()} />
       </Appbar.Header>
       <ScrollView contentContainerStyle={styles.contentContainer}>
