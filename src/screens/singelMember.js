@@ -173,10 +173,17 @@ function singleMemberScreen({
   // console.log(newsFeed);
   const renderItem = ({ item }) => {
     return (
-      <Card style={styles.cards}>
+      <Card
+        style={styles.cards}
+        onPress={() =>
+          item.links[0].url &&
+          !item.links[0].url.includes(`public/index`) &&
+          Linking.openURL(item.links[0].url)
+        }
+      >
         <Card.Title
           title={item.title}
-          subtitle={`${item.published.slice(0, -13)}`}
+          subtitle={`${item.published.slice(0, 16)}`}
           titleNumberOfLines={5}
           titleStyle={styles.titleText}
           subtitleStyle={styles.subtitleText}
