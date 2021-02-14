@@ -83,8 +83,6 @@ export default function Bills({ navigation }) {
     }
   };
 
-  // effect hook for changing type of recent bill
-  //TO DO:
   useEffect(() => {
     let chamber = 'house';
     getRecentBills(congress, chamber, type);
@@ -117,13 +115,14 @@ export default function Bills({ navigation }) {
     }
   };
 
-  useEffect(() => {
-    callSearchBills();
-  }, [searchQuery]);
+  // useEffect(() => {
+  //   callSearchBills();
+  // }, [searchQuery]);
 
   const renderSingleBill = ({ item }) => (
     <TouchableOpacity
       onPress={() => {
+        console.log(item);
         navigation.navigate('Specific Bill', {
           bill_slug: item.bill_slug,
         });
@@ -153,13 +152,14 @@ export default function Bills({ navigation }) {
 
   return (
     <ScrollView style={styles.container}>
-      <Appbar.Header style={{backgroundColor: "#177388"}}>
-        <Appbar.Content title="Bills" />
+      <Appbar.Header style={{ backgroundColor: '#177388' }}>
+        <Appbar.Content title="Search Bills" />
         <Appbar.Action icon="menu" onPress={() => navigation.openDrawer()} />
       </Appbar.Header>
       <Searchbar
         placeholder="Search Bills"
         onChangeText={onChangeSearch}
+        onSubmitEditing={() => callSearchBills()}
         value={searchQuery}
       />
       {searchResults && searchResults.length > 0 && (
@@ -181,7 +181,7 @@ export default function Bills({ navigation }) {
           showsHorizontalScrollIndicator={false}
           data={upcomingBills}
           renderItem={renderUpcomingBill}
-          keyExtractor={(item) => item.bill_id}
+          keyExtractor={(item) => item.bill_number}
         />
         {/* <Menu
           visible={visible}
