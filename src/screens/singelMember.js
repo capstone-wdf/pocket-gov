@@ -1,5 +1,5 @@
-import { StatusBar } from 'expo-status-bar';
-import React, { useState, useEffect } from 'react';
+import { StatusBar } from "expo-status-bar";
+import React, { useState, useEffect } from "react";
 import {
   ScrollView,
   FlatList,
@@ -7,7 +7,7 @@ import {
   StyleSheet,
   View,
   Linking,
-} from 'react-native';
+} from "react-native";
 import {
   Avatar,
   Button,
@@ -19,17 +19,25 @@ import {
   Dialog,
   Portal,
   Paragraph,
-} from 'react-native-paper';
-import axios from 'axios';
-import { config } from '../../secrets';
-import { VictoryPie, VictoryStack, VictoryBar } from 'victory-native';
-import { firebase } from '../firebase/config';
-import { connect } from 'react-redux';
-import { updateUserMemFollowingThunk, unfollowMemThunk } from '../../redux/app-redux';
-
+} from "react-native-paper";
+import axios from "axios";
+import { config } from "../../secrets";
+import {
+  VictoryPie,
+  VictoryStack,
+  VictoryBar,
+  VictoryLabel,
+} from "victory-native";
+import { firebase } from "../firebase/config";
+import { connect } from "react-redux";
+import {
+  updateUserMemFollowingThunk,
+  unfollowMemThunk,
+} from "../../redux/app-redux";
 
 // const rssParser = require("react-native-rss-parser");
-import * as rssParser from 'react-native-rss-parser';
+import * as rssParser from "react-native-rss-parser";
+import { getFontScale } from "react-native/Libraries/Utilities/PixelRatio";
 
 async function fetchUserData(rss_url) {
   //function invocation was commented out to not clutter console -EZ
@@ -37,7 +45,7 @@ async function fetchUserData(rss_url) {
   //   let theUrl = "https://www.blumenthal.senate.gov/rss/feeds/?type=press";
 
   const theUrl =
-    rss_url || 'https://www.blumenthal.senate.gov/rss/feeds/?type=press';
+    rss_url || "https://www.blumenthal.senate.gov/rss/feeds/?type=press";
 
   try {
     const { data } = await axios.get(theUrl);
@@ -60,14 +68,18 @@ async function getMembers(congress, chamber) {
   }
 }
 
-
-function singleMemberScreen({ route, navigation, user, updateUserMem, unfollowMem }) {
+function singleMemberScreen({
+  route,
+  navigation,
+  user,
+  updateUserMem,
+  unfollowMem,
+}) {
   const [members, setMembers] = useState([]);
   const [member, setMember] = useState(null);
   const [newsFeed, setNewsFeed] = useState(null);
   const [visible1, setVisible1] = useState(false);
   const [visible, setVisible] = React.useState(false);
-
 
   const showDialog = () => setVisible(true);
   const hideDialog = () => setVisible(false);
@@ -82,8 +94,8 @@ function singleMemberScreen({ route, navigation, user, updateUserMem, unfollowMe
   //useEffect for comparison API
 
   //other stuff
-  let congress = '117';
-  let senate = 'senate';
+  let congress = "117";
+  let senate = "senate";
 
   const apiCall = async () => {
     let response = await getMembers(congress, senate);
@@ -138,7 +150,7 @@ function singleMemberScreen({ route, navigation, user, updateUserMem, unfollowMe
       console.log("user state after update u:", user, member.id);
       // navigation.navigate('singelMember')
     } catch (error) {
-      console.log('Follow Error', error);
+      console.log("Follow Error", error);
     }
   };
 
@@ -146,32 +158,41 @@ function singleMemberScreen({ route, navigation, user, updateUserMem, unfollowMe
     try {
       await unfollowMem(user.id, member.id);
     } catch (error) {
-      console.log('Unfollow Error', error);
+      console.log("Unfollow Error", error);
     }
   };
 
   const onRedirectToLogin = async () => {
     try {
       setVisible(false);
-      navigation.navigate('Login');
+      navigation.navigate("Login");
     } catch (error) {
-      console.log('Redirect Error', error);
+      console.log("Redirect Error", error);
     }
   };
-
+  console.log(newsFeed);
   const renderItem = ({ item }) => {
     return (
       <Card style={styles.cards}>
-        <Card.Content>
+        <Text
+          style={styles.publishText}
+          title={item.title}
+
+          // onPress={() =>
+          //   item.links[0].url && Linking.openURL(item.links[0].url)
+          // }
+        >
+          {item.published.slice(0, -9)}
+          {"\n"}
+          {"\n"}
+          <Text style={styles.titleText}>{`${item.title.trim()}`}</Text>
           <Text
-            title={item.title}
-            // onPress={() =>
-            //   item.links[0].url && Linking.openURL(item.links[0].url)
-            // }
+            style={styles.linkText}
+            onPress={() => Linking.openURL(`${item.links[0].url}`)}
           >
-            {item.title}
+            ...click for more details
           </Text>
-        </Card.Content>
+        </Text>
       </Card>
     );
   };
@@ -194,11 +215,11 @@ function singleMemberScreen({ route, navigation, user, updateUserMem, unfollowMe
             <View>
               <Title>{`${member.first_name} ${member.last_name}`}</Title>
               <Text>{`Party: ${
-                member.party === 'D' ? 'Democrat' : 'Republican'
+                member.party === "D" ? "Democrat" : "Republican"
               }`}</Text>
               {member.district && (
                 <Text>{`District: ${member.state} ${
-                  member.at_large ? 'at large' : member.district
+                  member.at_large ? "at large" : member.district
                 }`}</Text>
               )}
               {/* <Text>{`Committees: ${member.committees.length}`}</Text> */}
@@ -211,11 +232,25 @@ function singleMemberScreen({ route, navigation, user, updateUserMem, unfollowMe
               <Text>{`Votes with Party: ${member.votes_with_party_pct}% `}</Text>
               <Text>{`Votes Against Party: ${member.votes_against_party_pct}% `}</Text>
               <View>
-                {/* <VictoryStack
+                <VictoryStack
+                  height={90}
                   horizontal={true}
-                  colorScale={['forestgreen', 'firebrick']}
+                  colorScale={["#4B3F73", "#E4572E"]}
                 >
                   <VictoryBar
+                    animate={{
+                      duration: 2000,
+                      onLoad: { duration: 1000 },
+                    }}
+                    labelComponent={
+                      <VictoryLabel
+                        x={50}
+                        capHeight={10}
+                        textAnchor="start"
+                        verticalAnchor="start"
+                        text="Agree With Party"
+                      />
+                    }
                     data={[
                       {
                         x: `Agree ${member.votes_with_party_pct}%`,
@@ -225,20 +260,33 @@ function singleMemberScreen({ route, navigation, user, updateUserMem, unfollowMe
                     barWidth={30}
                   />
                   <VictoryBar
+                    animate={{
+                      duration: 2000,
+                      onLoad: { duration: 1000 },
+                    }}
+                    labelComponent={
+                      <VictoryLabel
+                        x={259}
+                        capHeight={10}
+                        textAnchor="start"
+                        verticalAnchor="start"
+                        text="Disagree With Party"
+                      />
+                    }
                     data={[
                       {
-                        x: `Disagree ${member.votes_against_party_pct}%`,
+                        x: `${member.votes_against_party_pct}%`,
                         y: member.votes_against_party_pct,
                       },
                     ]}
-                    barWidth={30}
+                    barWidth={25}
                   />
-                </VictoryStack> */}
+                </VictoryStack>
               </View>
               {member.phone && <Text>{`Phone Number: ${member.phone} `}</Text>}
 
               {member.rss_url && (
-                <View>
+                <View style={styles.NewsFeed}>
                   <Title>Recent News</Title>
                   <FlatList
                     horizontal
@@ -357,19 +405,18 @@ function singleMemberScreen({ route, navigation, user, updateUserMem, unfollowMe
       </ScrollView>
     </SafeAreaView>
   );
-
 }
 
 const styles = StyleSheet.create({
   contentContainer: {
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-    height: '100%',
+    backgroundColor: "#fff",
+    alignItems: "center",
+    justifyContent: "center",
+    height: "100%",
   },
   menu_container: {
     // flex: 1,
-    flexDirection: 'row',
+    flexDirection: "row",
     // justifyContent: "space-around",
   },
   memberContainer: {
@@ -381,21 +428,42 @@ const styles = StyleSheet.create({
   },
 
   AvatarContainer: {
-    flexDirection: 'row',
+    flexDirection: "row",
     marginVertical: 20,
-    justifyContent: 'space-evenly',
+    justifyContent: "space-evenly",
   },
   cards: {
     width: 275,
-    height: 200,
+    height: 175,
     margin: 5,
-    backgroundColor: '#D3D3D3',
+    backgroundColor: "#119DA4",
+    justifyContent: "center",
+  },
+  titleText: {
+    fontSize: 16,
+    fontWeight: "bold",
+    margin: 20,
+    height: 300,
+  },
+  linkText: {
+    color: "#4B3F72",
+    fontSize: 16,
+  },
+  publishText: {
+    fontSize: 14,
+    fontWeight: "bold",
+    margin: 20,
+    height: 300,
   },
   photoContainer: {
     flex: 1,
-    justifyContent: 'space-evenly',
-    alignItems: 'center',
+    justifyContent: "space-evenly",
+    alignItems: "center",
     marginTop: 20,
+  },
+  NewsFeed: {},
+  flatlist: {
+    backgroundColor: "#177388",
   },
 });
 
@@ -410,7 +478,7 @@ const mapDispatch = (dispatch) => {
     updateUserMem: (userId, memberId) =>
       dispatch(updateUserMemFollowingThunk(userId, memberId)),
     unfollowMem: (userId, memberId) =>
-      dispatch(unfollowMemThunk(userId, memberId))
+      dispatch(unfollowMemThunk(userId, memberId)),
   };
 };
 
