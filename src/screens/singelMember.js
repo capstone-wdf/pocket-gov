@@ -183,7 +183,7 @@ function singleMemberScreen({
       >
         <Card.Title
           title={item.title}
-          subtitle={`${item.published.slice(0, -13)}`}
+          subtitle={`${item.published.slice(0, 16)}`}
           titleNumberOfLines={5}
           titleStyle={styles.titleText}
           subtitleStyle={styles.subtitleText}
