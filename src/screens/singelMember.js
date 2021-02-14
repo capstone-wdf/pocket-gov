@@ -174,27 +174,17 @@ function singleMemberScreen({
   const renderItem = ({ item }) => {
     return (
       <Card style={styles.cards}>
-        <Text
-          style={styles.publishText}
-          title={item.title}
-          onPress={() =>
-            item.links[0].url &&
-            !item.links[0].url.includes(`public/index`) &&
-            Linking.openURL(item.links[0].url)
-          }
-        >
-          {item.published.slice(0, -9)}
-          {'\n'}
-          {'\n'}
-          <Text style={styles.titleText}>{`${item.title.trim()}`}</Text>
-        </Text>
+        <Card.Title title={item.title} subtitle={`${item.published.slice(0, -13)}`} titleNumberOfLines={5} titleStyle={styles.titleText} subtitleStyle={styles.subtitleText}/>
       </Card>
     );
   };
 
   return (
     <SafeAreaView style={styles.contentContainer}>
-      <ScrollView>
+      <ScrollView
+      directionalLockEnabled
+      showsHorizontalScrollIndicator={false}
+      >
         {member && (
           <View style={styles.photoContainer}>
             <Avatar.Image
@@ -226,7 +216,7 @@ function singleMemberScreen({
               <Text>{`Missed Votes: ${member.missed_votes}`}</Text>
               <Text>{`Votes with Party: ${member.votes_with_party_pct}% `}</Text>
               <Text>{`Votes Against Party: ${member.votes_against_party_pct}% `}</Text>
-              <View>
+              <View style={styles.graphContainer}>
                 <VictoryStack
                   height={90}
                   horizontal={true}
@@ -244,7 +234,7 @@ function singleMemberScreen({
                         capHeight={10}
                         textAnchor="start"
                         verticalAnchor="start"
-                        text="Agree With Party"
+                        text="Votes with Party"
                       />
                     }
                     data={[
@@ -263,10 +253,10 @@ function singleMemberScreen({
                     labelComponent={
                       <VictoryLabel
                         x={259}
-                        capHeight={10}
+                        capHeight={2}
                         textAnchor="start"
                         verticalAnchor="start"
-                        text="Disagree With Party"
+                        text="Votes Against Party"
                       />
                     }
                     data={[
@@ -409,20 +399,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     height: '100%',
-  },
-  menu_container: {
-    // flex: 1,
-    flexDirection: 'row',
-    // justifyContent: "space-around",
+    width: "100%"
   },
   memberContainer: {
     margin: 10,
   },
-  dataContainer: {
-    marginHorizontal: 50,
-    paddingHorizontal: 10,
-  },
-
   AvatarContainer: {
     flexDirection: 'row',
     marginVertical: 20,
@@ -430,7 +411,7 @@ const styles = StyleSheet.create({
   },
   cards: {
     width: 275,
-    height: 175,
+    height: 200,
     margin: 5,
     backgroundColor: '#119DA4',
     justifyContent: 'center',
@@ -438,18 +419,10 @@ const styles = StyleSheet.create({
   titleText: {
     fontSize: 16,
     fontWeight: 'bold',
-    margin: 20,
-    height: 300,
+    paddingVertical: 5
   },
-  linkText: {
-    color: '#4B3F72',
-    fontSize: 16,
-  },
-  publishText: {
+  subtitleText: {
     fontSize: 14,
-    fontWeight: 'bold',
-    margin: 20,
-    height: 300,
   },
   photoContainer: {
     flex: 1,
@@ -457,10 +430,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: 20,
   },
-  NewsFeed: {},
-  flatlist: {
-    backgroundColor: '#177388',
-  },
+  graphContainer: {
+    width: "90%"
+  }
+  // flatlist: {
+  //   backgroundColor: '#177388',
+  // },
 });
 
 const mapState = (state) => {

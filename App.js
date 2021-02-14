@@ -1,7 +1,7 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { useState, useEffect } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, LogBox } from 'react-native';
 import { Provider as PaperProvider, IconButton } from 'react-native-paper';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -158,14 +158,8 @@ function Home({ navigation }) {
 }
 
 export default function App() {
-  const [loading, setLoading] = useState(true);
 
-  // if (loading) {
-  //   console.log("Loading")
-  //   return (
-  //     <></>
-  //   )
-  // }
+  // LogBox.ignoreAllLogs()
 
   return (
     <Provider store={store}>
