@@ -116,7 +116,7 @@ function singleMemberScreen({
 
   useEffect(() => {
     const selectedRep = route.params.selectedRep;
-    console.log(selectedRep.rss_url);
+    // console.log(selectedRep.rss_url);
     setMember({
       id: selectedRep.id,
       first_name: selectedRep.first_name,
@@ -147,7 +147,7 @@ function singleMemberScreen({
   const onFollowPress = async () => {
     try {
       await updateUserMem(user.id, member.id);
-      console.log("user state after update u:", user, member.id);
+      // console.log("user state after update u:", user, member.id);
       // navigation.navigate('singelMember')
     } catch (error) {
       console.log("Follow Error", error);
@@ -170,7 +170,7 @@ function singleMemberScreen({
       console.log("Redirect Error", error);
     }
   };
-  console.log(newsFeed);
+  // console.log(newsFeed);
   const renderItem = ({ item }) => {
     return (
       <Card style={styles.cards}>
@@ -178,20 +178,14 @@ function singleMemberScreen({
           style={styles.publishText}
           title={item.title}
 
-          // onPress={() =>
-          //   item.links[0].url && Linking.openURL(item.links[0].url)
-          // }
+          onPress={() =>
+            item.links[0].url && !item.links[0].url.includes(`public/index`) && Linking.openURL(item.links[0].url)
+          }
         >
           {item.published.slice(0, -9)}
           {"\n"}
           {"\n"}
           <Text style={styles.titleText}>{`${item.title.trim()}`}</Text>
-          <Text
-            style={styles.linkText}
-            onPress={() => Linking.openURL(`${item.links[0].url}`)}
-          >
-            ...click for more details
-          </Text>
         </Text>
       </Card>
     );

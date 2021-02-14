@@ -113,6 +113,7 @@ function Home({ navigation }) {
         component={SingleState}
       />
       <Stack.Screen name="Specific Bill" component={SpecificBill} />
+      <Stack.Screen name="Search Bills" component={Bills} />
       <Stack.Screen
         options={{
           headerRight: () => (
