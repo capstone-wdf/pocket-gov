@@ -181,7 +181,7 @@ export default function Bills({ navigation }) {
           showsHorizontalScrollIndicator={false}
           data={upcomingBills}
           renderItem={renderUpcomingBill}
-          keyExtractor={(item) => item.bill_id}
+          keyExtractor={(item) => item.bill_number}
         />
         {/* <Menu
           visible={visible}

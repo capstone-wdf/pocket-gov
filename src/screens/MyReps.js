@@ -66,7 +66,7 @@ export default function MyReps({ navigation }) {
   return (
     <View style={styles.container}>
       <Appbar.Header style={{ backgroundColor: '#177388' }}>
-        <Appbar.Content title="Bills" />
+        <Appbar.Content title="Search Elected Officials" />
         <Appbar.Action icon="menu" onPress={() => navigation.openDrawer()} />
       </Appbar.Header>
       <Searchbar
