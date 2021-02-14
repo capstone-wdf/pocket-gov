@@ -1,8 +1,8 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { useState, useEffect } from 'react';
-import { Button, StyleSheet, Text, View } from 'react-native';
-import { Provider as PaperProvider, Colors } from 'react-native-paper';
+import { StyleSheet, Text, View } from 'react-native';
+import { Provider as PaperProvider, IconButton } from 'react-native-paper';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import {
@@ -31,7 +31,6 @@ import FollowingScreen from './src/screens/FollowingScreen';
 import { Provider } from 'react-redux';
 import { store, logOutUserThunk } from './redux/app-redux';
 import BottomNav from './src/components/BottomNav';
-
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -78,17 +77,33 @@ function CustomDrawerContent(props) {
 //   );
 // }
 
-function Home() {
+function Home({ navigation }) {
   return (
-    <Stack.Navigator>
+    <Stack.Navigator
+      screenOptions={{
+        headerTintColor: 'white',
+        headerStyle: { backgroundColor: '#177388' },
+      }}
+    >
       <Stack.Screen
-        options={{ title: 'PocketGov' }}
+        options={{
+          title: 'PocketGov',
+          headerRight: () => (
+            <IconButton
+              icon="menu"
+              color="white"
+              onPress={() => navigation.openDrawer()}
+            />
+          ),
+        }}
         name="Home"
         component={HomeScreen}
       />
       <Stack.Screen name="Registration" component={RegistrationScreen} />
       <Stack.Screen
-        options={({ route }) => ({ title: `${route.params.selectedRep.first_name} ${route.params.selectedRep.last_name}` })}
+        options={({ route }) => ({
+          title: `${route.params.selectedRep.first_name} ${route.params.selectedRep.last_name}`,
+        })}
         name="Single Member"
         component={singleMember}
       />
@@ -98,16 +113,38 @@ function Home() {
         component={SingleState}
       />
       <Stack.Screen
-        name="Search Bills"
-        component={Bills}
-      />
-      <Stack.Screen
-        options={{ title: 'Bill' }}
+        options={{
+          title: 'Bill',
+        }}
         name="Specific Bill"
         component={SpecificBill}
       />
-      <Stack.Screen name="Login" component={LoginScreen} />
-      <Stack.Screen name="Following" component={FollowingScreen} />
+      <Stack.Screen
+        options={{
+          headerRight: () => (
+            <IconButton
+              icon="menu"
+              color="white"
+              onPress={() => navigation.openDrawer()}
+            />
+          ),
+        }}
+        name="Login"
+        component={LoginScreen}
+      />
+      <Stack.Screen
+        options={{
+          headerRight: () => (
+            <IconButton
+              icon="menu"
+              color="white"
+              onPress={() => navigation.openDrawer()}
+            />
+          ),
+        }}
+        name="Following"
+        component={FollowingScreen}
+      />
     </Stack.Navigator>
   );
 }
@@ -129,13 +166,17 @@ export default function App() {
           <Drawer.Navigator
             initialRouteName="Home"
             drawerContentOptions={{
-              activeTintColor: Colors.cyan700,
+              activeTintColor: '#177388',
             }}
             drawerContent={(props) => <CustomDrawerContent {...props} />}
           >
             <Drawer.Screen name="Home" component={Home} />
             <Drawer.Screen name="My Representatives" component={MyReps} />
-            <Drawer.Screen name="Compare Members" component={CompareMembers} />
+            <Drawer.Screen
+              name="Compare Members"
+              headerShown
+              component={CompareMembers}
+            />
             <Drawer.Screen name="Search Bills" component={Bills} />
           </Drawer.Navigator>
         </NavigationContainer>

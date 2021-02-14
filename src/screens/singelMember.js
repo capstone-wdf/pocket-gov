@@ -329,9 +329,9 @@ function singleMemberScreen({ route, navigation, user, updateUserMem, unfollowMe
           {member && user.id ? (
             <View>
               {user.members.includes(member.id) ? (
-                <Button style={styles.button} onPress={() => onUnfollowPress()}>Following</Button>
+                <Button style={styles.button} mode="contained" onPress={() => onUnfollowPress()}>Following</Button>
               ) : (
-                <Button style={styles.button} onPress={() => onFollowPress()}>Follow</Button>
+                <Button style={styles.button} mode="contained" onPress={() => onFollowPress()}>Follow</Button>
               )}
             </View>
           ) : (
