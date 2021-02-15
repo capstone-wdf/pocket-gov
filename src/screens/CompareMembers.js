@@ -378,7 +378,9 @@ export default function CompareMembers({ navigation }) {
         </View> */}
         {agreeData && member1 && member2 && (
           <View style={styles.dataContainer}>
-            <Subheading>Voting Records</Subheading>
+            <Subheading style={{ fontWeight: "700" }}>
+              Voting Records
+            </Subheading>
             <View style={styles.textContainer}>
               <Text>{`${member1.short_title} ${member1.last_name} and ${member2.short_title} ${member2.last_name} agree ${agreeData.agree_percent}% of the time and have ${agreeData.common_votes} votes in common`}</Text>
               {/* <Text>{`Agree percent: ${agreeData.agree_percent}`}</Text>
@@ -470,7 +472,7 @@ export default function CompareMembers({ navigation }) {
                     duration: 2000,
                     onLoad: { duration: 1200 },
                   }}
-                  colorScale={["#4B3F73", "#E4572E"]}
+                  colorScale={["#62AF5A", "#E4572E"]}
                   data={[
                     {
                       x: `${agreeData.agree_percent}%`,
@@ -491,9 +493,11 @@ export default function CompareMembers({ navigation }) {
         )}
         {sponsorships && (
           <View style={{ alignItems: "center", flex: 1 }}>
-            <Subheading>Bill Sponsorships</Subheading>
+            <Subheading style={{ fontWeight: "700" }}>
+              Bill Sponsorships
+            </Subheading>
             <Text
-              style={styles.bills}
+              style={styles.textContainer}
             >{`${member1.short_title} ${member1.last_name} and ${member2.short_title} ${member2.last_name} have co-sponsored ${sponsorships.common_bills} bills:`}</Text>
             <FlatList
               horizontal
@@ -559,5 +563,4 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  bills: {},
 });
