@@ -151,9 +151,9 @@ const styles = StyleSheet.create({
   },
   button: {
     backgroundColor: '#4B3F72',
-    marginTop: 20,
-    paddingTop: 5,
-    paddingBottom: 5,
+    margin: 10,
+    // paddingTop: 5,
+    // paddingBottom: 5,
     borderRadius: 5,
   }
 });
