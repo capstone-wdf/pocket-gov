@@ -77,12 +77,12 @@ export default function SingleState({ route, navigation }) {
       <TouchableWithoutFeedback onPress={() => handlePageChange(house, rep.id)}>
         <View style={{ alignItems: "center", padding: 5 }}>
           <Avatar.Image
-            ref={`${rep.id} (${rep.party})`}
+            // ref={`${rep.id} (${rep.party})`}
             size={70}
             source={{
               uri: `https://theunitedstates.io/images/congress/225x275/${rep.id}.jpg`,
             }}
-            onerror={this.source="./../../assets/blank-person.png"}
+            // onerror={this.source="./../../assets/blank-person.png"}
             // onError={(e) => console.log("Boop")}
           />
 
