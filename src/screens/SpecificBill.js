@@ -111,14 +111,14 @@ function SpecificBill({
           {bill && user.id ? (
             <View>
               {user.bills.includes(bill_slug) ? (
-                <Button onPress={() => onUnfollowPress()}>Following</Button>
+                <Button style={styles.button} mode="contained" onPress={() => onUnfollowPress()}>Following</Button>
               ) : (
-                <Button onPress={() => onFollowPress()}>Follow</Button>
+                <Button style={styles.button} mode="contained" onPress={() => onFollowPress()}>Follow</Button>
               )}
             </View>
           ) : (
             <View>
-              <Button onPress={showDialog}>Follow</Button>
+              <Button style={styles.button} mode="contained" onPress={showDialog}>Follow</Button>
               <Portal>
                 <Dialog visible={visible} onDismiss={hideDialog}>
                   <Dialog.Title>Hi there 👋 </Dialog.Title>
@@ -149,6 +149,13 @@ const styles = StyleSheet.create({
   billContainer: {
     margin: 15,
   },
+  button: {
+    backgroundColor: '#4B3F72',
+    margin: 10,
+    // paddingTop: 5,
+    // paddingBottom: 5,
+    borderRadius: 5,
+  }
 });
 
 const mapState = (state) => {

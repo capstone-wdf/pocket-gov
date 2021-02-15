@@ -77,10 +77,13 @@ export default function SingleState({ route, navigation }) {
       <TouchableWithoutFeedback onPress={() => handlePageChange(house, rep.id)}>
         <View style={{ alignItems: "center", padding: 5 }}>
           <Avatar.Image
+            ref={`${rep.id} (${rep.party})`}
             size={70}
             source={{
               uri: `https://theunitedstates.io/images/congress/225x275/${rep.id}.jpg`,
             }}
+            onerror={this.source="./../../assets/blank-person.png"}
+            // onError={(e) => console.log("Boop")}
           />
 
           <Text>{`${rep.last_name} (${rep.party})`}</Text>
@@ -117,6 +120,8 @@ export default function SingleState({ route, navigation }) {
                       source={{
                         uri: `https://theunitedstates.io/images/congress/225x275/${senator.id}.jpg`,
                       }}
+                      // defaultSource={require("./../../assets/blank-person.png")}
+                      // onError={(e) => this.refs[img_unique_id].setNativeProps({src: "./../../assets/blank-person.png"})}
                     />
                     <Text>{`${senator.last_name} (${senator.party})`}</Text>
                   </View>

@@ -597,4 +597,20 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
+  bills: {},
+  button: {
+    backgroundColor: '#4B3F72',
+    margin: 10,
+    // marginRight: 20,
+    // marginTop: 20,
+    // paddingTop: 5,
+    // paddingBottom: 5,
+    // height: 48,
+    borderRadius: 5,
+    // alignItems: 'center',
+    // justifyContent: 'center',
+  },
+  coloredText: {
+    color: '#4B3F72'
+  }
 });

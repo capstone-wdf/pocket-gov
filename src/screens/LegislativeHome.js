@@ -112,14 +112,16 @@ const styles = StyleSheet.create({
   },
   //not currently used
   button: {
-    backgroundColor: "#788eec",
-    marginLeft: 30,
-    marginRight: 30,
-    marginTop: 20,
-    height: 48,
+    backgroundColor: '#4B3F72',
+    // marginLeft: 30,
+    // marginRight: 30,
+    // marginTop: 20,
+    paddingTop: 5,
+    paddingBottom: 5,
+    // height: 48,
     borderRadius: 5,
-    alignItems: "center",
-    justifyContent: "center",
+    // alignItems: 'center',
+    // justifyContent: 'center',
   },
   buttonTitle: {
     color: "white",

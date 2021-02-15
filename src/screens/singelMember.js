@@ -373,14 +373,14 @@ function singleMemberScreen({
           {member && user.id ? (
             <View>
               {user.members.includes(member.id) ? (
-                <Button onPress={() => onUnfollowPress()}>Following</Button>
+                <Button style={styles.button} mode="contained" onPress={() => onUnfollowPress()}>Following</Button>
               ) : (
-                <Button onPress={() => onFollowPress()}>Follow</Button>
+                <Button style={styles.button} mode="contained" onPress={() => onFollowPress()}>Follow</Button>
               )}
             </View>
           ) : (
             <View>
-              <Button onPress={showDialog}>Follow</Button>
+              <Button style={styles.button} mode="contained" onPress={showDialog}>Follow</Button>
               <Portal>
                 <Dialog visible={visible} onDismiss={hideDialog}>
                   <Dialog.Title>Hi there 👋 </Dialog.Title>
@@ -439,6 +439,19 @@ const styles = StyleSheet.create({
     justifyContent: 'space-evenly',
     alignItems: 'center',
     marginTop: 20,
+  },
+  button: {
+    backgroundColor: '#4B3F72',
+    margin: 10,
+    // marginLeft: 20,
+    // marginRight: 20,
+    // marginTop: 20,
+    // paddingTop: 5,
+    // paddingBottom: 5,
+    // height: 48,
+    borderRadius: 5,
+    // alignItems: 'center',
+    // justifyContent: 'center',
   },
   graphContainer: {
     width: '90%',
