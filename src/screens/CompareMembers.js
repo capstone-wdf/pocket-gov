@@ -239,6 +239,13 @@ export default function CompareMembers({ navigation }) {
             : `Compare Two Representatives`}
         </Title>
         <Button
+          style={{
+            margin: 10,
+            backgroundColor: "#4b3f72",
+            borderRadius: 5,
+          }}
+          dark={true}
+          mode="contained"
           onPress={() => setChamber(chamber === "senate" ? "house" : "senate")}
         >
           switch chamber
@@ -250,7 +257,16 @@ export default function CompareMembers({ navigation }) {
               visible={visible1}
               onDismiss={closeMenu1}
               anchor={
-                <Button onPress={openMenu1}>
+                <Button
+                  style={{
+                    margin: 10,
+                    backgroundColor: "#4b3f72",
+                    borderRadius: 5,
+                  }}
+                  dark={true}
+                  mode="contained"
+                  onPress={openMenu1}
+                >
                   {chamber === "senate" ? "1st senator" : "1st representative"}
                 </Button>
               }
@@ -299,7 +315,16 @@ export default function CompareMembers({ navigation }) {
               visible={visible2}
               onDismiss={closeMenu2}
               anchor={
-                <Button onPress={openMenu2}>
+                <Button
+                  style={{
+                    margin: 10,
+                    backgroundColor: "#4b3f72",
+                    borderRadius: 5,
+                  }}
+                  dark={true}
+                  mode="contained"
+                  onPress={openMenu2}
+                >
                   {chamber === "senate" ? "2nd senator" : "2nd representative"}
                 </Button>
               }
@@ -393,7 +418,7 @@ export default function CompareMembers({ navigation }) {
                 <>
                   <View
                     style={{
-                      backgroundColor: "#E4572E",
+                      backgroundColor: "#ed5145",
                       height: "30%",
                       width: "74%",
                       left: "13%",
@@ -404,7 +429,7 @@ export default function CompareMembers({ navigation }) {
                   <VictoryStack
                     height={100}
                     horizontal={true}
-                    colorScale={["#62AF5A", "#E4572E"]}
+                    colorScale={["#60d394", "#ed5145"]}
                   >
                     <VictoryBar
                       animate={{
@@ -413,7 +438,7 @@ export default function CompareMembers({ navigation }) {
                       }}
                       labelComponent={
                         <VictoryLabel
-                          style={[{ fill: "#62AF5A" }]}
+                          style={[{ fill: "#60d394" }]}
                           x={50}
                           capHeight={2}
                           textAnchor="start"
@@ -436,7 +461,7 @@ export default function CompareMembers({ navigation }) {
                       labelComponent={
                         <VictoryLabel
                           x={277}
-                          style={[{ fill: "#E4572E" }]}
+                          style={[{ fill: "#ed5145" }]}
                           capHeight={11.5}
                           textAnchor="start"
                           verticalAnchor="start"
@@ -465,14 +490,14 @@ export default function CompareMembers({ navigation }) {
                     },
                   }}
                   labelRadius={40}
-                  cornerRadius={({ datum }) => datum.y * 0.1}
+                  // cornerRadius={({ datum }) => datum.y * 0.1}
                   height={285}
-                  radius={({ datum }) => 40 + datum.y * 0.8}
+                  // radius={({ datum }) => 40 + datum.y * 0.8}
                   animate={{
                     duration: 2000,
                     onLoad: { duration: 1200 },
                   }}
-                  colorScale={["#62AF5A", "#E4572E"]}
+                  colorScale={["#60d394", "#ed5145"]}
                   data={[
                     {
                       x: `${agreeData.agree_percent}%`,
@@ -486,7 +511,16 @@ export default function CompareMembers({ navigation }) {
                 />
               )}
             </View>
-            <Button onPress={() => setSwitchView(!switchView)}>
+            <Button
+              style={{
+                margin: 10,
+                backgroundColor: "#4b3f72",
+                borderRadius: 5,
+              }}
+              dark={true}
+              mode="contained"
+              onPress={() => setSwitchView(!switchView)}
+            >
               Switch Graph
             </Button>
           </View>
