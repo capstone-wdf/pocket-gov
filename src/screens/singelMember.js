@@ -1,5 +1,5 @@
-import { StatusBar } from 'expo-status-bar';
-import React, { useState, useEffect } from 'react';
+import { StatusBar } from "expo-status-bar";
+import React, { useState, useEffect } from "react";
 import {
   ScrollView,
   FlatList,
@@ -7,7 +7,7 @@ import {
   StyleSheet,
   View,
   Linking,
-} from 'react-native';
+} from "react-native";
 import {
   Avatar,
   Button,
@@ -19,25 +19,25 @@ import {
   Dialog,
   Portal,
   Paragraph,
-} from 'react-native-paper';
-import axios from 'axios';
-import { config } from '../../secrets';
+} from "react-native-paper";
+import axios from "axios";
+import { config } from "../../secrets";
 import {
   VictoryPie,
   VictoryStack,
   VictoryBar,
   VictoryLabel,
-} from 'victory-native';
-import { firebase } from '../firebase/config';
-import { connect } from 'react-redux';
+} from "victory-native";
+import { firebase } from "../firebase/config";
+import { connect } from "react-redux";
 import {
   updateUserMemFollowingThunk,
   unfollowMemThunk,
-} from '../../redux/app-redux';
+} from "../../redux/app-redux";
 
 // const rssParser = require("react-native-rss-parser");
-import * as rssParser from 'react-native-rss-parser';
-import { getFontScale } from 'react-native/Libraries/Utilities/PixelRatio';
+import * as rssParser from "react-native-rss-parser";
+import { getFontScale } from "react-native/Libraries/Utilities/PixelRatio";
 
 async function fetchUserData(rss_url) {
   //function invocation was commented out to not clutter console -EZ
@@ -45,7 +45,7 @@ async function fetchUserData(rss_url) {
   //   let theUrl = "https://www.blumenthal.senate.gov/rss/feeds/?type=press";
 
   const theUrl =
-    rss_url || 'https://www.blumenthal.senate.gov/rss/feeds/?type=press';
+    rss_url || "https://www.blumenthal.senate.gov/rss/feeds/?type=press";
 
   try {
     const { data } = await axios.get(theUrl);
@@ -94,8 +94,8 @@ function singleMemberScreen({
   //useEffect for comparison API
 
   //other stuff
-  let congress = '117';
-  let senate = 'senate';
+  let congress = "117";
+  let senate = "senate";
 
   const apiCall = async () => {
     let response = await getMembers(congress, senate);
@@ -150,7 +150,7 @@ function singleMemberScreen({
       // console.log("user state after update u:", user, member.id);
       // navigation.navigate('singelMember')
     } catch (error) {
-      console.log('Follow Error', error);
+      console.log("Follow Error", error);
     }
   };
 
@@ -158,16 +158,16 @@ function singleMemberScreen({
     try {
       await unfollowMem(user.id, member.id);
     } catch (error) {
-      console.log('Unfollow Error', error);
+      console.log("Unfollow Error", error);
     }
   };
 
   const onRedirectToLogin = async () => {
     try {
       setVisible(false);
-      navigation.navigate('Login');
+      navigation.navigate("Login");
     } catch (error) {
-      console.log('Redirect Error', error);
+      console.log("Redirect Error", error);
     }
   };
   // console.log(newsFeed);
@@ -210,11 +210,11 @@ function singleMemberScreen({
             <View>
               <Title>{`${member.first_name} ${member.last_name}`}</Title>
               <Text>{`Party: ${
-                member.party === 'D' ? 'Democrat' : 'Republican'
+                member.party === "D" ? "Democrat" : "Republican"
               }`}</Text>
               {member.district && (
                 <Text>{`District: ${member.state} ${
-                  member.at_large ? 'at large' : member.district
+                  member.at_large ? "at large" : member.district
                 }`}</Text>
               )}
               {/* <Text>{`Committees: ${member.committees.length}`}</Text> */}
@@ -225,8 +225,8 @@ function singleMemberScreen({
               <Text>{`Total Votes: ${member.total_votes}`}</Text>
               <Text>{`Missed Votes: ${member.missed_votes}`}</Text>
               <Text>{`Votes with Party: ${member.votes_with_party_pct}% `}</Text>
-              <Text>{`Votes Against Party: ${member.votes_against_party_pct}% `}</Text>
-              <View style={styles.graphContainer}>
+              {/* <Text>{`Votes Against Party: ${member.votes_against_party_pct}% `}</Text> */}
+              {/* <View style={styles.graphContainer}>
                 <VictoryStack
                   height={90}
                   horizontal={true}
@@ -278,7 +278,7 @@ function singleMemberScreen({
                     barWidth={25}
                   />
                 </VictoryStack>
-              </View>
+              </View> */}
               {member.phone && <Text>{`Phone Number: ${member.phone} `}</Text>}
 
               {member.rss_url && (
@@ -373,14 +373,32 @@ function singleMemberScreen({
           {member && user.id ? (
             <View>
               {user.members.includes(member.id) ? (
-                <Button style={styles.button} mode="contained" onPress={() => onUnfollowPress()}>Following</Button>
+                <Button
+                  style={styles.button}
+                  mode="contained"
+                  onPress={() => onUnfollowPress()}
+                >
+                  Following
+                </Button>
               ) : (
-                <Button style={styles.button} mode="contained" onPress={() => onFollowPress()}>Follow</Button>
+                <Button
+                  style={styles.button}
+                  mode="contained"
+                  onPress={() => onFollowPress()}
+                >
+                  Follow
+                </Button>
               )}
             </View>
           ) : (
             <View>
-              <Button style={styles.button} mode="contained" onPress={showDialog}>Follow</Button>
+              <Button
+                style={styles.button}
+                mode="contained"
+                onPress={showDialog}
+              >
+                Follow
+              </Button>
               <Portal>
                 <Dialog visible={visible} onDismiss={hideDialog}>
                   <Dialog.Title>Hi there 👋 </Dialog.Title>
@@ -405,30 +423,30 @@ function singleMemberScreen({
 
 const styles = StyleSheet.create({
   contentContainer: {
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-    height: '100%',
-    width: '100%',
+    backgroundColor: "#fff",
+    alignItems: "center",
+    justifyContent: "center",
+    height: "100%",
+    width: "100%",
   },
   memberContainer: {
     margin: 10,
   },
   AvatarContainer: {
-    flexDirection: 'row',
+    flexDirection: "row",
     marginVertical: 20,
-    justifyContent: 'space-evenly',
+    justifyContent: "space-evenly",
   },
   cards: {
     width: 275,
     height: 200,
     margin: 5,
-    backgroundColor: '#119DA4',
-    justifyContent: 'center',
+    backgroundColor: "#119DA4",
+    justifyContent: "center",
   },
   titleText: {
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     paddingVertical: 5,
   },
   subtitleText: {
@@ -436,12 +454,12 @@ const styles = StyleSheet.create({
   },
   photoContainer: {
     flex: 1,
-    justifyContent: 'space-evenly',
-    alignItems: 'center',
+    justifyContent: "space-evenly",
+    alignItems: "center",
     marginTop: 20,
   },
   button: {
-    backgroundColor: '#4B3F72',
+    backgroundColor: "#4B3F72",
     margin: 10,
     // marginLeft: 20,
     // marginRight: 20,
@@ -454,7 +472,7 @@ const styles = StyleSheet.create({
     // justifyContent: 'center',
   },
   graphContainer: {
-    width: '90%',
+    width: "90%",
   },
   // flatlist: {
   //   backgroundColor: '#177388',
