@@ -257,16 +257,7 @@ export default function CompareMembers({ navigation }) {
               visible={visible1}
               onDismiss={closeMenu1}
               anchor={
-                <Button
-                  style={{
-                    margin: 10,
-                    backgroundColor: "#4b3f72",
-                    borderRadius: 5,
-                  }}
-                  dark={true}
-                  mode="contained"
-                  onPress={openMenu1}
-                >
+                <Button color="#4b3f72" dark={true} onPress={openMenu1}>
                   {chamber === "senate" ? "1st senator" : "1st representative"}
                 </Button>
               }
@@ -315,16 +306,7 @@ export default function CompareMembers({ navigation }) {
               visible={visible2}
               onDismiss={closeMenu2}
               anchor={
-                <Button
-                  style={{
-                    margin: 10,
-                    backgroundColor: "#4b3f72",
-                    borderRadius: 5,
-                  }}
-                  dark={true}
-                  mode="contained"
-                  onPress={openMenu2}
-                >
+                <Button color="#4b3f72" dark={true} onPress={openMenu2}>
                   {chamber === "senate" ? "2nd senator" : "2nd representative"}
                 </Button>
               }
@@ -599,7 +581,7 @@ const styles = StyleSheet.create({
   },
   bills: {},
   button: {
-    backgroundColor: '#4B3F72',
+    backgroundColor: "#4B3F72",
     margin: 10,
     // marginRight: 20,
     // marginTop: 20,
@@ -611,6 +593,6 @@ const styles = StyleSheet.create({
     // justifyContent: 'center',
   },
   coloredText: {
-    color: '#4B3F72'
-  }
+    color: "#4B3F72",
+  },
 });
