@@ -411,6 +411,7 @@ export default function CompareMembers({ navigation }) {
                       }}
                       labelComponent={
                         <VictoryLabel
+                          style={[{ fill: "#62AF5A" }]}
                           x={50}
                           capHeight={2}
                           textAnchor="start"
@@ -433,7 +434,8 @@ export default function CompareMembers({ navigation }) {
                       labelComponent={
                         <VictoryLabel
                           x={277}
-                          capHeight={12}
+                          style={[{ fill: "#E4572E" }]}
+                          capHeight={11.5}
                           textAnchor="start"
                           verticalAnchor="start"
                           text="Disagree"
@@ -488,14 +490,21 @@ export default function CompareMembers({ navigation }) {
           </View>
         )}
         {sponsorships && (
-          <View>
+          <View style={{ alignItems: "center", flex: 1 }}>
             <Subheading>Bill Sponsorships</Subheading>
             <Text
               style={styles.bills}
             >{`${member1.short_title} ${member1.last_name} and ${member2.short_title} ${member2.last_name} have co-sponsored ${sponsorships.common_bills} bills:`}</Text>
+            <FlatList
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              data={sponsorships.bills}
+              renderItem={renderItem}
+              keyExtractor={(item) => item.number}
+            />
           </View>
         )}
-        {sponsorships && (
+        {/* {sponsorships && (
           <FlatList
             horizontal
             showsHorizontalScrollIndicator={false}
@@ -503,7 +512,7 @@ export default function CompareMembers({ navigation }) {
             renderItem={renderItem}
             keyExtractor={(item) => item.number}
           />
-        )}
+        )} */}
       </ScrollView>
     </View>
   );
