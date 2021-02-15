@@ -70,9 +70,9 @@ function LegislativeHome({ navigation }) {
       </ZoomView>
 
       <View style={styles.bottom}>
-        <Text style={{ textAlign: "center", color: "#e4572e", margin: 5 }}>
+        {/* <Text style={{ textAlign: "center", color: "#e4572e", margin: 5 }}>
           * iOS devices might have trouble interacting with the map
-        </Text>
+        </Text> */}
       </View>
     </View>
   );
