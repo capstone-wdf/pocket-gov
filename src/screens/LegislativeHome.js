@@ -33,7 +33,9 @@ function LegislativeHome({ navigation }) {
   return (
     <View style={styles.container}>
       <View style={styles.menu}>
-        <Title>Legislative Branch</Title>
+        <View style={{ margin: 10 }}>
+          <Title>Legislative Branch</Title>
+        </View>
         <View style={{ alignItems: "center" }}>
           <Text style={{ textAlign: "center", fontSize: 16, margin: 3 }}>
             Find your state's federal representatives from the drop-down or
@@ -68,9 +70,9 @@ function LegislativeHome({ navigation }) {
       </ZoomView>
 
       <View style={styles.bottom}>
-        <Text style={{ textAlign: "center", color: "#e4572e", margin: 5 }}>
+        {/* <Text style={{ textAlign: "center", color: "#e4572e", margin: 5 }}>
           * iOS devices might have trouble interacting with the map
-        </Text>
+        </Text> */}
       </View>
     </View>
   );
@@ -79,13 +81,13 @@ function LegislativeHome({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fbf5f3",
+    backgroundColor: "#fff",
     alignItems: "center",
     justifyContent: "center",
   },
   menu: {
     flex: 1,
-    backgroundColor: "#fbf5f3",
+    backgroundColor: "#fff",
     zIndex: 1,
     justifyContent: "space-between",
     alignItems: "center",
@@ -104,7 +106,7 @@ const styles = StyleSheet.create({
   bottom: {
     flex: 1,
     width: "100%",
-    backgroundColor: "#fbf5f3",
+    backgroundColor: "#fff",
     zIndex: 1,
     justifyContent: "space-between",
   },

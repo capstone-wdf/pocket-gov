@@ -1,5 +1,5 @@
-import { StatusBar } from 'expo-status-bar';
-import React, { useState, useEffect } from 'react';
+import { StatusBar } from "expo-status-bar";
+import React, { useState, useEffect } from "react";
 import {
   ScrollView,
   FlatList,
@@ -7,7 +7,7 @@ import {
   StyleSheet,
   View,
   Pressable,
-} from 'react-native';
+} from "react-native";
 
 import {
   Appbar,
@@ -18,17 +18,17 @@ import {
   Text,
   Title,
   Subheading,
-} from 'react-native-paper';
-import axios from 'axios';
-import { config } from '../../secrets';
+} from "react-native-paper";
+import axios from "axios";
+import { config } from "../../secrets";
 import {
   VictoryPie,
   VictoryStack,
   VictoryBar,
   VictoryLabel,
   VictoryLegend,
-} from 'victory-native';
-import SingleBill from '../components/SingleBill';
+} from "victory-native";
+import SingleBill from "../components/SingleBill";
 
 async function getMembers(congress, chamber) {
   const theUrl = `https://api.propublica.org/congress/v1/${congress}/${chamber}/members.json`;
@@ -79,7 +79,7 @@ export default function CompareMembers({ navigation }) {
   const [visible2, setVisible2] = useState(false);
   const [agreeData, setAgreeData] = useState(null);
   const [switchView, setSwitchView] = useState(false);
-  const [chamber, setChamber] = useState('senate');
+  const [chamber, setChamber] = useState("senate");
   const [sponsorships, setSponsorships] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -106,7 +106,7 @@ export default function CompareMembers({ navigation }) {
   }, [member1, member2]);
 
   //other stuff
-  let congress = '117';
+  let congress = "117";
 
   const apiCall = async () => {
     let response = await getMembers(congress, chamber);
@@ -119,7 +119,7 @@ export default function CompareMembers({ navigation }) {
   }
 
   //switch from senate to house
-  if (members.length < 105 && members.length > 0 && chamber === 'house') {
+  if (members.length < 105 && members.length > 0 && chamber === "house") {
     setMember1(null);
     setMember2(null);
     setMembers([]);
@@ -128,7 +128,7 @@ export default function CompareMembers({ navigation }) {
   }
 
   //switch from house to senate
-  if (members.length > 105 && members.length > 0 && chamber === 'senate') {
+  if (members.length > 105 && members.length > 0 && chamber === "senate") {
     setMember1(null);
     setMember2(null);
     setMembers([]);
@@ -213,12 +213,12 @@ export default function CompareMembers({ navigation }) {
 
   //Render SingleBill component
   const renderItem = ({ item }) => {
-    const billSlug = item.number.split('.').join('');
+    const billSlug = item.number.split(".").join("");
 
     return (
       <Pressable
         onPress={() => {
-          navigation.navigate('Specific Bill', { bill_slug: billSlug });
+          navigation.navigate("Specific Bill", { bill_slug: billSlug });
         }}
       >
         <SingleBill title={item.title} number={item.number} />
@@ -228,18 +228,25 @@ export default function CompareMembers({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <Appbar.Header style={{ backgroundColor: '#177388' }}>
+      <Appbar.Header style={{ backgroundColor: "#177388" }}>
         <Appbar.Content title="Compare Members of Congress" />
         <Appbar.Action icon="menu" onPress={() => navigation.openDrawer()} />
       </Appbar.Header>
       <ScrollView contentContainerStyle={styles.contentContainer}>
         <Title>
-          {chamber === 'senate'
+          {chamber === "senate"
             ? `Compare Two Senators`
             : `Compare Two Representatives`}
         </Title>
         <Button
-          onPress={() => setChamber(chamber === 'senate' ? 'house' : 'senate')}
+          style={{
+            margin: 10,
+            backgroundColor: "#4b3f72",
+            borderRadius: 5,
+          }}
+          dark={true}
+          mode="contained"
+          onPress={() => setChamber(chamber === "senate" ? "house" : "senate")}
         >
           switch chamber
         </Button>
@@ -250,8 +257,17 @@ export default function CompareMembers({ navigation }) {
               visible={visible1}
               onDismiss={closeMenu1}
               anchor={
-                <Button onPress={openMenu1}>
-                  {chamber === 'senate' ? '1st senator' : '1st representative'}
+                <Button
+                  style={{
+                    margin: 10,
+                    backgroundColor: "#4b3f72",
+                    borderRadius: 5,
+                  }}
+                  dark={true}
+                  mode="contained"
+                  onPress={openMenu1}
+                >
+                  {chamber === "senate" ? "1st senator" : "1st representative"}
                 </Button>
               }
             >
@@ -299,8 +315,17 @@ export default function CompareMembers({ navigation }) {
               visible={visible2}
               onDismiss={closeMenu2}
               anchor={
-                <Button onPress={openMenu2}>
-                  {chamber === 'senate' ? '2nd senator' : '2nd representative'}
+                <Button
+                  style={{
+                    margin: 10,
+                    backgroundColor: "#4b3f72",
+                    borderRadius: 5,
+                  }}
+                  dark={true}
+                  mode="contained"
+                  onPress={openMenu2}
+                >
+                  {chamber === "senate" ? "2nd senator" : "2nd representative"}
                 </Button>
               }
             >
@@ -378,7 +403,9 @@ export default function CompareMembers({ navigation }) {
         </View> */}
         {agreeData && member1 && member2 && (
           <View style={styles.dataContainer}>
-            <Subheading>Voting Records</Subheading>
+            <Subheading style={{ fontWeight: "700" }}>
+              Voting Records
+            </Subheading>
             <View style={styles.textContainer}>
               <Text>{`${member1.short_title} ${member1.last_name} and ${member2.short_title} ${member2.last_name} agree ${agreeData.agree_percent}% of the time and have ${agreeData.common_votes} votes in common`}</Text>
               {/* <Text>{`Agree percent: ${agreeData.agree_percent}`}</Text>
@@ -391,18 +418,18 @@ export default function CompareMembers({ navigation }) {
                 <>
                   <View
                     style={{
-                      backgroundColor: '#E4572E',
-                      height: '30%',
-                      width: '74%',
-                      left: '13%',
-                      top: '35%',
-                      position: 'absolute',
+                      backgroundColor: "#ed5145",
+                      height: "30%",
+                      width: "74%",
+                      left: "13%",
+                      top: "35%",
+                      position: "absolute",
                     }}
                   ></View>
                   <VictoryStack
                     height={100}
                     horizontal={true}
-                    colorScale={['#4B3F73', '#E4572E']}
+                    colorScale={["#60d394", "#ed5145"]}
                   >
                     <VictoryBar
                       animate={{
@@ -411,6 +438,7 @@ export default function CompareMembers({ navigation }) {
                       }}
                       labelComponent={
                         <VictoryLabel
+                          style={[{ fill: "#60d394" }]}
                           x={50}
                           capHeight={2}
                           textAnchor="start"
@@ -426,14 +454,15 @@ export default function CompareMembers({ navigation }) {
                           y: agreeData.agree_percent,
                         },
                       ]}
-                      barWidth={35}
+                      barWidth={30}
                     />
 
                     <VictoryBar
                       labelComponent={
                         <VictoryLabel
                           x={277}
-                          capHeight={12}
+                          style={[{ fill: "#ed5145" }]}
+                          capHeight={11.5}
                           textAnchor="start"
                           verticalAnchor="start"
                           text="Disagree"
@@ -455,20 +484,20 @@ export default function CompareMembers({ navigation }) {
                 <VictoryPie
                   style={{
                     labels: {
-                      fill: 'black',
+                      fill: "black",
                       fontSize: 20,
-                      fontWeight: 'bold',
+                      fontWeight: "bold",
                     },
                   }}
                   labelRadius={40}
-                  cornerRadius={({ datum }) => datum.y * 0.1}
+                  // cornerRadius={({ datum }) => datum.y * 0.1}
                   height={285}
-                  radius={({ datum }) => 40 + datum.y * 0.8}
+                  // radius={({ datum }) => 40 + datum.y * 0.8}
                   animate={{
                     duration: 2000,
                     onLoad: { duration: 1200 },
                   }}
-                  colorScale={['#4B3F73', '#E4572E']}
+                  colorScale={["#60d394", "#ed5145"]}
                   data={[
                     {
                       x: `${agreeData.agree_percent}%`,
@@ -482,20 +511,38 @@ export default function CompareMembers({ navigation }) {
                 />
               )}
             </View>
-            <Button onPress={() => setSwitchView(!switchView)}>
+            <Button
+              style={{
+                margin: 10,
+                backgroundColor: "#4b3f72",
+                borderRadius: 5,
+              }}
+              dark={true}
+              mode="contained"
+              onPress={() => setSwitchView(!switchView)}
+            >
               Switch Graph
             </Button>
           </View>
         )}
         {sponsorships && (
-          <View>
-            <Subheading>Bill Sponsorships</Subheading>
+          <View style={{ alignItems: "center", flex: 1 }}>
+            <Subheading style={{ fontWeight: "700" }}>
+              Bill Sponsorships
+            </Subheading>
             <Text
-              style={styles.bills}
+              style={styles.textContainer}
             >{`${member1.short_title} ${member1.last_name} and ${member2.short_title} ${member2.last_name} have co-sponsored ${sponsorships.common_bills} bills:`}</Text>
+            <FlatList
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              data={sponsorships.bills}
+              renderItem={renderItem}
+              keyExtractor={(item) => item.number}
+            />
           </View>
         )}
-        {sponsorships && (
+        {/* {sponsorships && (
           <FlatList
             horizontal
             showsHorizontalScrollIndicator={false}
@@ -503,7 +550,7 @@ export default function CompareMembers({ navigation }) {
             renderItem={renderItem}
             keyExtractor={(item) => item.number}
           />
-        )}
+        )} */}
       </ScrollView>
     </View>
   );
@@ -515,40 +562,39 @@ export default function CompareMembers({ navigation }) {
 //   ))}
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#fff',
-    height: '100%',
+    backgroundColor: "#fff",
+    height: "100%",
   },
   contentContainer: {
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: "#fff",
+    alignItems: "center",
+    justifyContent: "center",
   },
   menuContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    width: '90%',
+    flexDirection: "row",
+    justifyContent: "space-around",
+    width: "90%",
   },
   member: {
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   memberContainer: {
     flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    width: '90%',
+    flexDirection: "row",
+    justifyContent: "space-around",
+    width: "90%",
   },
   text: {
-    alignItems: 'center',
+    alignItems: "center",
     margin: 10,
   },
   textContainer: {
-    alignItems: 'center',
+    alignItems: "center",
     margin: 10,
   },
   dataContainer: {
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
-  bills: {},
 });
