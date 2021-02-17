@@ -46,12 +46,9 @@ Backend: Firebase, Cloud FireStore
 
 ## App Screenshots
 
-![IMG_3286](https://user-images.githubusercontent.com/62243114/108268742-f78a2600-713a-11eb-94ef-bfa988806343.PNG)
+<img src="https://user-images.githubusercontent.com/62243114/108268742-f78a2600-713a-11eb-94ef-bfa988806343.PNG" width="300" />     <img src="https://user-images.githubusercontent.com/62243114/108268755-fc4eda00-713a-11eb-893b-179ff48d5017.PNG" width="300" />     <img src="https://user-images.githubusercontent.com/62243114/108268768-01ac2480-713b-11eb-9489-a6e2dc910df6.PNG" width="300" />
 
-![IMG_3287](https://user-images.githubusercontent.com/62243114/108268755-fc4eda00-713a-11eb-893b-179ff48d5017.PNG)
 
-![IMG_3288](https://user-images.githubusercontent.com/62243114/108268768-01ac2480-713b-11eb-9489-a6e2dc910df6.PNG)
+<img src="https://user-images.githubusercontent.com/62243114/108268795-0a9cf600-713b-11eb-9d7d-457db809c1e1.PNG" width="300" />     <img src="https://user-images.githubusercontent.com/62243114/108268810-0f61aa00-713b-11eb-903f-8e36a89652d8.PNG" width="300" />
 
-![IMG_3289](https://user-images.githubusercontent.com/62243114/108268795-0a9cf600-713b-11eb-9d7d-457db809c1e1.PNG)
 
-![IMG_3291](https://user-images.githubusercontent.com/62243114/108268810-0f61aa00-713b-11eb-903f-8e36a89652d8.PNG)
