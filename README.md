@@ -5,6 +5,8 @@ PocketGov is a civic information mobile app that equips our users with the lates
 
 Created by [May Hein](https://github.com/mayhein), [Ahmad Zaki](https://github.com/AhmadZaki33), [Anya Dunaif](https://github.com/aannyyaa), and [Eric Zou](https://github.com/uoze).
 
+Watch the application walkthrough on [YouTube](https://www.youtube.com/watch?v=h7dbnkKF-PQ&list=PLx0iOsdUOUmnwv1vrUcoOhP736-omYGMN&index=28&ab_channel=FullstackAcademy).
+
 ## How to use our app
 
 - Download the Expo Go app.
